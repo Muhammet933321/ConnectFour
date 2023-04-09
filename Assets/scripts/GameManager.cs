@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
 
     public void TakeTurn(int column)
     {
-        Instantiate(Player1, SpawnLocation[column].transform.position , Quaternion.identity);
+        Instantiate(Player1, SpawnLocation[column].transform.position ,new Quaternion(0,90,90,0));
     }
     
 }
