@@ -5,11 +5,12 @@ using UnityEngine;
 public class InputFileds : MonoBehaviour
 {
     public int column;
-    public GameObject GM;
+    public GameManager gm;
     void OnMouseDown()
     {
-        Debug.Log("coluumn number is " + column);
+        gm.SelectColumn(column);
+        gm.TakeTurn(column);
     }
 
-    
+
 }
