@@ -11,5 +11,5 @@ public class InputFileds : MonoBehaviour
         Debug.Log("coluumn number is " + column);
     }
 
-
+    
 }
