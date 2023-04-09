@@ -17,4 +17,14 @@ public class GameManager : MonoBehaviour
     {
         
     }
+
+    public void SelectColumn(int column)
+    {
+        Debug.Log("Selected Column = "+ column);
+    }
+
+    void TakeTurn(int column)
+    {
+        Instantiate(Player1, SpawnLocation[column].transform.position , Quaternion.identity);
+    }
 }
