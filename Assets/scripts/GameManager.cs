@@ -46,33 +46,36 @@ public class GameManager : MonoBehaviour
     }
     public void TakeTurn(int column)
     {
-        if(UpdateBoardState(column))
+        if (StateBoard[column, HeightOfBoard - 1] == 0 && (FallingPiece == null || FallingPiece.GetComponent<Rigidbody>().velocity == Vector3.zero))
         {
-            Player1Ghost.SetActive(false);
-            Player2Ghost.SetActive(false);
-            if (Player1Turn == true)
+            if (UpdateBoardState(column))
             {
-                FallingPiece = Instantiate(Player1, SpawnLocation[column].transform.position, new Quaternion(0, 90, 90, 0));
-                FallingPiece.GetComponent<Rigidbody>().velocity = new Vector3(0,0.1f,0);
-                Player1Turn = false;
-                if (DidWin(1))
+                Player1Ghost.SetActive(false);
+                Player2Ghost.SetActive(false);
+                if (Player1Turn == true)
                 {
-                    Debug.LogWarning("Player 1 win");
+                    FallingPiece = Instantiate(Player1, SpawnLocation[column].transform.position, new Quaternion(0, 90, 90, 0));
+                    FallingPiece.GetComponent<Rigidbody>().velocity = new Vector3(0, 0.1f, 0);
+                    Player1Turn = false;
+                    if (DidWin(1))
+                    {
+                        Debug.LogWarning("Player 1 win");
+                    }
                 }
-            }
-            else
-            {
-                FallingPiece = Instantiate(Player2, SpawnLocation[column].transform.position, new Quaternion(0, 90, 90, 0));
-                FallingPiece.GetComponent<Rigidbody>().velocity = new Vector3(0, 0.1f, 0);
-                Player1Turn = true;
-                if (DidWin(2))
+                else
                 {
-                    Debug.LogWarning("Player 2 win");
+                    FallingPiece = Instantiate(Player2, SpawnLocation[column].transform.position, new Quaternion(0, 90, 90, 0));
+                    FallingPiece.GetComponent<Rigidbody>().velocity = new Vector3(0, 0.1f, 0);
+                    Player1Turn = true;
+                    if (DidWin(2))
+                    {
+                        Debug.LogWarning("Player 2 win");
+                    }
                 }
-            }
-            if(IsDraw())
-            {
-                Debug.LogWarning("Draw!");
+                if (IsDraw())
+                {
+                    Debug.LogWarning("Draw!");
+                }
             }
         }
     }
