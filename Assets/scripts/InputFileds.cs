@@ -11,6 +11,10 @@ public class InputFileds : MonoBehaviour
         gm.SelectColumn(column);
         gm.TakeTurn(column);
     }
+    private void OnMouseOver()
+    {
+        gm.HoverCloumn(column);
+    }
 
 
 }
