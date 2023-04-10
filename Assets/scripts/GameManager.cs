@@ -73,6 +73,10 @@ public class GameManager : MonoBehaviour
                     Debug.LogWarning("Player 2 win");
                 }
             }
+            if(IsDraw())
+            {
+                Debug.LogWarning("Draw!");
+            }
             
         }
         
@@ -144,5 +148,15 @@ public class GameManager : MonoBehaviour
         return false;
     }
 
-    
+    bool IsDraw()
+    {
+        for(int x =0; x< LenghttOfBoard;x++)
+        {
+            if (StateBoard[x,HeightOfBoard -1] == 0)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 }
