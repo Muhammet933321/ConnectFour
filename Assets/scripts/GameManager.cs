@@ -28,7 +28,6 @@ public class GameManager : MonoBehaviour
     {
         //Debug.Log("Selected Column + " + column);
     }
-
     public void HoverCloumn(int column) 
     {
         if (StateBoard[column , HeightOfBoard -1 ] == 0 && (FallingPiece == null || FallingPiece.GetComponent<Rigidbody>().velocity == Vector3.zero))
@@ -43,9 +42,7 @@ public class GameManager : MonoBehaviour
                 Player2Ghost.SetActive(true);
                 Player2Ghost.transform.position = SpawnLocation[column].transform.position;
             }
-
         }
-        
     }
     public void TakeTurn(int column)
     {
@@ -77,10 +74,7 @@ public class GameManager : MonoBehaviour
             {
                 Debug.LogWarning("Draw!");
             }
-            
         }
-        
-
     }
     bool UpdateBoardState(int column)
     {
@@ -117,7 +111,6 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
-
         //Vertical
         for (int x = 0; x < LenghttOfBoard ; x++)
         {
@@ -129,7 +122,6 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
-
         //y = x line 
         for (int x = 0; x < LenghttOfBoard -3 ; x++)
         {
@@ -147,7 +139,6 @@ public class GameManager : MonoBehaviour
         }
         return false;
     }
-
     bool IsDraw()
     {
         for(int x =0; x< LenghttOfBoard;x++)
