@@ -9,11 +9,14 @@ public class InputFileds : MonoBehaviour
     public GameManager gm;
     private void OnMouseOver()
     {
-        gm.HoverCloumn(column);
     }
     private void OnMouseUpAsButton()
     {
         gm.SelectColumn(column);
         gm.TakeTurn(column);
+    }
+    private void OnMouseEnter()
+    {
+        gm.HoverCloumn(column);
     }
 }
