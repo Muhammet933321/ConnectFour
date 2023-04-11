@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -10,11 +11,12 @@ public class GameManager : MonoBehaviour
     public GameObject Player2Ghost;
     GameObject FallingPiece;
 
+
     public GameObject[] SpawnLocation;
     bool Player1Turn;
     int HeightOfBoard = 6;
     int LenghttOfBoard = 7;
-    
+
 
     int[,] StateBoard;
     private void Start()
@@ -28,9 +30,9 @@ public class GameManager : MonoBehaviour
     {
         //Debug.Log("Selected Column + " + column);
     }
-    public void HoverCloumn(int column) 
+    public void HoverCloumn(int column)
     {
-        if (StateBoard[column , HeightOfBoard -1 ] == 0 && (FallingPiece == null || FallingPiece.GetComponent<Rigidbody>().velocity == Vector3.zero))
+        if (StateBoard[column, HeightOfBoard - 1] == 0 && (FallingPiece == null || FallingPiece.GetComponent<Rigidbody>().velocity == Vector3.zero))
         {
             if (Player1Turn)
             {
@@ -61,6 +63,12 @@ public class GameManager : MonoBehaviour
                     {
                         Debug.LogWarning("Player 1 win");
                     }
+
+                    
+                    PlayAi(BestMove(StateBoard));
+                    Player1Turn = true;
+                    
+                        
                 }
                 else
                 {
@@ -81,6 +89,7 @@ public class GameManager : MonoBehaviour
     }
     bool UpdateBoardState(int column)
     {
+        
         for (int Raw = 0; Raw < HeightOfBoard; Raw++)
         {
             if (StateBoard[column, Raw] == 0)
@@ -93,48 +102,48 @@ public class GameManager : MonoBehaviour
                 {
                     StateBoard[column, Raw] = 2;
                 }
-                Debug.Log("Column ,Raw = " + column + " , " + Raw);
+                //Debug.Log("Column ,Raw = " + column + " , " + Raw);
                 return true;
             }
         }
         return false;
     }
-    
+
 
     bool DidWin(int PlayerNum)
     {
         // Horizontal
-        for(int x =0; x < LenghttOfBoard -3; x++) 
+        for (int x = 0; x < LenghttOfBoard - 3; x++)
         {
-            for(int y =0; y< HeightOfBoard; y++) 
+            for (int y = 0; y < HeightOfBoard; y++)
             {
-                if (StateBoard[x,y] == PlayerNum && StateBoard[x+1, y] == PlayerNum && StateBoard[x + 2, y] == PlayerNum && StateBoard[x + 3, y] == PlayerNum)
+                if (StateBoard[x, y] == PlayerNum && StateBoard[x + 1, y] == PlayerNum && StateBoard[x + 2, y] == PlayerNum && StateBoard[x + 3, y] == PlayerNum)
                 {
                     return true;
                 }
             }
         }
         //Vertical
-        for (int x = 0; x < LenghttOfBoard ; x++)
+        for (int x = 0; x < LenghttOfBoard; x++)
         {
-            for (int y = 0; y < HeightOfBoard -3; y++)
+            for (int y = 0; y < HeightOfBoard - 3; y++)
             {
-                if (StateBoard[x, y] == PlayerNum && StateBoard[x , y+1] == PlayerNum && StateBoard[x , y+2] == PlayerNum && StateBoard[x , y+3] == PlayerNum)
+                if (StateBoard[x, y] == PlayerNum && StateBoard[x, y + 1] == PlayerNum && StateBoard[x, y + 2] == PlayerNum && StateBoard[x, y + 3] == PlayerNum)
                 {
                     return true;
                 }
             }
         }
         //y = x line 
-        for (int x = 0; x < LenghttOfBoard -3 ; x++)
+        for (int x = 0; x < LenghttOfBoard - 3; x++)
         {
             for (int y = 0; y < HeightOfBoard - 3; y++)
             {
-                if (StateBoard[x, y+3] == PlayerNum && StateBoard[x + 1, y + 2] == PlayerNum && StateBoard[x + 2, y + 1] == PlayerNum && StateBoard[x + 3, y ] == PlayerNum)
+                if (StateBoard[x, y + 3] == PlayerNum && StateBoard[x + 1, y + 2] == PlayerNum && StateBoard[x + 2, y + 1] == PlayerNum && StateBoard[x + 3, y] == PlayerNum)
                 {
                     return true;
                 }
-                if (StateBoard[x, y] == PlayerNum && StateBoard[x + 1, y + 1] == PlayerNum && StateBoard[x + 2, y + 2] == PlayerNum && StateBoard[x + 3, y+3] == PlayerNum)
+                if (StateBoard[x, y] == PlayerNum && StateBoard[x + 1, y + 1] == PlayerNum && StateBoard[x + 2, y + 2] == PlayerNum && StateBoard[x + 3, y + 3] == PlayerNum)
                 {
                     return true;
                 }
@@ -144,13 +153,116 @@ public class GameManager : MonoBehaviour
     }
     bool IsDraw()
     {
-        for(int x =0; x< LenghttOfBoard;x++)
+        for (int x = 0; x < LenghttOfBoard; x++)
         {
-            if (StateBoard[x,HeightOfBoard -1] == 0)
+            if (StateBoard[x, HeightOfBoard - 1] == 0)
             {
                 return false;
             }
         }
         return true;
     }
+
+
+    // Connect Four MiniMax Algorithma Ai
+
+    void PlayAi(int column)
+    {
+        Player1Ghost.SetActive(false);
+        Player2Ghost.SetActive(false);
+        if (StateBoard[column, HeightOfBoard - 1] == 0)
+        {
+            for (int Raw = 0; Raw < HeightOfBoard; Raw++)
+            {
+                if (StateBoard[column, Raw] == 0)
+                {
+
+                    StateBoard[column, Raw] = 2;
+                    FallingPiece = Instantiate(Player2, SpawnLocation[column].transform.position, new Quaternion(0, 90, 90, 0));
+                    FallingPiece.GetComponent<Rigidbody>().velocity = new Vector3(0, 0.1f, 0);
+                    Debug.Log("Column ,Raw = " + column + " , " + Raw);
+                }
+                
+            }
+        }
+        Debug.Log("Play Ai ");
+
+    }
+    bool UpdateAiBoard(int[,] Board , int column)
+    {
+        for (int Raw = 0; Raw < HeightOfBoard; Raw++)
+        {
+            if (StateBoard[column, Raw] == 0)
+            {
+                if (Player1Turn)
+                {
+                    StateBoard[column, Raw] = 1;
+                }
+                else
+                {
+                    StateBoard[column, Raw] = 2;
+                }
+                //Debug.Log("Column ,Raw = " + column + " , " + Raw);
+                return true;
+            }
+        }
+        return false;
+    }
+    int BestMove(int[,] Board)
+    {
+        
+        for(int column = 0; column < LenghttOfBoard -1; column++)
+        {
+            UpdateAiBoard(Board , column);
+            // Horizontal
+            for (int x = 0; x < LenghttOfBoard - 3; x++)
+            {
+                for (int y = 0; y < HeightOfBoard; y++)
+                {
+                    if (StateBoard[x, y] == 2 && StateBoard[x + 1, y] == 2 && StateBoard[x + 2, y] == 2 && StateBoard[x + 3, y] == 2)
+                    {
+                        return column;
+                    }
+                }
+            }
+            //Vertical
+            for (int x = 0; x < LenghttOfBoard; x++)
+            {
+                for (int y = 0; y < HeightOfBoard - 3; y++)
+                {
+                    if (StateBoard[x, y] == 2 && StateBoard[x, y + 1] == 2 && StateBoard[x, y + 2] == 2 && StateBoard[x, y + 3] == 2)
+                    {
+                        return column;
+                    }
+                }
+            }
+            //y = x line 
+            for (int x = 0; x < LenghttOfBoard - 3; x++)
+            {
+                for (int y = 0; y < HeightOfBoard - 3; y++)
+                {
+                    if (StateBoard[x, y + 3] == 2 && StateBoard[x + 1, y + 2] == 2 && StateBoard[x + 2, y + 1] == 2 && StateBoard[x + 3, y] == 2)
+                    {
+                        return column;
+                    }
+                    if (StateBoard[x, y] == 2 && StateBoard[x + 1, y + 1] == 2 && StateBoard[x + 2, y + 2] == 2 && StateBoard[x + 3, y + 3] == 2)
+                    {
+                        return column;
+                    }
+                }
+            }
+        }
+        
+        
+
+
+
+        return 0;
+    }
+
+
+
+
+   
 }
+    
