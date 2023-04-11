@@ -1,0 +1,9 @@
+diff a/Assets/scripts/GameManager.cs b/Assets/scripts/GameManager.cs	(rejected hunks)
+@@ -28,7 +28,6 @@
+     {
+         //Debug.Log("Selected Column + " + column);
+     }
+-
+     public void HoverCloumn(int column) 
+     {
+         if (StateBoard[column , HeightOfBoard -1 ] == 0 && (FallingPiece == null || FallingPiece.GetComponent<Rigidbody>().velocity == Vector3.zero))

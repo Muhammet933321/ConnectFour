@@ -63,10 +63,6 @@ public class GameManager : MonoBehaviour
                     {
                         Debug.LogWarning("Player 1 win");
                     }
-
-                    
-                    PlayAi(BestMove(StateBoard));
-                    Player1Turn = true;
                     
                         
                 }
@@ -164,105 +160,7 @@ public class GameManager : MonoBehaviour
     }
 
 
-    // Connect Four MiniMax Algorithma Ai
-
-    void PlayAi(int column)
-    {
-        Player1Ghost.SetActive(false);
-        Player2Ghost.SetActive(false);
-        if (StateBoard[column, HeightOfBoard - 1] == 0)
-        {
-            for (int Raw = 0; Raw < HeightOfBoard; Raw++)
-            {
-                if (StateBoard[column, Raw] == 0)
-                {
-
-                    StateBoard[column, Raw] = 2;
-                    FallingPiece = Instantiate(Player2, SpawnLocation[column].transform.position, new Quaternion(0, 90, 90, 0));
-                    FallingPiece.GetComponent<Rigidbody>().velocity = new Vector3(0, 0.1f, 0);
-                    Debug.Log("Column ,Raw = " + column + " , " + Raw);
-                }
-                
-            }
-        }
-        Debug.Log("Play Ai ");
-
-    }
-    bool UpdateAiBoard(int[,] Board , int column)
-    {
-        for (int Raw = 0; Raw < HeightOfBoard; Raw++)
-        {
-            if (StateBoard[column, Raw] == 0)
-            {
-                if (Player1Turn)
-                {
-                    StateBoard[column, Raw] = 1;
-                }
-                else
-                {
-                    StateBoard[column, Raw] = 2;
-                }
-                //Debug.Log("Column ,Raw = " + column + " , " + Raw);
-                return true;
-            }
-        }
-        return false;
-    }
-    int BestMove(int[,] Board)
-    {
-        
-        for(int column = 0; column < LenghttOfBoard -1; column++)
-        {
-            UpdateAiBoard(Board , column);
-            // Horizontal
-            for (int x = 0; x < LenghttOfBoard - 3; x++)
-            {
-                for (int y = 0; y < HeightOfBoard; y++)
-                {
-                    if (StateBoard[x, y] == 2 && StateBoard[x + 1, y] == 2 && StateBoard[x + 2, y] == 2 && StateBoard[x + 3, y] == 2)
-                    {
-                        return column;
-                    }
-                }
-            }
-            //Vertical
-            for (int x = 0; x < LenghttOfBoard; x++)
-            {
-                for (int y = 0; y < HeightOfBoard - 3; y++)
-                {
-                    if (StateBoard[x, y] == 2 && StateBoard[x, y + 1] == 2 && StateBoard[x, y + 2] == 2 && StateBoard[x, y + 3] == 2)
-                    {
-                        return column;
-                    }
-                }
-            }
-            //y = x line 
-            for (int x = 0; x < LenghttOfBoard - 3; x++)
-            {
-                for (int y = 0; y < HeightOfBoard - 3; y++)
-                {
-                    if (StateBoard[x, y + 3] == 2 && StateBoard[x + 1, y + 2] == 2 && StateBoard[x + 2, y + 1] == 2 && StateBoard[x + 3, y] == 2)
-                    {
-                        return column;
-                    }
-                    if (StateBoard[x, y] == 2 && StateBoard[x + 1, y + 1] == 2 && StateBoard[x + 2, y + 2] == 2 && StateBoard[x + 3, y + 3] == 2)
-                    {
-                        return column;
-                    }
-                }
-            }
-        }
-        
-        
-
-
-
-        return 0;
-    }
-
-
-
-
+    
    
 }
     
