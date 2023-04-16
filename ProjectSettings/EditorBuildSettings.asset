@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/PlayTwoPlayer.unity
     guid: 387febb77d24a1a40adb8370d2b56650
+  - enabled: 1
+    path: Assets/Scenes/LoadingMenu.unity
+    guid: 25f1f8d8883c2aa45a4827b09661e55e
   m_configObjects: {}
