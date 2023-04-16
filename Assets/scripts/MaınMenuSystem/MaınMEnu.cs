@@ -9,19 +9,19 @@ public class MaınMEnu : MonoBehaviour
 {
 
 
-    void MultiplayerGame()
+     public void MultiplayerGame()
     {
         SceneManager.LoadScene("LoadingMenu");
 
     }
 
-    void OnlineGame()
+    public void OnlineGame()
     {
 
 
     }
 
-    void PlayTwoPlayer()
+    public void PlayTwoPlayer()
     {
 
 

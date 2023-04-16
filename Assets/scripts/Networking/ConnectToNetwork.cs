@@ -7,7 +7,6 @@ using UnityEngine.SceneManagement;
 public class ConnectToNetwork : Photon.PunBehaviour
 {
     string GameVersion = "1.0";
-    private float ConnectToDelay = 2f;
     void Awake()
     {
 
