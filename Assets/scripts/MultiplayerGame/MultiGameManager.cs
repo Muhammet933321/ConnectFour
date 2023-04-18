@@ -10,39 +10,100 @@ public class MultiGameManager : Photon.PunBehaviour
     public GameObject Player2;
     public GameObject Player1Ghost;
     public GameObject Player2Ghost;
-    GameObject FallingPiece;
-
-    
-    
-    
-
-    
     public GameObject[] SpawnLocation;
-    bool Player1Turn;
+    private GameObject FallingPiece;
+    private bool CanPlay;
+    private bool AmIPlayer1;
+    private bool IsMyTurn;
+
+
+
     int HeightOfBoard = 6;
-    int PlayerId;
     int LenghttOfBoard = 7;
-
-
     int[,] StateBoard;
+
+    /* bool IsMyTurn()
+     {
+         if(PhotonNetwork.player.GetFinishedTurn() == 2 && AmIPlayer1 || PhotonNetwork.player.GetFinishedTurn() == 1 && !AmIPlayer1) 
+                 return true;
+         else
+         {
+             if (PhotonNetwork.player.GetFinishedTurn() == 0 && AmIPlayer1)
+             {
+                 return true;
+             }
+
+             return false;
+         }
+
+
+
+     }*/
+
+
+    
+    
+
     private void Awake()
     {
-        Player1Turn = true;
         StateBoard = new int[LenghttOfBoard, HeightOfBoard];
+        PhotonNetwork.player.SetFinishedTurn(1);
         Player1Ghost.SetActive(false);
         Player2Ghost.SetActive(false);
-        //PhotonNetwork.player.Get(1).ID;
+        CanPlay = false;
 
-        
+
+        /*
+        if (PhotonNetwork.player.GetNext().ID == 3)
+        {
+            Debug.Log("2. oyuncu bekleniyor");
+            CanPlay = false;
+            AmIPlayer1 = true;
+        }
+        else
+        {
+            Debug.Log("Oyun Basliyor");
+            CanPlay = true;
+            AmIPlayer1 = false;
+        }
+        */
     }
+
+    [PunRPC]
+    void Info()
+    {
+
+        Debug.Log("Bana Erisildi");
+    }
+    
+
     private void Update()
     {
-        
-        
+        if (AmIPlayer1)
+            GetComponent<PhotonView>().RPC("Info", PhotonNetwork.player.GetNextFor(1), null);
+        else
+            GetComponent<PhotonView>().RPC("Info", PhotonNetwork.player.GetNextFor(2), null);
+
+
     }
     void Start()
     {
-        Debug.Log("Player ID = " + PlayerId );
+        if(PhotonNetwork.player.GetNextFor(1) == null)
+        {
+            Debug.Log("2. Oyuncu bekleniyor");
+            AmIPlayer1 = true;
+            IsMyTurn= true;
+            CanPlay = false;
+        } 
+        else
+        {
+            Debug.Log("Oyun Basliyor ");
+            AmIPlayer1= false;
+            CanPlay = true;
+            IsMyTurn= false;
+            
+        }
+            
     }
     public void SelectColumn(int column)
     {
@@ -52,15 +113,19 @@ public class MultiGameManager : Photon.PunBehaviour
     {
         if (StateBoard[column, HeightOfBoard - 1] == 0 && (FallingPiece == null || FallingPiece.GetComponent<Rigidbody>().velocity == Vector3.zero))
         {
-            if (Player1Turn)
+            if (IsMyTurn)
             {
-                Player1Ghost.SetActive(true);
-                Player1Ghost.transform.position = SpawnLocation[column].transform.position;
-            }
-            else
-            {
-                Player2Ghost.SetActive(true);
-                Player2Ghost.transform.position = SpawnLocation[column].transform.position;
+                if(AmIPlayer1)
+                {
+                    Player1Ghost.SetActive(true);
+                    Player1Ghost.transform.position = SpawnLocation[column].transform.position;
+                }
+                else
+                {
+                    Player2Ghost.SetActive(true);
+                    Player2Ghost.transform.position = SpawnLocation[column].transform.position;
+                }
+                
             }
         }
     }
@@ -68,41 +133,55 @@ public class MultiGameManager : Photon.PunBehaviour
     {
         if (StateBoard[column, HeightOfBoard - 1] == 0 && (FallingPiece == null || FallingPiece.GetComponent<Rigidbody>().velocity == Vector3.zero))
         {
-            if (UpdateBoardState(column))
-            {
-                Player1Ghost.SetActive(false);
-                Player2Ghost.SetActive(false);
-                if (Player1Turn)
+                if (UpdateBoardState(column))
                 {
-                    
-                    PhotonNetwork.Instantiate(Player1.name, SpawnLocation[column].transform.position, new Quaternion(0, 90, 90, 0), 0);
+                    Player1Ghost.SetActive(false);
+                    Player2Ghost.SetActive(false);
+                    if (IsMyTurn)
+                    {
+                    if(AmIPlayer1)
+                        PhotonNetwork.Instantiate(Player1.name, SpawnLocation[column].transform.position, new Quaternion(0, 90, 90, 0), 0);
                     // FallingPiece.GetComponent<Rigidbody>().velocity = new Vector3(0, 0.1f, 0);
-                    GetComponent<PunTurnManager>();
+                    else
+                        PhotonNetwork.Instantiate(Player2.name, SpawnLocation[column].transform.position, new Quaternion(0, 90, 90, 0), 0);
 
-                    if (DidWin(1))
-                    {
-                        Debug.LogWarning("Player 1 win");
+                    GetComponent<PhotonView>().RPC("EnemyTurn",PhotonNetwork.player.GetNext(),null);
+                    IsMyTurn= false;
+                        if (DidWin(1))
+                        {
+                            Debug.LogWarning("Player 1 win");
+                        }
+
+
                     }
-                    
-                        
-                }
-               /* else
-                {
-                    PhotonNetwork.Instantiate(Player2.name, SpawnLocation[column].transform.position,new Quaternion(0, 90, 90, 0), 0);
-                     // FallingPiece.GetComponent<Rigidbody>().velocity = new Vector3(0, 0.1f, 0);
-                    Player1Turn = true;
-                    if (DidWin(2))
+                    /* else
+                     {
+                         PhotonNetwork.Instantiate(Player2.name, SpawnLocation[column].transform.position,new Quaternion(0, 90, 90, 0), 0);
+                          // FallingPiece.GetComponent<Rigidbody>().velocity = new Vector3(0, 0.1f, 0);
+                         Player1Turn = true;
+                         if (DidWin(2))
+                         {
+                             Debug.LogWarning("Player 2 win");
+                         }
+                     }*/
+                    if (IsDraw())
                     {
-                        Debug.LogWarning("Player 2 win");
+                        Debug.LogWarning("Draw!");
                     }
-                }*/
-                if (IsDraw())
-                {
-                    Debug.LogWarning("Draw!");
                 }
-            }
+            
         }
     }
+
+    [PunRPC]
+    void EnemyTurn()
+    {
+        IsMyTurn = true;
+        Debug.Log("Sira degisti");
+
+    }
+
+    [PunRPC]
     bool UpdateBoardState(int column)
     {
         
@@ -110,8 +189,9 @@ public class MultiGameManager : Photon.PunBehaviour
         {
             if (StateBoard[column, Raw] == 0)
             {
-                if (Player1Turn)
+                if (AmIPlayer1)
                 {
+                    
                     StateBoard[column, Raw] = 1;
                 }
                 else
