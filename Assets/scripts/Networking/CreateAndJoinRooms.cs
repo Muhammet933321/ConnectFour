@@ -18,7 +18,10 @@ public class CreateAndJoinRooms : Photon.PunBehaviour
     }
     public void CreateRoom()
     {
-        PhotonNetwork.CreateRoom(CreateInput.text);
+        RoomOptions roomOptions = new RoomOptions();
+        roomOptions.MaxPlayers= 2;
+
+        PhotonNetwork.CreateRoom(CreateInput.text ,roomOptions, null);
 
     }
     public void JoinRoom()
@@ -27,6 +30,8 @@ public class CreateAndJoinRooms : Photon.PunBehaviour
     }
     public override void OnJoinedRoom()
     {
+
+
         PhotonNetwork.LoadLevel("PlayMultiplayerGame");
     }
 }

@@ -11,13 +11,13 @@ public class MaınMEnu : MonoBehaviour
 
      public void MultiplayerGame()
     {
-        SceneManager.LoadScene("LoadingMenu");
+        SceneManager.LoadScene("LoadingMilti");
 
     }
 
     public void OnlineGame()
     {
-
+        SceneManager.LoadScene("LoadingOnline");
 
     }
 

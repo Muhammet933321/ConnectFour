@@ -4,7 +4,7 @@ using UnityEngine;
 using Photon.Realtime;
 using UnityEngine.SceneManagement;
 
-public class ConnectToNetwork : Photon.PunBehaviour
+public class LoadingMultiC : Photon.PunBehaviour
 {
     string GameVersion = "1.0";
     void Awake()
@@ -20,7 +20,7 @@ public class ConnectToNetwork : Photon.PunBehaviour
         PhotonNetwork.CreateRoom(null);  
 
     }
-
+    
     public override void OnConnectedToMaster()
     {
         PhotonNetwork.JoinLobby(null);
@@ -29,5 +29,6 @@ public class ConnectToNetwork : Photon.PunBehaviour
     public override void OnJoinedLobby()
     {
         SceneManager.LoadScene("Lobby");
+        
     }
 }
