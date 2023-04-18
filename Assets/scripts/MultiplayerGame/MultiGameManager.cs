@@ -12,25 +12,37 @@ public class MultiGameManager : Photon.PunBehaviour
     public GameObject Player2Ghost;
     GameObject FallingPiece;
 
+    
+    
+    
 
+    
     public GameObject[] SpawnLocation;
     bool Player1Turn;
     int HeightOfBoard = 6;
+    int PlayerId;
     int LenghttOfBoard = 7;
 
 
     int[,] StateBoard;
-    string GameVersion = "1.0";
     private void Awake()
-    {
-        //PhotonNetwork.ConnectUsingSettings(GameVersion);
-    }
-    private void Start()
     {
         Player1Turn = true;
         StateBoard = new int[LenghttOfBoard, HeightOfBoard];
         Player1Ghost.SetActive(false);
         Player2Ghost.SetActive(false);
+        //PhotonNetwork.player.Get(1).ID;
+
+        
+    }
+    private void Update()
+    {
+        
+        
+    }
+    void Start()
+    {
+        Debug.Log("Player ID = " + PlayerId );
     }
     public void SelectColumn(int column)
     {
@@ -60,11 +72,13 @@ public class MultiGameManager : Photon.PunBehaviour
             {
                 Player1Ghost.SetActive(false);
                 Player2Ghost.SetActive(false);
-                if (Player1Turn == true)
+                if (Player1Turn)
                 {
+                    
                     PhotonNetwork.Instantiate(Player1.name, SpawnLocation[column].transform.position, new Quaternion(0, 90, 90, 0), 0);
                     // FallingPiece.GetComponent<Rigidbody>().velocity = new Vector3(0, 0.1f, 0);
-                    Player1Turn = false;
+                    GetComponent<PunTurnManager>();
+
                     if (DidWin(1))
                     {
                         Debug.LogWarning("Player 1 win");
@@ -72,7 +86,7 @@ public class MultiGameManager : Photon.PunBehaviour
                     
                         
                 }
-                else
+               /* else
                 {
                     PhotonNetwork.Instantiate(Player2.name, SpawnLocation[column].transform.position,new Quaternion(0, 90, 90, 0), 0);
                      // FallingPiece.GetComponent<Rigidbody>().velocity = new Vector3(0, 0.1f, 0);
@@ -81,7 +95,7 @@ public class MultiGameManager : Photon.PunBehaviour
                     {
                         Debug.LogWarning("Player 2 win");
                     }
-                }
+                }*/
                 if (IsDraw())
                 {
                     Debug.LogWarning("Draw!");
