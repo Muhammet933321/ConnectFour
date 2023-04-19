@@ -9,11 +9,14 @@ public class LoadingOnlineC : Photon.PunBehaviour
     string GameVersion = "1.0";
     int TryRandomRoom = 0;
     bool TryToJoin = true;
+    RoomOptions roomOP;
     void Awake()
     {
 
         PhotonNetwork.ConnectUsingSettings(GameVersion);
 
+        roomOP = new RoomOptions();
+        roomOP.MaxPlayers = 2;
 
     }
 
@@ -36,10 +39,15 @@ public class LoadingOnlineC : Photon.PunBehaviour
         Debug.Log("Try Join Room");
         PhotonNetwork.JoinRoom("Room" + TryRandomRoom.ToString());
     }
+    private void TryCreateRoom()
+    {
+        Debug.Log("Try Create Room");
+        PhotonNetwork.CreateRoom("Room" + TryRandomRoom.ToString());
+    }
 
     public override void OnJoinedRoom()
     {
-        Debug.Log("Finded The Random Game");
+        Debug.Log("Created Room" + TryRandomRoom.ToString());
         SceneManager.LoadScene("PlayMultiplayerGame");
     }
 
@@ -57,28 +65,34 @@ public class LoadingOnlineC : Photon.PunBehaviour
                 Debug.Log("Didn't Find Waiting Game");
                 TryToJoin = false;
                 TryRandomRoom = 0;
-                TryJoinRoom();
+                TryCreateRoom();
             }    
                 
         }
-        else if(TryRandomRoom < 10 && !TryToJoin)
+        else if(TryRandomRoom < 10 && TryToJoin == false)
         {
             
-            RoomOptions roomOP = new RoomOptions();
-            roomOP.MaxPlayers = 2;
             Debug.Log("Created Room" + TryRandomRoom.ToString());
             PhotonNetwork.JoinOrCreateRoom("Room" + TryRandomRoom.ToString(), roomOP, null);
+
         }
         else
         {
             Debug.Log("Couldn't Find A Emnpty Room All Rooms Is Full");
             SceneManager.LoadScene("MainMenu");
         }
-            
-
         
-
     }
+    /*
+    public override void OnPhotonCreateRoomFailed(object[] codeAndMsg)
+    {
+        
+        Debug.Log("Created Room" + TryRandomRoom.ToString());
+        TryRandomRoom++;
+        PhotonNetwork.CreateRoom("Room" + TryRandomRoom.ToString(), roomOP, null);
+        
+    }
+    */
 
 
     /*
