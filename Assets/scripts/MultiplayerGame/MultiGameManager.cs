@@ -153,6 +153,9 @@ public class MultiGameManager : Photon.PunBehaviour
                     else
                         PhotonNetwork.Instantiate(Player2.name, SpawnLocation[column].transform.position, new Quaternion(0, 90, 90, 0), 0);
 
+
+                    
+
                     GetComponent<PhotonView>().RPC("EnemyUpdateBoardState", PhotonNetwork.player.GetNext(), column);
                     GetComponent<PhotonView>().RPC("EnemyTurn",PhotonNetwork.player.GetNext(),null);
                     IsMyTurn= false;
