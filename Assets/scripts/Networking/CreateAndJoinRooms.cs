@@ -20,7 +20,7 @@ public class CreateAndJoinRooms : Photon.PunBehaviour
     {
         RoomOptions roomOptions = new RoomOptions();
         roomOptions.MaxPlayers= 2;
-
+        
         PhotonNetwork.CreateRoom(CreateInput.text ,roomOptions, null);
 
     }
