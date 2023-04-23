@@ -47,7 +47,7 @@ public class LoadingOnlineC : Photon.PunBehaviour
 
     public override void OnJoinedRoom()
     {
-        Debug.Log("Created Room" + TryRandomRoom.ToString());
+        Debug.Log("Joined Room" + TryRandomRoom.ToString());
         SceneManager.LoadScene("PlayMultiplayerGame");
     }
 
@@ -83,7 +83,7 @@ public class LoadingOnlineC : Photon.PunBehaviour
         }
         
     }
-    /*
+    
     public override void OnPhotonCreateRoomFailed(object[] codeAndMsg)
     {
         
@@ -92,7 +92,7 @@ public class LoadingOnlineC : Photon.PunBehaviour
         PhotonNetwork.CreateRoom("Room" + TryRandomRoom.ToString(), roomOP, null);
         
     }
-    */
+    
 
 
     /*
