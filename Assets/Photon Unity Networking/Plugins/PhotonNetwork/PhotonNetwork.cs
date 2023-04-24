@@ -1617,7 +1617,7 @@ public static class PhotonNetwork
     /// </remarks>
     /// <param name="roomName">Unique name of the room to create.</param>
     /// <returns>If the operation got queued and will be sent.</returns>
-    public static bool CreateRoom(string roomName)
+    public static bool CreateRoom(string roomName, RoomOptions roomOptions)
     {
         return CreateRoom(roomName, null, null, null);
     }

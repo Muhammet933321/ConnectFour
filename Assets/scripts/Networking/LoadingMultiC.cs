@@ -17,7 +17,7 @@ public class LoadingMultiC : Photon.PunBehaviour
 
     public void CreateRoom()
     {
-        PhotonNetwork.CreateRoom(null);  
+        PhotonNetwork.CreateRoom(null , new RoomOptions());  
 
     }
     

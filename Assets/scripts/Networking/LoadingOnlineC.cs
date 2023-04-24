@@ -42,7 +42,7 @@ public class LoadingOnlineC : Photon.PunBehaviour
     private void TryCreateRoom()
     {
         Debug.Log("Try Create Room");
-        PhotonNetwork.CreateRoom("Room" + TryRandomRoom.ToString());
+        PhotonNetwork.CreateRoom("Room" + TryRandomRoom.ToString() , new RoomOptions { });
     }
 
     public override void OnJoinedRoom()
