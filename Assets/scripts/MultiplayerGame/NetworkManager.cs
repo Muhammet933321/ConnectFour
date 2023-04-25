@@ -14,8 +14,7 @@ public class NetworkManager : Photon.PunBehaviour
     private const int MAX_PLAYER = 2;
     private LevelMode PlayerLevel;
     [Header("InputFields")]
-    [SerializeField] private TMP_InputField CreateRoomName;
-    [SerializeField] private TMP_InputField JoinRoomName;
+    [SerializeField] private TMP_InputField RoomName;
 
     private void Awake()
     {
@@ -90,12 +89,12 @@ public class NetworkManager : Photon.PunBehaviour
     public void OnJoinButton()
     {
         
-        PhotonNetwork.JoinRoom(JoinRoomName.text);
+        PhotonNetwork.JoinRoom(RoomName.text);
 
     }
     public void OnCreateButton()
     {
-        PhotonNetwork.CreateRoom(CreateRoomName.text,null);
+        PhotonNetwork.CreateRoom(RoomName.text,null);
 
     }
 

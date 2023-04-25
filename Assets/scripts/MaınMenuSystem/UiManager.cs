@@ -3,34 +3,34 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UiManager : MonoBehaviour
 {
     [SerializeField] private NetworkManager networkManager;
 
-    [Header("MainMenu")]
-    [SerializeField] private GameObject GameModeSelectionScreen;
-    [SerializeField] private GameObject GameSellectSreen;
-    [SerializeField] private GameObject CreateJoin;
+    [Header("Buttons")]
+    [SerializeField] private GameObject GameMode;
+    [SerializeField] private GameObject GameType;
+    [SerializeField] private GameObject PlayFriends;
     [SerializeField] private GameObject FindRandomGame;
-    [SerializeField] private GameObject ConnectToGameScane;
-    [SerializeField] private GameObject GameOverScreen;
-    
-    
+
+
+
 
     private void DisableAllScreen()
     {
-        GameModeSelectionScreen.SetActive(false);
-        GameSellectSreen.SetActive(false);
-        ConnectToGameScane.SetActive(false);
-        GameOverScreen.SetActive(false);
-        CreateJoin.SetActive(false);
+
+        GameMode.SetActive(false);
+        GameType.SetActive(false);
+        PlayFriends.SetActive(false);
         FindRandomGame.SetActive(false);
+        
     }
     private void Awake()
     {
         DisableAllScreen();
-        GameModeSelectionScreen.SetActive(true);
+        GameMode.SetActive(true);
     }
     public void OnSinglePlayerModeSelected()
     {
@@ -40,7 +40,7 @@ public class UiManager : MonoBehaviour
     public void OnOnlineModeSelected()
     {
         DisableAllScreen();
-        GameSellectSreen.SetActive(true);
+        GameType.SetActive(true);
     }
 
     public void OnRandomGameSelected()
@@ -65,7 +65,7 @@ public class UiManager : MonoBehaviour
     public void OnConnectFriends()
     {
         DisableAllScreen();
-        CreateJoin.SetActive(true);
+        PlayFriends.SetActive(true);
         networkManager.SetPlayerLevel((LevelMode)0);
         networkManager.connectFriends();
     }
