@@ -29,38 +29,43 @@ public class NetworkManager : Photon.PunBehaviour
     {
         
         Debug.Log("Looking For Random Room With Game Mode " + PlayerLevel); 
-        PhotonNetwork.JoinRandomRoom(new ExitGames.Client.Photon.Hashtable() { { MODE, PlayerLevel } } , MAX_PLAYER );
+        PhotonNetwork.JoinRandomRoom( new ExitGames.Client.Photon.Hashtable() { { MODE , PlayerLevel } } , MAX_PLAYER);
+        // new ExitGames.Client.Photon.Hashtable() { { MODE, PlayerLevel } }
     }
     public override void OnPhotonRandomJoinFailed(object[] codeAndMsg)
     {
         Debug.Log("Join Random Room Fieled .Creating New One");
-        PhotonNetwork.CreateRoom(null , new RoomOptions
+        PhotonNetwork.CreateRoom(null , new RoomOptions 
         {
-            CustomRoomPropertiesForLobby = new string[] { MODE } ,
-            MaxPlayers = MAX_PLAYER ,
-            CustomRoomProperties = new ExitGames.Client.Photon.Hashtable() { { MODE, 1 } } ,
-
+            
+            CustomRoomPropertiesForLobby = new string[] {MODE} ,
+            MaxPlayers = MAX_PLAYER,
+            CustomRoomProperties =  new ExitGames.Client.Photon.Hashtable() { { MODE , PlayerLevel } } ,
 
         });
-        PhotonNetwork.room.CustomProperties.Add(MODE , 1);
-        // PhotonNetwork.room.SetCustomProperties(new ExitGames.Client.Photon.Hashtable() { { MODE, 1 } });
         
+    }
+    
+
+    public override void OnCreatedRoom()
+    {
+        // Creating Room Properties
+        PhotonNetwork.room.MaxPlayers= MAX_PLAYER;
+        PhotonNetwork.room.SetCustomProperties(new ExitGames.Client.Photon.Hashtable() { { MODE, PlayerLevel } });
+
     }
     public override void OnJoinedRoom()
     {
-        if (PhotonNetwork.room.CustomProperties[MODE] == null)
-        {
-            Debug.Log($" Room Properties is null . Player Level =  { PlayerLevel }");
-            Debug.Log(PhotonNetwork.room.CustomProperties);
-            Debug.Log(PhotonNetwork.room.CustomProperties[MODE]);
-        }
-        else
-            Debug.Log($"Player {PhotonNetwork.player.ID} Joined the room With {PhotonNetwork.room.CustomProperties[MODE]}");
+            Debug.Log($"Player {PhotonNetwork.player.ID} Joined the room With {(LevelMode)PhotonNetwork.room.CustomProperties[MODE]} MaxPlyaer = {PhotonNetwork.room.MaxPlayers}");
     }
 
     public void SetPlayerLevel(LevelMode levelMode)
     {
         PlayerLevel = levelMode;
         PhotonNetwork.player.SetCustomProperties(new ExitGames.Client.Photon.Hashtable { { MODE, levelMode } } );
+    }
+    public override void OnPhotonPlayerConnected(PhotonPlayer newPlayer)
+    {
+        Debug.Log("New Player Connected The Toom");
     }
 }
