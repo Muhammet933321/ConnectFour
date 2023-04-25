@@ -43,19 +43,31 @@ public class UiManager : MonoBehaviour
         GameSellectSreen.SetActive(true);
     }
 
-    public void OnRandomGameSelevted()
+    public void OnRandomGameSelected()
     {
         DisableAllScreen();
         FindRandomGame.SetActive(true);
+        networkManager.SetPlayerLevel((LevelMode)1);
+        networkManager.connectRandom();
     }
     public void OnFindRandomGameSelected()
     {
         DisableAllScreen();
+
     }
-    public void OnConnect()
+    /*
+    public void OnConnectRandom()
     {
         networkManager.SetPlayerLevel((LevelMode)1);
-        networkManager.connect();  
+        networkManager.connectRandom();  
     }
- 
+    */
+    public void OnConnectFriends()
+    {
+        DisableAllScreen();
+        CreateJoin.SetActive(true);
+        networkManager.SetPlayerLevel((LevelMode)0);
+        networkManager.connectFriends();
+    }
+
 }
