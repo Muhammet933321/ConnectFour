@@ -6,6 +6,7 @@ using Photon.Realtime;
 using ExitGames.Client.Photon;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 using TMPro;
+using Unity.VisualScripting;
 
 public class NetworkManager : Photon.PunBehaviour
 {
@@ -15,10 +16,21 @@ public class NetworkManager : Photon.PunBehaviour
     private LevelMode PlayerLevel;
     [Header("InputFields")]
     [SerializeField] private TMP_InputField RoomName;
+    [SerializeField] private GameObject GameManagerOBJ;
+    [SerializeField] private GameObject BoardInput;
+    [SerializeField] private GameObject UiManagerOBJ;
+    private MultiGameManagerUpdate GameManager;
+    private UiManager UiManagerSC;
+
 
     private void Awake()
     {
+        GameManager = GameManagerOBJ.GetComponent<MultiGameManagerUpdate>();
+        UiManagerSC = UiManagerOBJ.GetComponent<UiManager>();
+        GameManagerOBJ.SetActive(false);
+        BoardInput.SetActive(false);
         PhotonNetwork.automaticallySyncScene = true;
+        
     }
     public void connectRandom()
     {
@@ -81,9 +93,12 @@ public class NetworkManager : Photon.PunBehaviour
         PlayerLevel = levelMode;
         PhotonNetwork.player.SetCustomProperties(new Hashtable { { MODE, levelMode } } );
     }
+    // On Connected Another Player To Room
     public override void OnPhotonPlayerConnected(PhotonPlayer newPlayer)
     {
+        
         Debug.LogError($"Player {newPlayer.ID} Connected The Toom");
+        RoomIsReady();
     }
 
     public void OnJoinButton()
@@ -95,7 +110,18 @@ public class NetworkManager : Photon.PunBehaviour
     public void OnCreateButton()
     {
         PhotonNetwork.CreateRoom(RoomName.text,null);
-
+        UiManagerSC.DisableAllScreen();
+        GameManager.AmIPlayer1 = true;
+        GameManager.IsMyTurn = true;
+        GameManager.CanPlay = false;
+    }
+    public void RoomIsReady()
+    {
+        GameManagerOBJ.SetActive(true);
+        BoardInput.SetActive(true);
+        GameManager.CanPlay = true;
+        Debug.LogError("Game Is Starting");
+        
     }
 
 }

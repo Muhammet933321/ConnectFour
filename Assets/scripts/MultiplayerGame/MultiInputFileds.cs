@@ -9,18 +9,19 @@ public class MultiInputFileds : MonoBehaviour
     public GameObject gm;
     private void Awake()
     {
-        gm.GetComponent<MultiGameManager>().SelectColumn(column);
+        gm.GetComponent<MultiGameManagerUpdate>().SelectColumn(column);
     }
     private void OnMouseOver()
     {
     }
     private void OnMouseUpAsButton()
     {
-        gm.GetComponent<MultiGameManager>().SelectColumn(column);
-        gm.GetComponent<MultiGameManager>().TakeTurn(column);
+        gm.GetComponent<MultiGameManagerUpdate>().SelectColumn(column);
+        gm.GetComponent<MultiGameManagerUpdate>().TakeTurn(column);
     }
     private void OnMouseEnter()
     {
-        gm.GetComponent<MultiGameManager>().HoverCloumn(column);
+        //Debug.LogError($"Mouse On Column {column}");
+        gm.GetComponent<MultiGameManagerUpdate>().HoverCloumn(column);
     }
 }

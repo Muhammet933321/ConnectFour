@@ -18,7 +18,7 @@ public class UiManager : MonoBehaviour
 
 
 
-    private void DisableAllScreen()
+    public void DisableAllScreen()
     {
 
         GameMode.SetActive(false);
