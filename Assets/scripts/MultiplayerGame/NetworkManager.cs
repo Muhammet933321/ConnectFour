@@ -34,13 +34,13 @@ public class NetworkManager : Photon.PunBehaviour
 
     public override void OnConnectedToMaster()
     {
-        Debug.Log($"Connected to master. Loading to Select Game Mode");
+        Debug.LogError($"Connected to master. Loading to Select Game Mode");
 
     }
     public void JoinRandomRoom()
     {
         
-        Debug.Log("Looking For Random Room With Game Mode " + PlayerLevel);
+        Debug.LogError("Looking For Random Room With Game Mode " + PlayerLevel);
 
         Hashtable RANDOM_HASH = new Hashtable { { MODE , PlayerLevel } };
         
@@ -71,7 +71,7 @@ public class NetworkManager : Photon.PunBehaviour
     }
     public override void OnJoinedRoom()
     {
-            Debug.Log($"Player {PhotonNetwork.player.ID} Joined the room With  " +
+            Debug.LogError($"Player {PhotonNetwork.player.ID} Joined the room With  " +
                 $"{(LevelMode)PhotonNetwork.room.CustomProperties[MODE]} " +
                 $"MaxPlyaer = {PhotonNetwork.room.MaxPlayers}");
     }
@@ -83,7 +83,7 @@ public class NetworkManager : Photon.PunBehaviour
     }
     public override void OnPhotonPlayerConnected(PhotonPlayer newPlayer)
     {
-        Debug.Log($"Player {newPlayer.ID} Connected The Toom");
+        Debug.LogError($"Player {newPlayer.ID} Connected The Toom");
     }
 
     public void OnJoinButton()
