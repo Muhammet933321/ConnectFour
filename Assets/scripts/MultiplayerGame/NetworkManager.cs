@@ -7,6 +7,7 @@ using ExitGames.Client.Photon;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 using TMPro;
 using Unity.VisualScripting;
+using System;
 
 public class NetworkManager : Photon.PunBehaviour
 {
@@ -19,12 +20,14 @@ public class NetworkManager : Photon.PunBehaviour
     [SerializeField] private GameObject GameManagerOBJ;
     [SerializeField] private GameObject BoardInput;
     [SerializeField] private GameObject UiManagerOBJ;
+    private PhotonView photonViewOBJ ;
     private MultiGameManagerUpdate GameManager;
     private UiManager UiManagerSC;
 
 
     private void Awake()
     {
+        photonViewOBJ = GetComponent<PhotonView>();
         GameManager = GameManagerOBJ.GetComponent<MultiGameManagerUpdate>();
         UiManagerSC = UiManagerOBJ.GetComponent<UiManager>();
         GameManagerOBJ.SetActive(false);
@@ -86,6 +89,7 @@ public class NetworkManager : Photon.PunBehaviour
             Debug.LogError($"Player {PhotonNetwork.player.ID} Joined the room With  " +
                 $"{(LevelMode)PhotonNetwork.room.CustomProperties[MODE]} " +
                 $"MaxPlyaer = {PhotonNetwork.room.MaxPlayers}");
+        
     }
 
     public void SetPlayerLevel(LevelMode levelMode)
@@ -98,7 +102,7 @@ public class NetworkManager : Photon.PunBehaviour
     {
         
         Debug.LogError($"Player {newPlayer.ID} Connected The Toom");
-        RoomIsReady();
+        RoomIsReady(newPlayer);
     }
 
     public void OnJoinButton()
@@ -115,13 +119,28 @@ public class NetworkManager : Photon.PunBehaviour
         GameManager.IsMyTurn = true;
         GameManager.CanPlay = false;
     }
-    public void RoomIsReady()
+    public void RoomIsReady(PhotonPlayer newPlayer)
     {
         GameManagerOBJ.SetActive(true);
         BoardInput.SetActive(true);
         GameManager.CanPlay = true;
+        photonViewOBJ.RPC("RPC_GameStart", newPlayer , null);
         Debug.LogError("Game Is Starting");
         
     }
+
+    [PunRPC]
+    public void RPC_GameStart()
+    {
+        GameManagerOBJ.SetActive(true);
+        BoardInput.SetActive(true);
+        GameManager.CanPlay = true;
+        GameManager.AmIPlayer1 = false;
+        GameManager.IsMyTurn = false;
+        GameManager.CanPlay = true;
+        UiManagerSC.DisableAllScreen();
+        Debug.LogError("RPC GAME IS STARTING");
+    }
+    
 
 }

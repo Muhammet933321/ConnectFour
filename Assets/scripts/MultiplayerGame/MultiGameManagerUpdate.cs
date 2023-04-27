@@ -12,6 +12,7 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
     public GameObject Player2Ghost;
     public GameObject[] SpawnLocation;
     private GameObject FallingPiece;
+    private PhotonView photonViewOBJ;
     public bool CanPlay;
     public bool AmIPlayer1;
     public bool IsMyTurn;
@@ -47,6 +48,7 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
 
     private void Awake()
     {
+        photonViewOBJ = GetComponent<PhotonView>();
         StateBoard = new int[LenghttOfBoard, HeightOfBoard];
         Player1Ghost.SetActive(false);
         Player2Ghost.SetActive(false);
@@ -135,6 +137,7 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
                     {
                         Debug.LogError("Moved a Pieces");
                         PhotonNetwork.Instantiate(Player1.name, SpawnLocation[column].transform.position, new Quaternion(0, 90, 90, 0), 0);
+                        photonViewOBJ.RPC("EnemyTurn" , PhotonNetwork.player.GetNext(),null);
 
 
                     }
@@ -142,13 +145,13 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
                     {
                         Debug.LogError("Moved a Pieces");
                         PhotonNetwork.Instantiate(Player2.name, SpawnLocation[column].transform.position, new Quaternion(0, 90, 90, 0), 0);
-
+                        photonViewOBJ.RPC("EnemyTurn", PhotonNetwork.player.GetNext(), null);
                     }
 
                     IsMyTurn = false;
                     if (DidWin(1))
                     {
-                        Debug.LogWarning("Player 1 win");
+                        Debug.LogError("Player 1 win");
                     }
 
 
@@ -176,7 +179,6 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
     void EnemyTurn()
     {
         IsMyTurn = true;
-        Debug.Log("Sira degisti");
 
     }
 
@@ -190,10 +192,12 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
             {
                 if (AmIPlayer1)
                 {
+                    Debug.LogError("Updated Board State");
                     StateBoard[column, Raw] = 2;
                 }
                 else
                 {
+                    Debug.LogError("Enemy Moved a piece");
                     StateBoard[column, Raw] = 1;
                 }
                 //Debug.Log("Column ,Raw = " + column + " , " + Raw);
@@ -213,10 +217,12 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
                 if (AmIPlayer1)
                 {
 
+                    photonViewOBJ.RPC("EnemyUpdateBoardState", PhotonNetwork.player.GetNext(),column);
                     StateBoard[column, Raw] = 1;
                 }
                 else
                 {
+                    photonViewOBJ.RPC("EnemyUpdateBoardState", PhotonNetwork.player.GetNext(), column);
                     StateBoard[column, Raw] = 2;
                 }
                 //Debug.Log("Column ,Raw = " + column + " , " + Raw);
