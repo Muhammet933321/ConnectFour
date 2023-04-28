@@ -155,6 +155,10 @@ public class NetworkManager : Photon.PunBehaviour
         UiManagerSC.OnLose();
 
     }
+    public bool IsConnectedFun()
+    {
+        return PhotonNetwork.connected;
+    }
 
 
 }

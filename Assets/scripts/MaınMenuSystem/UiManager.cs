@@ -33,8 +33,7 @@ public class UiManager : MonoBehaviour
     }
     private void Awake()
     {
-        DisableAllScreen();
-        GameMode.SetActive(true);
+        MainMenuButton();
     }
     public void OnSinglePlayerModeSelected()
     {
@@ -43,6 +42,10 @@ public class UiManager : MonoBehaviour
 
     public void OnOnlineModeSelected()
     {
+        if(networkManager.IsConnectedFun())
+        {
+            PhotonNetwork.Disconnect();
+        }
         DisableAllScreen();
         GameType.SetActive(true);
     }
@@ -108,5 +111,15 @@ public class UiManager : MonoBehaviour
     public void NewGameButton()
     {
 
+    }
+
+    public void MainMenuButton()
+    {
+        if (networkManager.IsConnectedFun())
+        {
+            PhotonNetwork.Disconnect();
+        }
+        DisableAllScreen();
+        GameMode.SetActive(true);
     }
 }
