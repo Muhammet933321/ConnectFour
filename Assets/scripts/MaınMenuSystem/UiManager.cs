@@ -7,8 +7,9 @@ using UnityEngine.UI;
 
 public class UiManager : MonoBehaviour
 {
-    [Header("NetworkManager")]
+    [Header("Managers")]
     [SerializeField] private NetworkManager networkManager;
+    [SerializeField] private GameObject MultiGameManagerUpdate;
 
     [Header("Buttons")]
     [SerializeField] private GameObject GameMode;
@@ -29,7 +30,6 @@ public class UiManager : MonoBehaviour
         FindRandomGame.SetActive(false);
         WinerScreen.SetActive(false);
         LoserScreen.SetActive(false);
-
     }
     private void Awake()
     {
@@ -78,15 +78,32 @@ public class UiManager : MonoBehaviour
     {
         DisableAllScreen();
         WinerScreen.SetActive(true);
+        networkManager.GetComponent<PhotonView>().RPC("OnLoseRPC" , PhotonNetwork.player.GetNext());
+        MultiGameManagerUpdate.GetComponent<PhotonView>().RPC("EndGame" , PhotonNetwork.player.GetNext());
+        MultiGameManagerUpdate.GetComponent<MultiGameManagerUpdate>().EndGame();
+        
     }
     public void OnLose()
     {
         DisableAllScreen();
-        LoserScreen.SetActive(false);
+        LoserScreen.SetActive(true);
     }
     public void PlayAgainButton()
     {
+       // Debug.LogError("Cliced Play Again Button");
+        MultiGameManagerUpdate.GetComponent<PhotonView>().RPC("ClearBoard", PhotonNetwork.player.GetNext());
+        MultiGameManagerUpdate.GetComponent<PhotonView>().RPC("ClearBoard", PhotonNetwork.player);
+        MultiGameManagerUpdate.GetComponent<PhotonView>().RPC("EnemyWannaPlayAgain", PhotonNetwork.player.GetNext());
+        MultiGameManagerUpdate.GetComponent<MultiGameManagerUpdate>().IWanaPlayAgain = true;
+        MultiGameManagerUpdate.GetComponent<MultiGameManagerUpdate>().ReStartRoom();
+        MultiGameManagerUpdate.GetComponent<PhotonView>().RPC("ReStartRoom", PhotonNetwork.player.GetNext());
 
+        
+
+        
+
+
+        
     }
     public void NewGameButton()
     {

@@ -6,6 +6,7 @@ using Photon.Realtime;
 
 public class MultiGameManagerUpdate : Photon.PunBehaviour
 {
+    [SerializeField] private GameObject UiManagerOBJ;
     public GameObject Player1;
     public GameObject Player2;
     public GameObject Player1Ghost;
@@ -16,6 +17,8 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
     public bool CanPlay;
     public bool AmIPlayer1;
     public bool IsMyTurn;
+    private bool EnemyWanaPlayAgain;
+    public bool IWanaPlayAgain;
 
 
 
@@ -49,10 +52,12 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
     private void Awake()
     {
         photonViewOBJ = GetComponent<PhotonView>();
+        
         StateBoard = new int[LenghttOfBoard, HeightOfBoard];
         Player1Ghost.SetActive(false);
         Player2Ghost.SetActive(false);
         CanPlay = false;
+        EnemyWanaPlayAgain= false;
 
 
         /*
@@ -127,12 +132,13 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
     {
         if (StateBoard[column, HeightOfBoard - 1] == 0 && (FallingPiece == null || FallingPiece.GetComponent<Rigidbody>().velocity == Vector3.zero))
         {
-            if (UpdateBoardState(column))
+            if (IsMyTurn && CanPlay)
+            {
+                if (UpdateBoardState(column))
             {
                 Player1Ghost.SetActive(false);
                 Player2Ghost.SetActive(false);
-                if (IsMyTurn && CanPlay)
-                {
+                
                     if (AmIPlayer1)
                     {
                         Debug.LogError("Moved a Pieces");
@@ -149,10 +155,23 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
                     }
 
                     IsMyTurn = false;
-                    if (DidWin(1))
+                    if(AmIPlayer1)
                     {
-                        Debug.LogError("Player 1 win");
+                        if (DidWin(1))
+                        {
+                            UiManagerOBJ.GetComponent<UiManager>().OnWin();
+                            Debug.LogError("Player 1 win");
+                        }
                     }
+                    else
+                    {
+                        if (DidWin(2))
+                        {
+                            UiManagerOBJ.GetComponent<UiManager>().OnWin();
+                            Debug.LogError("Player 1 win");
+                        }
+                    }
+                    
 
 
                 }
@@ -285,20 +304,53 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
         }
         return true;
     }
-
-    public void CreateNewGame()
+    [PunRPC]
+    public void ClearBoard()
     {
         for (int x = 0; x < HeightOfBoard; x++)
         {
             for(int y = 0; y < LenghttOfBoard; y ++)
             {
-                StateBoard[x,y] = 0;
+                StateBoard[y,x] = 0;
             }
         }
-        Debug.LogError("Cleared BoardState");
+        Debug.LogError("Board Was Cleared");
+    }
 
-        PhotonNetwork.Destroy(Player1.GetComponent<PhotonView>());
-        PhotonNetwork.Destroy(Player2.GetComponent<PhotonView>());
+    [PunRPC]
+    public void ReStartRoom()
+    {
+        if(EnemyWanaPlayAgain && IWanaPlayAgain && PhotonNetwork.player.IsMasterClient)
+        {
+            PhotonNetwork.DestroyAll();
+            CanPlay = true;
+            UiManagerOBJ.GetComponent<UiManager>().DisableAllScreen();
+            GetComponent<PhotonView>().RPC("DisableAllScreen" , PhotonNetwork.player.GetNext());
+            Debug.LogError("ReStartinG The Room");
+            EnemyWanaPlayAgain= false;
+            IWanaPlayAgain= false;
+            
+        }
+        
+    }
+    [PunRPC]
+    public void EndGame()
+    {
+        CanPlay= false;
+        AmIPlayer1 = !AmIPlayer1;
+        
+    }
+    [PunRPC]
+    public void EnemyWannaPlayAgain()
+    {
+        EnemyWanaPlayAgain= true;
+    }
+    [PunRPC]
+    public void DisableAllScreen()
+    {
+        Debug.LogError("Disable All Screen");
+        CanPlay = true;
+        UiManagerOBJ.GetComponent<UiManager>().DisableAllScreen();
     }
 
 

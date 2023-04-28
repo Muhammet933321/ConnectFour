@@ -72,7 +72,13 @@ public class NetworkManager : Photon.PunBehaviour
         RANDOM_ROOM_OPTIONS.CustomRoomProperties = new Hashtable { { MODE , PlayerLevel } };
         
         PhotonNetwork.CreateRoom(null, RANDOM_ROOM_OPTIONS );
-        
+
+        PhotonNetwork.CreateRoom(RoomName.text, null);
+        UiManagerSC.DisableAllScreen();
+        GameManager.AmIPlayer1 = true;
+        GameManager.IsMyTurn = true;
+        GameManager.CanPlay = false;
+
     }
     
 
@@ -141,6 +147,14 @@ public class NetworkManager : Photon.PunBehaviour
         UiManagerSC.DisableAllScreen();
         Debug.LogError("RPC GAME IS STARTING");
     }
-    
+
+    [PunRPC]
+    public void OnLoseRPC()
+    {
+        Debug.LogError("I am Loser");
+        UiManagerSC.OnLose();
+
+    }
+
 
 }

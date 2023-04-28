@@ -45,4 +45,14 @@ MonoBehaviour:
   - OnCreateButton
   - RoomIsReady
   - RPC_GameStart
+  - OnLoseRPC
+  - RemoveAllPieces
+  - DestroyAllPieces
+  - CreateNewGame
+  - ClearBoard
+  - ReJoinTheRoom
+  - EndGame
+  - ReStartRoom
+  - EnemyWannaPlayAgain
+  - DisableAllScreen
   DisableAutoOpenWizard: 1
