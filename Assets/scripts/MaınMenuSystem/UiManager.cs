@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class UiManager : MonoBehaviour
 {
+    [Header("NetworkManager")]
     [SerializeField] private NetworkManager networkManager;
 
     [Header("Buttons")]
@@ -14,7 +15,8 @@ public class UiManager : MonoBehaviour
     [SerializeField] private GameObject GameType;
     [SerializeField] private GameObject PlayFriends;
     [SerializeField] private GameObject FindRandomGame;
-
+    [SerializeField] private GameObject WinerScreen;
+    [SerializeField] private GameObject LoserScreen;
 
 
 
@@ -25,7 +27,9 @@ public class UiManager : MonoBehaviour
         GameType.SetActive(false);
         PlayFriends.SetActive(false);
         FindRandomGame.SetActive(false);
-        
+        WinerScreen.SetActive(false);
+        LoserScreen.SetActive(false);
+
     }
     private void Awake()
     {
@@ -70,4 +74,22 @@ public class UiManager : MonoBehaviour
         networkManager.connectFriends();
     }
 
+    public void OnWin()
+    {
+        DisableAllScreen();
+        WinerScreen.SetActive(true);
+    }
+    public void OnLose()
+    {
+        DisableAllScreen();
+        LoserScreen.SetActive(false);
+    }
+    public void PlayAgainButton()
+    {
+
+    }
+    public void NewGameButton()
+    {
+
+    }
 }

@@ -286,7 +286,20 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
         return true;
     }
 
+    public void CreateNewGame()
+    {
+        for (int x = 0; x < HeightOfBoard; x++)
+        {
+            for(int y = 0; y < LenghttOfBoard; y ++)
+            {
+                StateBoard[x,y] = 0;
+            }
+        }
+        Debug.LogError("Cleared BoardState");
 
+        PhotonNetwork.Destroy(Player1.GetComponent<PhotonView>());
+        PhotonNetwork.Destroy(Player2.GetComponent<PhotonView>());
+    }
 
 
 }
