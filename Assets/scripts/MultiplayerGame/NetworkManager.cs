@@ -50,6 +50,15 @@ public class NetworkManager : Photon.PunBehaviour
     public override void OnConnectedToMaster()
     {
         Debug.LogError($"Connected to master. Loading to Select Game Mode");
+        if(((int)PlayerLevel) == 1)
+        {
+            UiManagerOBJ.GetComponent<UiManager>().RandomGameMenuLoad();
+        }
+        else
+        {
+            UiManagerOBJ.GetComponent<UiManager>().MultiGameMenuLoad();
+        }
+        
 
     }
     public void JoinRandomRoom()
@@ -95,6 +104,7 @@ public class NetworkManager : Photon.PunBehaviour
             Debug.LogError($"Player {PhotonNetwork.player.ID} Joined the room With  " +
                 $"{(LevelMode)PhotonNetwork.room.CustomProperties[MODE]} " +
                 $"MaxPlyaer = {PhotonNetwork.room.MaxPlayers}");
+        UiManagerSC.GameScreenActive("Waiting For Connect A Player");
         
     }
 
@@ -132,7 +142,9 @@ public class NetworkManager : Photon.PunBehaviour
         GameManager.CanPlay = true;
         photonViewOBJ.RPC("RPC_GameStart", newPlayer , null);
         Debug.LogError("Game Is Starting");
-        
+        UiManagerSC.GameScreenActive("Your Turn");
+
+
     }
 
     [PunRPC]
@@ -144,7 +156,7 @@ public class NetworkManager : Photon.PunBehaviour
         GameManager.AmIPlayer1 = false;
         GameManager.IsMyTurn = false;
         GameManager.CanPlay = true;
-        UiManagerSC.DisableAllScreen();
+        UiManagerSC.GameScreenActive("Enemy's Turn");
         Debug.LogError("RPC GAME IS STARTING");
     }
 
@@ -155,9 +167,55 @@ public class NetworkManager : Photon.PunBehaviour
         UiManagerSC.OnLose();
 
     }
+    public void DisConnectFun()
+    {
+        if(PhotonNetwork.connected)
+        {
+            Debug.LogError("Player Is Online .DisConnecting Now");
+            PhotonNetwork.LeaveRoom();
+        }
+        else
+        {
+            Debug.LogError("Player Already Offline");
+        }
+    }
     public bool IsConnectedFun()
     {
-        return PhotonNetwork.connected;
+        if (PhotonNetwork.connected)
+        {
+            Debug.LogError("Player Is Online");
+            return true;
+        }
+        else
+        {
+            Debug.LogError("Player Is Offline");
+            return false;
+        }
+
+    }
+    public void LeaveTheRoomFun()
+    {
+        if (PhotonNetwork.inRoom)
+        {
+            Debug.LogError("Player Is In Room Leaving Now");
+            PhotonNetwork.LeaveRoom();
+        }
+        else
+        {
+            Debug.LogError("Player Already Not In Room");
+        }
+    }
+
+    public override void OnConnectionFail(DisconnectCause cause)
+    {
+        Debug.LogError("Internet Error");
+    }
+    public override void OnPhotonPlayerDisconnected(PhotonPlayer otherPlayer)
+    {
+        Debug.LogError("Enemy DisConnected To Game");
+        GameManager.CanPlay = false;
+        
+        UiManagerSC.EnemyDisConnectedUi();
     }
 
 

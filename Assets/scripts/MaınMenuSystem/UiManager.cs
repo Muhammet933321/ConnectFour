@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,6 +19,15 @@ public class UiManager : MonoBehaviour
     [SerializeField] private GameObject FindRandomGame;
     [SerializeField] private GameObject WinerScreen;
     [SerializeField] private GameObject LoserScreen;
+    [SerializeField] private GameObject GameScreen;
+    [SerializeField] private GameObject EnemyDisConnectedSceene;
+
+    [Header("Texts")]
+    [SerializeField] private TextMeshProUGUI PlayAgainTextWin;
+    [SerializeField] private TextMeshProUGUI PlayAgainTextLose;
+    public TextMeshProUGUI InfoText;
+    
+
 
 
 
@@ -30,6 +40,12 @@ public class UiManager : MonoBehaviour
         FindRandomGame.SetActive(false);
         WinerScreen.SetActive(false);
         LoserScreen.SetActive(false);
+        GameScreen.SetActive(false);
+        EnemyDisConnectedSceene.SetActive(false);
+        PlayAgainTextLose.text = "" +
+            "";
+        PlayAgainTextWin.text = "" +
+            "";
     }
     private void Awake()
     {
@@ -52,10 +68,19 @@ public class UiManager : MonoBehaviour
 
     public void OnRandomGameSelected()
     {
-        DisableAllScreen();
-        FindRandomGame.SetActive(true);
+        
         networkManager.SetPlayerLevel((LevelMode)1);
         networkManager.connectRandom();
+    }
+    public void RandomGameMenuLoad()
+    {
+        DisableAllScreen();
+        FindRandomGame.SetActive(true);
+    }
+    public void MultiGameMenuLoad()
+    {
+        DisableAllScreen();
+        PlayFriends.SetActive(true);
     }
     public void OnFindRandomGameSelected()
     {
@@ -71,8 +96,7 @@ public class UiManager : MonoBehaviour
     */
     public void OnConnectFriends()
     {
-        DisableAllScreen();
-        PlayFriends.SetActive(true);
+        
         networkManager.SetPlayerLevel((LevelMode)0);
         networkManager.connectFriends();
     }
@@ -93,10 +117,10 @@ public class UiManager : MonoBehaviour
     }
     public void PlayAgainButton()
     {
-       // Debug.LogError("Cliced Play Again Button");
+        // Debug.LogError("Cliced Play Again Button");
+        MultiGameManagerUpdate.GetComponent<PhotonView>().RPC("EnemyWannaPlayAgain", PhotonNetwork.player.GetNext());
         MultiGameManagerUpdate.GetComponent<PhotonView>().RPC("ClearBoard", PhotonNetwork.player.GetNext());
         MultiGameManagerUpdate.GetComponent<PhotonView>().RPC("ClearBoard", PhotonNetwork.player);
-        MultiGameManagerUpdate.GetComponent<PhotonView>().RPC("EnemyWannaPlayAgain", PhotonNetwork.player.GetNext());
         MultiGameManagerUpdate.GetComponent<MultiGameManagerUpdate>().IWanaPlayAgain = true;
         MultiGameManagerUpdate.GetComponent<MultiGameManagerUpdate>().ReStartRoom();
         MultiGameManagerUpdate.GetComponent<PhotonView>().RPC("ReStartRoom", PhotonNetwork.player.GetNext());
@@ -115,11 +139,31 @@ public class UiManager : MonoBehaviour
 
     public void MainMenuButton()
     {
-        if (networkManager.IsConnectedFun())
-        {
-            PhotonNetwork.Disconnect();
-        }
+        networkManager.LeaveTheRoomFun();
+
+        networkManager.DisConnectFun();
+
         DisableAllScreen();
+        MultiGameManagerUpdate.GetComponent<MultiGameManagerUpdate>().Player1Ghost.SetActive(false);
+        MultiGameManagerUpdate.GetComponent<MultiGameManagerUpdate>().Player2Ghost.SetActive(false);
         GameMode.SetActive(true);
+    }
+
+    public void GameScreenActive(string Text)
+    {
+        DisableAllScreen();
+        GameScreen.SetActive(true);
+        InfoText.text = Text;
+    }    
+    public void EnemyWannaPlayAgainUi()
+    {
+        PlayAgainTextLose.text = "Enemy Wanna  Play Again";
+        PlayAgainTextWin.text = "Enemy Wanna  Play Again";
+    }
+    public void EnemyDisConnectedUi()
+    {
+        DisableAllScreen();
+        EnemyDisConnectedSceene.SetActive(true);
+        
     }
 }

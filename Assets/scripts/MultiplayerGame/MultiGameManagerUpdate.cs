@@ -144,6 +144,7 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
                         Debug.LogError("Moved a Pieces");
                         PhotonNetwork.Instantiate(Player1.name, SpawnLocation[column].transform.position, new Quaternion(0, 90, 90, 0), 0);
                         photonViewOBJ.RPC("EnemyTurn" , PhotonNetwork.player.GetNext(),null);
+                        UiManagerOBJ.GetComponent<UiManager>().InfoText.text = "Enemy's Turn";
 
 
                     }
@@ -152,6 +153,7 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
                         Debug.LogError("Moved a Pieces");
                         PhotonNetwork.Instantiate(Player2.name, SpawnLocation[column].transform.position, new Quaternion(0, 90, 90, 0), 0);
                         photonViewOBJ.RPC("EnemyTurn", PhotonNetwork.player.GetNext(), null);
+                        UiManagerOBJ.GetComponent<UiManager>().InfoText.text = "Enemy's Turn";
                     }
 
                     IsMyTurn = false;
@@ -197,6 +199,7 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
     [PunRPC]
     void EnemyTurn()
     {
+        UiManagerOBJ.GetComponent<UiManager>().InfoText.text = "Your Turn";
         IsMyTurn = true;
 
     }
@@ -327,11 +330,27 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
             UiManagerOBJ.GetComponent<UiManager>().DisableAllScreen();
             GetComponent<PhotonView>().RPC("DisableAllScreen" , PhotonNetwork.player.GetNext());
             Debug.LogError("ReStartinG The Room");
+            if(AmIPlayer1)
+            {
+                GetComponent<PhotonView>().RPC("LoadGameScreen", PhotonNetwork.player.GetNext() , "Enemy's Turn");
+                UiManagerOBJ.GetComponent<UiManager>().GameScreenActive("Your Turn");
+            }
+            else
+            {
+                UiManagerOBJ.GetComponent<UiManager>().GameScreenActive("Enemy's Turn");
+                GetComponent<PhotonView>().RPC("LoadGameScreen", PhotonNetwork.player.GetNext(), "Your Turn");
+            }
+            
             EnemyWanaPlayAgain= false;
             IWanaPlayAgain= false;
             
         }
         
+    }
+    [PunRPC]
+    public void LoadGameScreen(string Text)
+    {
+        UiManagerOBJ.GetComponent<UiManager>().GameScreenActive(Text);
     }
     [PunRPC]
     public void EndGame()
@@ -343,7 +362,9 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
     [PunRPC]
     public void EnemyWannaPlayAgain()
     {
-        EnemyWanaPlayAgain= true;
+        Debug.LogError("Enemy Wanna Play again");
+        UiManagerOBJ.GetComponent<UiManager>().EnemyWannaPlayAgainUi();
+        EnemyWanaPlayAgain = true;
     }
     [PunRPC]
     public void DisableAllScreen()
