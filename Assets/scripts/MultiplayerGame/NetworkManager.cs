@@ -19,6 +19,13 @@ public class NetworkManager : Photon.PunBehaviour
     [SerializeField] private TMP_InputField RoomName;
     [SerializeField] private GameObject GameManagerOBJ;
     [SerializeField] private GameObject BoardInput;
+    [SerializeField] private GameObject BoardInput0;
+    [SerializeField] private GameObject BoardInput1;
+    [SerializeField] private GameObject BoardInput2;
+    [SerializeField] private GameObject BoardInput3;
+    [SerializeField] private GameObject BoardInput4;
+    [SerializeField] private GameObject BoardInput5;
+    [SerializeField] private GameObject BoardInput6;
     [SerializeField] private GameObject UiManagerOBJ;
     private PhotonView photonViewOBJ ;
     private MultiGameManagerUpdate GameManager;
@@ -32,6 +39,13 @@ public class NetworkManager : Photon.PunBehaviour
         UiManagerSC = UiManagerOBJ.GetComponent<UiManager>();
         GameManagerOBJ.SetActive(false);
         BoardInput.SetActive(false);
+        BoardInput0.GetComponent<MultiInputFileds>().GameMode = 0;
+        BoardInput1.GetComponent<MultiInputFileds>().GameMode = 0;
+        BoardInput2.GetComponent<MultiInputFileds>().GameMode = 0;
+        BoardInput3.GetComponent<MultiInputFileds>().GameMode = 0;
+        BoardInput4.GetComponent<MultiInputFileds>().GameMode = 0;
+        BoardInput5.GetComponent<MultiInputFileds>().GameMode = 0;
+        BoardInput6.GetComponent<MultiInputFileds>().GameMode = 0;
         PhotonNetwork.automaticallySyncScene = true;
         
     }

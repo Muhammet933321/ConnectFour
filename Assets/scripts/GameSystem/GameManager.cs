@@ -9,6 +9,14 @@ public class GameManager : MonoBehaviour
     public GameObject Player2;
     public GameObject Player1Ghost;
     public GameObject Player2Ghost;
+    public GameObject BoardInputs;
+    [SerializeField] private GameObject BoardInput0;
+    [SerializeField] private GameObject BoardInput1;
+    [SerializeField] private GameObject BoardInput2;
+    [SerializeField] private GameObject BoardInput3;
+    [SerializeField] private GameObject BoardInput4;
+    [SerializeField] private GameObject BoardInput5;
+    [SerializeField] private GameObject BoardInput6;
     GameObject FallingPiece;
 
 
@@ -25,6 +33,16 @@ public class GameManager : MonoBehaviour
         StateBoard = new int[LenghttOfBoard, HeightOfBoard];
         Player1Ghost.SetActive(false);
         Player2Ghost.SetActive(false);
+        BoardInputs.SetActive(true);
+        BoardInput0.GetComponent<MultiInputFileds>().GameMode = 1;
+        BoardInput1.GetComponent<MultiInputFileds>().GameMode = 1;
+        BoardInput2.GetComponent<MultiInputFileds>().GameMode = 1;
+        BoardInput3.GetComponent<MultiInputFileds>().GameMode = 1;
+        BoardInput4.GetComponent<MultiInputFileds>().GameMode = 1;
+        BoardInput5.GetComponent<MultiInputFileds>().GameMode = 1;
+        BoardInput6.GetComponent<MultiInputFileds>().GameMode = 1;
+        
+
     }
     public void SelectColumn(int column)
     {

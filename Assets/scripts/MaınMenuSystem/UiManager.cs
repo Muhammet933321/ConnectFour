@@ -46,6 +46,8 @@ public class UiManager : MonoBehaviour
         LoserScreen.SetActive(false);
         GameScreen.SetActive(false);
         EnemyDisConnectedSceene.SetActive(false);
+        SingleModeSceene.SetActive(false);
+        SelectAiLevelSceene.SetActive(false);
         PlayAgainTextLose.text = "" +
             "";
         PlayAgainTextWin.text = "" +

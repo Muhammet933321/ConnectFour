@@ -7,6 +7,7 @@ public class InputFileds : MonoBehaviour
 {
     public int column;
     public GameManager gm;
+
     private void OnMouseOver()
     {
     }
