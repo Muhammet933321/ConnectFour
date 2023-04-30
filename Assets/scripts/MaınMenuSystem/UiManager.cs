@@ -11,6 +11,8 @@ public class UiManager : MonoBehaviour
     [Header("Managers")]
     [SerializeField] private NetworkManager networkManager;
     [SerializeField] private GameObject MultiGameManagerUpdate;
+    [SerializeField] private GameObject TwoPlayerGameManager;
+    [SerializeField] private GameObject AiGameMnager;
 
     [Header("Buttons")]
     [SerializeField] private GameObject GameMode;
@@ -21,6 +23,8 @@ public class UiManager : MonoBehaviour
     [SerializeField] private GameObject LoserScreen;
     [SerializeField] private GameObject GameScreen;
     [SerializeField] private GameObject EnemyDisConnectedSceene;
+    [SerializeField] private GameObject SingleModeSceene;
+    [SerializeField] private GameObject SelectAiLevelSceene;
 
     [Header("Texts")]
     [SerializeField] private TextMeshProUGUI PlayAgainTextWin;
@@ -54,6 +58,18 @@ public class UiManager : MonoBehaviour
     public void OnSinglePlayerModeSelected()
     {
         DisableAllScreen();
+        SingleModeSceene.SetActive(true);
+    }
+    public void OnTwoPlayerModeSelected()
+    {
+        DisableAllScreen();
+        TwoPlayerGameManager.SetActive(true);
+
+    }
+    public void OnAiModeSelected()
+    {
+        DisableAllScreen();
+        SelectAiLevelSceene.SetActive(true);
     }
 
     public void OnOnlineModeSelected()
