@@ -69,6 +69,8 @@ public class UiManager : MonoBehaviour
     {
         DisableAllScreen();
         TwoPlayerGameManager.SetActive(true);
+        TwoPlayerGameManager.GetComponent<GameManager>().CanPlay = true;
+
 
     }
     public void OnAiModeSelected()
@@ -176,6 +178,22 @@ public class UiManager : MonoBehaviour
         GameMode.SetActive(true);
     }
 
+    public void MainMenuForSingle()
+    {
+        
+        
+        
+        MultiGameManagerUpdate.GetComponent<MultiGameManagerUpdate>().Player1Ghost.SetActive(false);
+        MultiGameManagerUpdate.GetComponent<MultiGameManagerUpdate>().Player2Ghost.SetActive(false);
+        TwoPlayerGameManager.GetComponent<GameManager>().CanPlay =false;
+        DisableAllScreen();
+        GameMode.SetActive(true);
+        TwoPlayerGameManager.SetActive(false);
+        Debug.LogError("MainMenu For Single ");
+        TwoPlayerGameManager.GetComponent<GameManager>().ClearSingleBoard();
+        TwoPlayerGameManager.GetComponent<GameManager>().ClearSinglePecies();
+    }
+
     public void GameScreenActive(string Text)
     {
         DisableAllScreen();
@@ -197,8 +215,11 @@ public class UiManager : MonoBehaviour
     public void PlayAgainSingle()
     {
         DisableAllScreen();
+        
+        TwoPlayerGameManager.GetComponent<GameManager>().CanPlay = true;
         TwoPlayerGameManager.GetComponent<GameManager>().ClearSingleBoard();
         TwoPlayerGameManager.GetComponent<GameManager>().ClearSinglePecies();
+
 
     }
 }

@@ -23,6 +23,8 @@ public class GameManager : MonoBehaviour
 
     public GameObject[] SpawnLocation;
     bool Player1Turn;
+    public bool CanPlay;
+
     int HeightOfBoard = 6;
     int LenghttOfBoard = 7;
 
@@ -53,6 +55,9 @@ public class GameManager : MonoBehaviour
     {
         if (StateBoard[column, HeightOfBoard - 1] == 0 && (FallingPiece == null || FallingPiece.GetComponent<Rigidbody>().velocity == Vector3.zero))
         {
+            if(CanPlay)
+            {
+
             if (Player1Turn)
             {
                 Player1Ghost.SetActive(true);
@@ -63,14 +68,19 @@ public class GameManager : MonoBehaviour
                 Player2Ghost.SetActive(true);
                 Player2Ghost.transform.position = SpawnLocation[column].transform.position;
             }
+            }
         }
     }
     public void TakeTurn(int column)
     {
         if (StateBoard[column, HeightOfBoard - 1] == 0 && (FallingPiece == null || FallingPiece.GetComponent<Rigidbody>().velocity == Vector3.zero))
         {
+            if ( CanPlay)
+            {
+
             if (UpdateBoardState(column))
             {
+                    Debug.LogWarning("Piecies was moved");
                 Player1Ghost.SetActive(false);
                 Player2Ghost.SetActive(false);
                 if (Player1Turn == true)
@@ -81,6 +91,7 @@ public class GameManager : MonoBehaviour
                     if (DidWin(1))
                     {
                         UiManagerOBJ.GetComponent<UiManager>().WinForSingle(1);
+                        CanPlay = false;
                         Debug.LogWarning("Player 1 win");
                     }
                     
@@ -94,6 +105,7 @@ public class GameManager : MonoBehaviour
                     if (DidWin(2))
                     {
                         UiManagerOBJ.GetComponent<UiManager>().WinForSingle(2);
+                        CanPlay = false;
                         Debug.LogWarning("Player 2 win");
                     }
                 }
@@ -102,6 +114,9 @@ public class GameManager : MonoBehaviour
                     Debug.LogWarning("Draw!");
                 }
             }
+            }
+            else
+                Debug.LogWarning("Cant Play Now");
         }
     }
     bool UpdateBoardState(int column)
@@ -194,22 +209,28 @@ public class GameManager : MonoBehaviour
 
     public void ClearSinglePecies()
     {
-        for(int i = 0 ; i< 42 ; i++)
-        {
-            if(GameObject.FindGameObjectsWithTag("Piecies")[i] == null)
-            {
-                break;
-            }
-            else
+        //for(int i = 0 ; i< 42 ; i++)
+        //{
+            /*if(GameObject.FindGameObjectsWithTag("Piecies")[i] != null)
             {
                 Destroy(GameObject.FindGameObjectsWithTag("Piecies")[i]);
                 Debug.LogError($"Piecies {i} Cleared");
             }
-            
-            
-        }
-        
+            else
+            {
+                Debug.LogError("Piecies Was Cleared");
+                break;
+            }*/
+
+            GameObject[] destroyObject;
+            destroyObject = GameObject.FindGameObjectsWithTag("Piecies");
+            foreach (GameObject oneObject in destroyObject)
+                Destroy(oneObject);
+
         Debug.LogError("Piecies Was Cleared");
+       // }
+        
+        
     }
 
 

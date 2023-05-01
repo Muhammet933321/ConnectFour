@@ -3668,6 +3668,7 @@ MonoBehaviour:
   - {fileID: 769502218}
   - {fileID: 277949690}
   - {fileID: 562108101}
+  CanPlay: 0
 --- !u!1 &769502218
 GameObject:
   m_ObjectHideFlags: 0
@@ -6736,7 +6737,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2073584798}
         m_TargetAssemblyTypeName: UiManager, Assembly-CSharp
-        m_MethodName: MainMenuButton
+        m_MethodName: MainMenuForSingle
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
