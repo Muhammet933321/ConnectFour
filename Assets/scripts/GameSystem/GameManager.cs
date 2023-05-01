@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject BoardInput4;
     [SerializeField] private GameObject BoardInput5;
     [SerializeField] private GameObject BoardInput6;
+    [SerializeField] private GameObject UiManagerOBJ;
     GameObject FallingPiece;
 
 
@@ -79,6 +80,7 @@ public class GameManager : MonoBehaviour
                     Player1Turn = false;
                     if (DidWin(1))
                     {
+                        UiManagerOBJ.GetComponent<UiManager>().WinForSingle(1);
                         Debug.LogWarning("Player 1 win");
                     }
                     
@@ -91,6 +93,7 @@ public class GameManager : MonoBehaviour
                     Player1Turn = true;
                     if (DidWin(2))
                     {
+                        UiManagerOBJ.GetComponent<UiManager>().WinForSingle(2);
                         Debug.LogWarning("Player 2 win");
                     }
                 }
@@ -175,6 +178,38 @@ public class GameManager : MonoBehaviour
             }
         }
         return true;
+    }
+
+    public void ClearSingleBoard()
+    {
+        for (int x = 0; x < HeightOfBoard; x++)
+        {
+            for (int y = 0; y < LenghttOfBoard; y++)
+            {
+                StateBoard[y, x] = 0;
+            }
+        }
+        Debug.LogError("Board Was Cleared");
+    }
+
+    public void ClearSinglePecies()
+    {
+        for(int i = 0 ; i< 42 ; i++)
+        {
+            if(GameObject.FindGameObjectsWithTag("Piecies")[i] == null)
+            {
+                break;
+            }
+            else
+            {
+                Destroy(GameObject.FindGameObjectsWithTag("Piecies")[i]);
+                Debug.LogError($"Piecies {i} Cleared");
+            }
+            
+            
+        }
+        
+        Debug.LogError("Piecies Was Cleared");
     }
 
 

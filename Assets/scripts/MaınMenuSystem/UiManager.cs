@@ -20,6 +20,7 @@ public class UiManager : MonoBehaviour
     [SerializeField] private GameObject PlayFriends;
     [SerializeField] private GameObject FindRandomGame;
     [SerializeField] private GameObject WinerScreen;
+    [SerializeField] private GameObject SingleWinScreen;
     [SerializeField] private GameObject LoserScreen;
     [SerializeField] private GameObject GameScreen;
     [SerializeField] private GameObject EnemyDisConnectedSceene;
@@ -29,6 +30,7 @@ public class UiManager : MonoBehaviour
     [Header("Texts")]
     [SerializeField] private TextMeshProUGUI PlayAgainTextWin;
     [SerializeField] private TextMeshProUGUI PlayAgainTextLose;
+    [SerializeField] private TextMeshProUGUI SingleWinText;
     public TextMeshProUGUI InfoText;
     
 
@@ -48,6 +50,7 @@ public class UiManager : MonoBehaviour
         EnemyDisConnectedSceene.SetActive(false);
         SingleModeSceene.SetActive(false);
         SelectAiLevelSceene.SetActive(false);
+        SingleWinScreen.SetActive(false);
         PlayAgainTextLose.text = "" +
             "";
         PlayAgainTextWin.text = "" +
@@ -128,6 +131,12 @@ public class UiManager : MonoBehaviour
         MultiGameManagerUpdate.GetComponent<MultiGameManagerUpdate>().EndGame();
         
     }
+    public void WinForSingle(int Player)
+    {
+        DisableAllScreen();
+        SingleWinText.text = "Player " + Player.ToString() +" Win";
+        SingleWinScreen.SetActive(true);
+    }
     public void OnLose()
     {
         DisableAllScreen();
@@ -183,5 +192,13 @@ public class UiManager : MonoBehaviour
         DisableAllScreen();
         EnemyDisConnectedSceene.SetActive(true);
         
+    }
+
+    public void PlayAgainSingle()
+    {
+        DisableAllScreen();
+        TwoPlayerGameManager.GetComponent<GameManager>().ClearSingleBoard();
+        TwoPlayerGameManager.GetComponent<GameManager>().ClearSinglePecies();
+
     }
 }
