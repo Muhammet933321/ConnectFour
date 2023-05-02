@@ -46,7 +46,6 @@ public class NetworkManager : Photon.PunBehaviour
         BoardInput4.GetComponent<MultiInputFileds>().GameMode = 0;
         BoardInput5.GetComponent<MultiInputFileds>().GameMode = 0;
         BoardInput6.GetComponent<MultiInputFileds>().GameMode = 0;
-        PhotonNetwork.automaticallySyncScene = true;
         
     }
     public void connectRandom()
@@ -63,7 +62,7 @@ public class NetworkManager : Photon.PunBehaviour
 
     public override void OnConnectedToMaster()
     {
-        Debug.LogError($"Connected to master. Loading to Select Game Mode");
+       // Debug.LogError($"Connected to master. Loading to Select Game Mode");
         if(((int)PlayerLevel) == 1)
         {
             UiManagerOBJ.GetComponent<UiManager>().RandomGameMenuLoad();
@@ -78,7 +77,7 @@ public class NetworkManager : Photon.PunBehaviour
     public void JoinRandomRoom()
     {
         
-        Debug.LogError("Looking For Random Room With Game Mode " + PlayerLevel);
+      //  Debug.LogError("Looking For Random Room With Game Mode " + PlayerLevel);
 
         Hashtable RANDOM_HASH = new Hashtable { { MODE , PlayerLevel } };
         
@@ -88,7 +87,7 @@ public class NetworkManager : Photon.PunBehaviour
     }
     public override void OnPhotonRandomJoinFailed(object[] codeAndMsg)
     {
-        Debug.LogError("Join Random Room Fieled .Creating New One");
+        //Debug.LogError("Join Random Room Fieled .Creating New One");
         RoomOptions RANDOM_ROOM_OPTIONS = new RoomOptions();
         RANDOM_ROOM_OPTIONS.CustomRoomPropertiesForLobby = new string[] { MODE };
         RANDOM_ROOM_OPTIONS.MaxPlayers= MAX_PLAYER;
@@ -115,9 +114,9 @@ public class NetworkManager : Photon.PunBehaviour
     }
     public override void OnJoinedRoom()
     {
-            Debug.LogError($"Player {PhotonNetwork.player.ID} Joined the room With  " +
-                $"{(LevelMode)PhotonNetwork.room.CustomProperties[MODE]} " +
-                $"MaxPlyaer = {PhotonNetwork.room.MaxPlayers}");
+           // Debug.LogError($"Player {PhotonNetwork.player.ID} Joined the room With  " +
+             //   $"{(LevelMode)PhotonNetwork.room.CustomProperties[MODE]} " +
+           //     $"MaxPlyaer = {PhotonNetwork.room.MaxPlayers}");
         UiManagerSC.GameScreenActive("Waiting For Connect A Player");
         
     }
@@ -131,7 +130,7 @@ public class NetworkManager : Photon.PunBehaviour
     public override void OnPhotonPlayerConnected(PhotonPlayer newPlayer)
     {
         
-        Debug.LogError($"Player {newPlayer.ID} Connected The Toom");
+      //  Debug.LogError($"Player {newPlayer.ID} Connected The Toom");
         RoomIsReady(newPlayer);
     }
 
@@ -155,7 +154,7 @@ public class NetworkManager : Photon.PunBehaviour
         BoardInput.SetActive(true);
         GameManager.CanPlay = true;
         photonViewOBJ.RPC("RPC_GameStart", newPlayer , null);
-        Debug.LogError("Game Is Starting");
+      //  Debug.LogError("Game Is Starting");
         UiManagerSC.GameScreenActive("Your Turn");
 
 
@@ -171,13 +170,13 @@ public class NetworkManager : Photon.PunBehaviour
         GameManager.IsMyTurn = false;
         GameManager.CanPlay = true;
         UiManagerSC.GameScreenActive("Enemy's Turn");
-        Debug.LogError("RPC GAME IS STARTING");
+       // Debug.LogError("RPC GAME IS STARTING");
     }
 
     [PunRPC]
     public void OnLoseRPC()
     {
-        Debug.LogError("I am Loser");
+       // Debug.LogError("I am Loser");
         UiManagerSC.OnLose();
 
     }
@@ -185,24 +184,24 @@ public class NetworkManager : Photon.PunBehaviour
     {
         if(PhotonNetwork.connected)
         {
-            Debug.LogError("Player Is Online .DisConnecting Now");
+         //   Debug.LogError("Player Is Online .DisConnecting Now");
             PhotonNetwork.LeaveRoom();
         }
         else
         {
-            Debug.LogError("Player Already Offline");
+         //   Debug.LogError("Player Already Offline");
         }
     }
     public bool IsConnectedFun()
     {
         if (PhotonNetwork.connected)
         {
-            Debug.LogError("Player Is Online");
+         //   Debug.LogError("Player Is Online");
             return true;
         }
         else
         {
-            Debug.LogError("Player Is Offline");
+          //  Debug.LogError("Player Is Offline");
             return false;
         }
 
@@ -211,22 +210,22 @@ public class NetworkManager : Photon.PunBehaviour
     {
         if (PhotonNetwork.inRoom)
         {
-            Debug.LogError("Player Is In Room Leaving Now");
+           // Debug.LogError("Player Is In Room Leaving Now");
             PhotonNetwork.LeaveRoom();
         }
         else
         {
-            Debug.LogError("Player Already Not In Room");
+            //Debug.LogError("Player Already Not In Room");
         }
     }
 
     public override void OnConnectionFail(DisconnectCause cause)
     {
-        Debug.LogError("Internet Error");
+       // Debug.LogError("Internet Error");
     }
     public override void OnPhotonPlayerDisconnected(PhotonPlayer otherPlayer)
     {
-        Debug.LogError("Enemy DisConnected To Game");
+       // Debug.LogError("Enemy DisConnected To Game");
         GameManager.CanPlay = false;
         
         UiManagerSC.EnemyDisConnectedUi();

@@ -17,20 +17,23 @@ public class MultiInputFileds : MonoBehaviour
         if (GameMode == 0)
         {
             OnlineGameManger.GetComponent<MultiGameManagerUpdate>().SelectColumn(column);
-            Debug.LogError("Online Sellected");
+           // Debug.LogError("Online Sellected");
         }
         else if (GameMode == 1)
         {
             TwoPlayerGameManager.GetComponent<GameManager>().SelectColumn(column);
-            Debug.LogError("Two Player Game Mode Sellected");
+           // Debug.LogError("Two Player Game Mode Sellected");
         }
         else if (GameMode == 2)
         {
-            Debug.LogError("AiMageMode Sellected");
+          //  Debug.LogError("AiMageMode Sellected");
 
         }
         else
-            Debug.LogError("Didn't Sellected a Game Mode");
+        {
+            //  Debug.LogError("Didn't Sellected a Game Mode");
+        }
+
 
 
     }

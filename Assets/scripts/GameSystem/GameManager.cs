@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -19,6 +21,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject BoardInput6;
     [SerializeField] private GameObject UiManagerOBJ;
     GameObject FallingPiece;
+    public TextMeshProUGUI SingleTurnText;
 
 
     public GameObject[] SpawnLocation;
@@ -44,7 +47,9 @@ public class GameManager : MonoBehaviour
         BoardInput4.GetComponent<MultiInputFileds>().GameMode = 1;
         BoardInput5.GetComponent<MultiInputFileds>().GameMode = 1;
         BoardInput6.GetComponent<MultiInputFileds>().GameMode = 1;
-        
+        SingleTurnText.text = "Player 1 Turn";
+
+
 
     }
     public void SelectColumn(int column)
@@ -80,7 +85,7 @@ public class GameManager : MonoBehaviour
 
             if (UpdateBoardState(column))
             {
-                    Debug.LogWarning("Piecies was moved");
+                    //Debug.LogWarning("Piecies was moved");
                 Player1Ghost.SetActive(false);
                 Player2Ghost.SetActive(false);
                 if (Player1Turn == true)
@@ -88,12 +93,13 @@ public class GameManager : MonoBehaviour
                     FallingPiece = Instantiate(Player1, SpawnLocation[column].transform.position, new Quaternion(0, 90, 90, 0));
                     FallingPiece.GetComponent<Rigidbody>().velocity = new Vector3(0, 0.1f, 0);
                     Player1Turn = false;
-                    if (DidWin(1))
-                    {
+                    SingleTurnText.text = "Player 2 Turn";
+                        if (DidWin(1))
+                        {
                         UiManagerOBJ.GetComponent<UiManager>().WinForSingle(1);
                         CanPlay = false;
-                        Debug.LogWarning("Player 1 win");
-                    }
+                        //    Debug.LogWarning("Player 1 win");
+                        }
                     
                         
                 }
@@ -102,21 +108,25 @@ public class GameManager : MonoBehaviour
                     FallingPiece = Instantiate(Player2, SpawnLocation[column].transform.position, new Quaternion(0, 90, 90, 0));
                     FallingPiece.GetComponent<Rigidbody>().velocity = new Vector3(0, 0.1f, 0);
                     Player1Turn = true;
-                    if (DidWin(2))
-                    {
+                    SingleTurnText.text = "Player 1 Turn";
+                        if (DidWin(2))
+                        {
                         UiManagerOBJ.GetComponent<UiManager>().WinForSingle(2);
                         CanPlay = false;
-                        Debug.LogWarning("Player 2 win");
-                    }
+                        //    Debug.LogWarning("Player 2 win");
+                        }
                 }
                 if (IsDraw())
                 {
-                    Debug.LogWarning("Draw!");
+               //     Debug.LogWarning("Draw!");
                 }
             }
             }
             else
-                Debug.LogWarning("Cant Play Now");
+            {
+                //   Debug.LogWarning("Cant Play Now");
+            }
+
         }
     }
     bool UpdateBoardState(int column)
@@ -204,7 +214,7 @@ public class GameManager : MonoBehaviour
                 StateBoard[y, x] = 0;
             }
         }
-        Debug.LogError("Board Was Cleared");
+      //  Debug.LogError("Board Was Cleared");
     }
 
     public void ClearSinglePecies()
@@ -227,7 +237,7 @@ public class GameManager : MonoBehaviour
             foreach (GameObject oneObject in destroyObject)
                 Destroy(oneObject);
 
-        Debug.LogError("Piecies Was Cleared");
+        //Debug.LogError("Piecies Was Cleared");
        // }
         
         

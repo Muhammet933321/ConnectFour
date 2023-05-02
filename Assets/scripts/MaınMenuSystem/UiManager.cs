@@ -26,11 +26,16 @@ public class UiManager : MonoBehaviour
     [SerializeField] private GameObject EnemyDisConnectedSceene;
     [SerializeField] private GameObject SingleModeSceene;
     [SerializeField] private GameObject SelectAiLevelSceene;
+    [SerializeField] private GameObject SingleGameScene;
+    [SerializeField] private GameObject OnlineGameScene;
+    [SerializeField] private GameObject GamePousedSingle;
+    [SerializeField] private GameObject GamePousedOnline;
 
     [Header("Texts")]
     [SerializeField] private TextMeshProUGUI PlayAgainTextWin;
     [SerializeField] private TextMeshProUGUI PlayAgainTextLose;
     [SerializeField] private TextMeshProUGUI SingleWinText;
+    
     public TextMeshProUGUI InfoText;
     
 
@@ -51,10 +56,12 @@ public class UiManager : MonoBehaviour
         SingleModeSceene.SetActive(false);
         SelectAiLevelSceene.SetActive(false);
         SingleWinScreen.SetActive(false);
-        PlayAgainTextLose.text = "" +
-            "";
-        PlayAgainTextWin.text = "" +
-            "";
+        SingleGameScene.SetActive(false);
+        GamePousedSingle.SetActive(false);
+        GamePousedOnline.SetActive(false);
+        OnlineGameScene.SetActive(false);
+        PlayAgainTextLose.text = "" ;
+        PlayAgainTextWin.text =  "" ;
     }
     private void Awake()
     {
@@ -68,11 +75,39 @@ public class UiManager : MonoBehaviour
     public void OnTwoPlayerModeSelected()
     {
         DisableAllScreen();
+        SingleGameScene.SetActive(true);
         TwoPlayerGameManager.SetActive(true);
         TwoPlayerGameManager.GetComponent<GameManager>().CanPlay = true;
 
 
     }
+    public void PouseGameSingle()
+    {
+            DisableAllScreen();
+            GamePousedSingle.SetActive(true);
+            TwoPlayerGameManager.GetComponent<GameManager>().CanPlay = false;
+    }
+    public void PouseGameOnline()
+    {
+        DisableAllScreen();
+        GamePousedOnline.SetActive(true);
+        MultiGameManagerUpdate.GetComponent<MultiGameManagerUpdate>().CanPlay = false ;
+
+
+    }
+    public void ContinueSingleGame()
+    {
+        DisableAllScreen();
+        SingleGameScene.SetActive(true);
+        TwoPlayerGameManager.GetComponent<GameManager>().CanPlay = true;
+    }
+    public void ContinueOnlineGame()
+    {
+        DisableAllScreen();
+        OnlineGameScene.SetActive(true);
+        MultiGameManagerUpdate.GetComponent<MultiGameManagerUpdate>().CanPlay = true;
+    }
+
     public void OnAiModeSelected()
     {
         DisableAllScreen();
@@ -133,6 +168,7 @@ public class UiManager : MonoBehaviour
         MultiGameManagerUpdate.GetComponent<MultiGameManagerUpdate>().EndGame();
         
     }
+
     public void WinForSingle(int Player)
     {
         DisableAllScreen();
@@ -168,6 +204,8 @@ public class UiManager : MonoBehaviour
 
     public void MainMenuButton()
     {
+        
+        //MultiGameManagerUpdate.GetComponent<PhotonView>().RPC("ClearBoard", PhotonNetwork.player);
         networkManager.LeaveTheRoomFun();
 
         networkManager.DisConnectFun();
@@ -180,16 +218,13 @@ public class UiManager : MonoBehaviour
 
     public void MainMenuForSingle()
     {
-        
-        
-        
         MultiGameManagerUpdate.GetComponent<MultiGameManagerUpdate>().Player1Ghost.SetActive(false);
         MultiGameManagerUpdate.GetComponent<MultiGameManagerUpdate>().Player2Ghost.SetActive(false);
         TwoPlayerGameManager.GetComponent<GameManager>().CanPlay =false;
         DisableAllScreen();
         GameMode.SetActive(true);
         TwoPlayerGameManager.SetActive(false);
-        Debug.LogError("MainMenu For Single ");
+       // Debug.LogError("MainMenu For Single ");
         TwoPlayerGameManager.GetComponent<GameManager>().ClearSingleBoard();
         TwoPlayerGameManager.GetComponent<GameManager>().ClearSinglePecies();
     }
@@ -197,7 +232,7 @@ public class UiManager : MonoBehaviour
     public void GameScreenActive(string Text)
     {
         DisableAllScreen();
-        GameScreen.SetActive(true);
+        OnlineGameScene.SetActive(true);
         InfoText.text = Text;
     }    
     public void EnemyWannaPlayAgainUi()
@@ -215,8 +250,12 @@ public class UiManager : MonoBehaviour
     public void PlayAgainSingle()
     {
         DisableAllScreen();
-        
+        SingleGameScene.SetActive(true) ;
+
+
         TwoPlayerGameManager.GetComponent<GameManager>().CanPlay = true;
+        TwoPlayerGameManager.GetComponent<GameManager>().SingleTurnText.text = "Player 1 Turn";
+        
         TwoPlayerGameManager.GetComponent<GameManager>().ClearSingleBoard();
         TwoPlayerGameManager.GetComponent<GameManager>().ClearSinglePecies();
 

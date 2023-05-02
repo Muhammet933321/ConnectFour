@@ -77,14 +77,14 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
     }
     public void LocalInfo()
     {
-        Debug.Log("Local Erisildi");
+     //   Debug.Log("Local Erisildi");
     }
 
     [PunRPC]
     void Info()
     {
 
-        Debug.Log("Global Erisildi");
+      //  Debug.Log("Global Erisildi");
     }
 
     /*
@@ -141,7 +141,7 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
                 
                     if (AmIPlayer1)
                     {
-                        Debug.LogError("Moved a Pieces");
+                       // Debug.LogError("Moved a Pieces");
                         PhotonNetwork.Instantiate(Player1.name, SpawnLocation[column].transform.position, new Quaternion(0, 90, 90, 0), 0);
                         photonViewOBJ.RPC("EnemyTurn" , PhotonNetwork.player.GetNext(),null);
                         UiManagerOBJ.GetComponent<UiManager>().InfoText.text = "Enemy's Turn";
@@ -150,7 +150,7 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
                     }
                     else
                     {
-                        Debug.LogError("Moved a Pieces");
+                       // Debug.LogError("Moved a Pieces");
                         PhotonNetwork.Instantiate(Player2.name, SpawnLocation[column].transform.position, new Quaternion(0, 90, 90, 0), 0);
                         photonViewOBJ.RPC("EnemyTurn", PhotonNetwork.player.GetNext(), null);
                         UiManagerOBJ.GetComponent<UiManager>().InfoText.text = "Enemy's Turn";
@@ -162,7 +162,7 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
                         if (DidWin(1))
                         {
                             UiManagerOBJ.GetComponent<UiManager>().OnWin();
-                            Debug.LogError("Player 1 win");
+                          //  Debug.LogError("Player 1 win");
                         }
                     }
                     else
@@ -170,7 +170,7 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
                         if (DidWin(2))
                         {
                             UiManagerOBJ.GetComponent<UiManager>().OnWin();
-                            Debug.LogError("Player 1 win");
+                           // Debug.LogError("Player 1 win");
                         }
                     }
                     
@@ -189,7 +189,7 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
                  }*/
                 if (IsDraw())
                 {
-                    Debug.LogWarning("Draw!");
+                 //   Debug.LogWarning("Draw!");
                 }
             }
 
@@ -214,12 +214,12 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
             {
                 if (AmIPlayer1)
                 {
-                    Debug.LogError("Updated Board State");
+             //       Debug.LogError("Updated Board State");
                     StateBoard[column, Raw] = 2;
                 }
                 else
                 {
-                    Debug.LogError("Enemy Moved a piece");
+               //     Debug.LogError("Enemy Moved a piece");
                     StateBoard[column, Raw] = 1;
                 }
                 //Debug.Log("Column ,Raw = " + column + " , " + Raw);
@@ -317,7 +317,7 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
                 StateBoard[y,x] = 0;
             }
         }
-        Debug.LogError("Board Was Cleared");
+    //    Debug.LogError("Board Was Cleared");
     }
 
     [PunRPC]
@@ -329,7 +329,7 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
             CanPlay = true;
             UiManagerOBJ.GetComponent<UiManager>().DisableAllScreen();
             GetComponent<PhotonView>().RPC("DisableAllScreen" , PhotonNetwork.player.GetNext());
-            Debug.LogError("ReStartinG The Room");
+         //   Debug.LogError("ReStartinG The Room");
             if(AmIPlayer1)
             {
                 GetComponent<PhotonView>().RPC("LoadGameScreen", PhotonNetwork.player.GetNext() , "Enemy's Turn");
@@ -362,14 +362,14 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
     [PunRPC]
     public void EnemyWannaPlayAgain()
     {
-        Debug.LogError("Enemy Wanna Play again");
+      //  Debug.LogError("Enemy Wanna Play again");
         UiManagerOBJ.GetComponent<UiManager>().EnemyWannaPlayAgainUi();
         EnemyWanaPlayAgain = true;
     }
     [PunRPC]
     public void DisableAllScreen()
     {
-        Debug.LogError("Disable All Screen");
+      //  Debug.LogError("Disable All Screen");
         CanPlay = true;
         UiManagerOBJ.GetComponent<UiManager>().DisableAllScreen();
     }
