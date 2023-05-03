@@ -11,17 +11,25 @@ public class MultiInputFileds : MonoBehaviour
     public GameObject OnlineGameManger;
     public GameObject TwoPlayerGameManager;
     public GameObject AiGameManager;
+    private MultiGameManagerUpdate MultiGameManagerUpdateSC;
+    private GameManager TwoPlayerGameManagerSC;
     public int GameMode;
+
+    private void Awake()
+    {
+        MultiGameManagerUpdateSC = OnlineGameManger.GetComponent<MultiGameManagerUpdate>();
+        TwoPlayerGameManagerSC = TwoPlayerGameManager.GetComponent<GameManager>();
+    }
     private void Start()
     {
         if (GameMode == 0)
         {
-            OnlineGameManger.GetComponent<MultiGameManagerUpdate>().SelectColumn(column);
+            MultiGameManagerUpdateSC.SelectColumn(column);
            // Debug.LogError("Online Sellected");
         }
         else if (GameMode == 1)
         {
-            TwoPlayerGameManager.GetComponent<GameManager>().SelectColumn(column);
+            TwoPlayerGameManagerSC.SelectColumn(column);
            // Debug.LogError("Two Player Game Mode Sellected");
         }
         else if (GameMode == 2)
@@ -44,14 +52,14 @@ public class MultiInputFileds : MonoBehaviour
     {
         if(GameMode == 0)
         {
-            OnlineGameManger.GetComponent<MultiGameManagerUpdate>().SelectColumn(column);
-            OnlineGameManger.GetComponent<MultiGameManagerUpdate>().TakeTurn(column);
+            MultiGameManagerUpdateSC.SelectColumn(column);
+            MultiGameManagerUpdateSC.TakeTurn(column);
 
         }
         else if (GameMode == 1)
         {
-            TwoPlayerGameManager.GetComponent<GameManager>().SelectColumn(column);
-            TwoPlayerGameManager.GetComponent<GameManager>().TakeTurn(column);
+            TwoPlayerGameManagerSC.SelectColumn(column);
+            TwoPlayerGameManagerSC.TakeTurn(column);
 
         }
         else if (GameMode == 2)
@@ -64,12 +72,12 @@ public class MultiInputFileds : MonoBehaviour
         //Debug.LogError($"Mouse On Column {column}");
         if(GameMode == 0)
         {
-            OnlineGameManger.GetComponent<MultiGameManagerUpdate>().HoverCloumn(column);
+            MultiGameManagerUpdateSC.HoverCloumn(column);
 
         }
         else if(GameMode == 1)
         {
-            TwoPlayerGameManager.GetComponent<GameManager>().HoverCloumn(column);
+            TwoPlayerGameManagerSC.HoverCloumn(column);
         }
         else if (GameMode == 2)
         {
