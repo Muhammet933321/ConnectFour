@@ -71,6 +71,7 @@ public class UiManager : MonoBehaviour
     }
     private void Awake()
     {
+        Application.targetFrameRate = 100;
         MultiGameManagerUpdateSC = MultiGameManagerUpdate.GetComponent<MultiGameManagerUpdate>();
         TwoPlayerGameManagerSC = TwoPlayerGameManager.GetComponent<GameManager>();
         MainMenuButton();

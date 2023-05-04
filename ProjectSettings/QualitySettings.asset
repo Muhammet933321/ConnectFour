@@ -262,7 +262,7 @@ QualitySettings:
     - Server
     - WebGL
   m_PerPlatformDefaultQuality:
-    Android: 1
+    Android: 2
     GameCoreScarlett: 5
     GameCoreXboxOne: 5
     Lumin: 5

@@ -45,9 +45,7 @@ public class MultiInputFileds : MonoBehaviour
 
 
     }
-    private void OnMouseOver()
-    {
-    }
+
     private void OnMouseUpAsButton()
     {
         if(GameMode == 0)
