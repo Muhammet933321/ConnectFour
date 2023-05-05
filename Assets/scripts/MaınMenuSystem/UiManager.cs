@@ -71,7 +71,7 @@ public class UiManager : MonoBehaviour
     }
     private void Awake()
     {
-        Application.targetFrameRate=  120;
+        Application.targetFrameRate=  30;
         MultiGameManagerUpdateSC = MultiGameManagerUpdate.GetComponent<MultiGameManagerUpdate>();
         TwoPlayerGameManagerSC = TwoPlayerGameManager.GetComponent<GameManager>();
         MainMenuButton();
@@ -132,7 +132,7 @@ public class UiManager : MonoBehaviour
         networkManager.DisConnectFun();
         DisableAllScreen();
         GameType.SetActive(true);
-        Debug.Log("OnlineMode Sellected");
+        //Debug.Log("OnlineMode Sellected");
     }
 
     public void OnRandomGameSelected()

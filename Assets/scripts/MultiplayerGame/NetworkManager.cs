@@ -184,22 +184,22 @@ public class NetworkManager : Photon.PunBehaviour
     {
         if(PhotonNetwork.connected)
         {
-            Debug.Log("Player Is Online .DisConnecting Now");
+            //Debug.Log("Player Is Online .DisConnecting Now");
             PhotonNetwork.Disconnect();
             if (PhotonNetwork.inRoom)
             {
                 PhotonNetwork.LeaveRoom();
-                Debug.Log("Player Is In A Room .Leaving Now");
+                //Debug.Log("Player Is In A Room .Leaving Now");
             }
             else
             {
-                Debug.Log("Player Is Not In A Room");
+                //Debug.Log("Player Is Not In A Room");
             }
             
         }
         else
         {
-            Debug.Log("Player Already Offline");
+            //Debug.Log("Player Already Offline");
         }
     }
     public bool IsConnectedFun()
