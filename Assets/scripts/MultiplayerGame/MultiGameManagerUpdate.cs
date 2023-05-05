@@ -54,10 +54,11 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
 
     private void Awake()
     {
+        StateBoard = new int[LenghttOfBoard, HeightOfBoard];
         photonViewOBJ = GetComponent<PhotonView>();
         UiManagerSC = UiManagerOBJ.GetComponent<UiManager>();
         photonViewComp = GetComponent<PhotonView>();
-        StateBoard = new int[LenghttOfBoard, HeightOfBoard];
+        
         Player1Ghost.SetActive(false);
         Player2Ghost.SetActive(false);
         CanPlay = false;
@@ -321,7 +322,7 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
                 StateBoard[y,x] = 0;
             }
         }
-    //    Debug.LogError("Board Was Cleared");
+       //Debug.LogError("Board Was Cleared");
     }
 
     [PunRPC]

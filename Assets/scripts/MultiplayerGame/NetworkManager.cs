@@ -184,12 +184,22 @@ public class NetworkManager : Photon.PunBehaviour
     {
         if(PhotonNetwork.connected)
         {
-         //   Debug.LogError("Player Is Online .DisConnecting Now");
-            PhotonNetwork.LeaveRoom();
+            Debug.Log("Player Is Online .DisConnecting Now");
+            PhotonNetwork.Disconnect();
+            if (PhotonNetwork.inRoom)
+            {
+                PhotonNetwork.LeaveRoom();
+                Debug.Log("Player Is In A Room .Leaving Now");
+            }
+            else
+            {
+                Debug.Log("Player Is Not In A Room");
+            }
+            
         }
         else
         {
-         //   Debug.LogError("Player Already Offline");
+            Debug.Log("Player Already Offline");
         }
     }
     public bool IsConnectedFun()
@@ -219,6 +229,14 @@ public class NetworkManager : Photon.PunBehaviour
         }
     }
 
+    public override void OnDisconnectedFromPhoton()
+    {
+        if(GameManagerOBJ.GetActive())
+        {
+            GameManager.ClearBoard();
+        }
+        
+    }
     public override void OnConnectionFail(DisconnectCause cause)
     {
        // Debug.LogError("Internet Error");
@@ -227,7 +245,8 @@ public class NetworkManager : Photon.PunBehaviour
     {
        // Debug.LogError("Enemy DisConnected To Game");
         GameManager.CanPlay = false;
-        
+        GameManager.ClearBoard();
+        PhotonNetwork.LeaveRoom();
         UiManagerSC.EnemyDisConnectedUi();
     }
 

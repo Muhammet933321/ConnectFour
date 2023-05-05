@@ -6,31 +6,34 @@ EditorUserSettings:
   serializedVersion: 4
   m_ConfigSettings:
     RecentlyUsedSceneGuid-0:
-      value: 5a0700510453590b0f0f557045725944424f4b2c75717f362c7c1866e6b6646d
-      flags: 0
-    RecentlyUsedSceneGuid-1:
-      value: 5009030000570b0c5a0a5e7611725e4446161c28747b7160297b1f66b4b66168
-      flags: 0
-    RecentlyUsedSceneGuid-2:
-      value: 5752055e00500b08580a5a2015205944404f4d2e2f2a76657b704a35e0e16069
-      flags: 0
-    RecentlyUsedSceneGuid-3:
       value: 05045554505608095d0a5d7014210644464e4c2f7e7f256078791865b0b0373e
       flags: 0
-    RecentlyUsedSceneGuid-4:
+    RecentlyUsedSceneGuid-1:
       value: 0507570504535c025b0f0d2346770d44404e41797a7874652e7d1f37e1e3613a
       flags: 0
-    RecentlyUsedSceneGuid-5:
+    RecentlyUsedSceneGuid-2:
       value: 5b5352535d565d5f0b0a0d2146730d4443151c2f2d717632797c196ab5b2303d
       flags: 0
+    RecentlyUsedSceneGuid-3:
+      value: 5a55050203570f085c575a7245715b441015197c29707e657e704961b2e6603d
+      flags: 0
+    RecentlyUsedSceneGuid-4:
+      value: 5b52005f530c0f5f550c0d7b4422094814474f292a7977367e2c4a32b7b1676f
+      flags: 0
+    RecentlyUsedSceneGuid-5:
+      value: 0508565206075b5e5c5b0f2416700b441416412c2f7e73647f28486be6e4646f
+      flags: 0
     RecentlyUsedSceneGuid-6:
-      value: 51045257030d0d0355565f2142225e4443164c727e7f2460747f4b62e7b5613d
+      value: 5309015753055c0f545e0d77497a5d4440154e2b2f7d25327b714c37bbb33139
       flags: 0
     RecentlyUsedSceneGuid-7:
-      value: 5a5757560101590a5d0c0e24427b5d44434e4c7a7b7a23677f2b4565b7b5353a
+      value: 5207055152510809085d5e7744205a154f46417e787f7366297c1b6be6e4306b
       flags: 0
     RecentlyUsedSceneGuid-8:
-      value: 5a55050203570f085c575a7245715b441015197c29707e657e704961b2e6603d
+      value: 51045257030d0d0355565f2142225e4443164c727e7f2460747f4b62e7b5613d
+      flags: 0
+    RecentlyUsedSceneGuid-9:
+      value: 5a5757560101590a5d0c0e24427b5d44434e4c7a7b7a23677f2b4565b7b5353a
       flags: 0
     UnityRemoteDevice:
       value: 2d5e5a03

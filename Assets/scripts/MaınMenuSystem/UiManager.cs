@@ -71,10 +71,14 @@ public class UiManager : MonoBehaviour
     }
     private void Awake()
     {
-        Application.targetFrameRate=  30;
+        Application.targetFrameRate=  120;
         MultiGameManagerUpdateSC = MultiGameManagerUpdate.GetComponent<MultiGameManagerUpdate>();
         TwoPlayerGameManagerSC = TwoPlayerGameManager.GetComponent<GameManager>();
         MainMenuButton();
+    }
+    private void Start()
+    {
+        
     }
     public void OnSinglePlayerModeSelected()
     {
@@ -125,12 +129,10 @@ public class UiManager : MonoBehaviour
 
     public void OnOnlineModeSelected()
     {
-        if(networkManager.IsConnectedFun())
-        {
-            PhotonNetwork.Disconnect();
-        }
+        networkManager.DisConnectFun();
         DisableAllScreen();
         GameType.SetActive(true);
+        Debug.Log("OnlineMode Sellected");
     }
 
     public void OnRandomGameSelected()
@@ -210,11 +212,31 @@ public class UiManager : MonoBehaviour
     {
 
     }
+    public void MainMenuFromOnlineGame()
+    {
 
+        //MultiGameManagerUpdate.GetComponent<PhotonView>().RPC("ClearBoard", PhotonNetwork.player);
+        if(MultiGameManagerUpdate.GetActive())
+        {
+            MultiGameManagerUpdateSC.ClearBoard();
+        }
+        
+
+        networkManager.LeaveTheRoomFun();
+
+        networkManager.DisConnectFun();
+
+        DisableAllScreen();
+        MultiGameManagerUpdateSC.Player1Ghost.SetActive(false);
+        MultiGameManagerUpdateSC.Player2Ghost.SetActive(false);
+        GameMode.SetActive(true);
+        //Debug.LogError("MainMenuFromOnlineGame");
+    }
     public void MainMenuButton()
     {
         
         //MultiGameManagerUpdate.GetComponent<PhotonView>().RPC("ClearBoard", PhotonNetwork.player);
+        
         networkManager.LeaveTheRoomFun();
 
         networkManager.DisConnectFun();
