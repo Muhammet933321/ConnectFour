@@ -76,6 +76,12 @@ public class UiManager : MonoBehaviour
         TwoPlayerGameManagerSC = TwoPlayerGameManager.GetComponent<GameManager>();
         MainMenuButton();
     }
+    public void SellectedPlayerVSAi()
+    {
+        AiGameMnager.SetActive(true);
+        DisableAllScreen();
+        SingleGameScene.SetActive(true);
+    }
     private void Start()
     {
         

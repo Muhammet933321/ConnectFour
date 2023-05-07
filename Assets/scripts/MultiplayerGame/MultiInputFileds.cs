@@ -11,12 +11,14 @@ public class MultiInputFileds : MonoBehaviour
     public GameObject OnlineGameManger;
     public GameObject TwoPlayerGameManager;
     public GameObject AiGameManager;
+    private AiGameManager AiGameManagerSC;
     private MultiGameManagerUpdate MultiGameManagerUpdateSC;
     private GameManager TwoPlayerGameManagerSC;
     public int GameMode;
 
     private void Awake()
     {
+        AiGameManagerSC = AiGameManager.GetComponent<AiGameManager>();
         MultiGameManagerUpdateSC = OnlineGameManger.GetComponent<MultiGameManagerUpdate>();
         TwoPlayerGameManagerSC = TwoPlayerGameManager.GetComponent<GameManager>();
     }
@@ -34,6 +36,7 @@ public class MultiInputFileds : MonoBehaviour
         }
         else if (GameMode == 2)
         {
+            AiGameManagerSC.SelectColumn(column);
           //  Debug.LogError("AiMageMode Sellected");
 
         }
@@ -62,7 +65,8 @@ public class MultiInputFileds : MonoBehaviour
         }
         else if (GameMode == 2)
         {
-
+            AiGameManagerSC.SelectColumn(column);
+            AiGameManagerSC.TakeTurn(column);
         }
     }
     private void OnMouseEnter()
@@ -79,7 +83,7 @@ public class MultiInputFileds : MonoBehaviour
         }
         else if (GameMode == 2)
         {
-            
+            AiGameManagerSC.HoverCloumn(column);
         }
     }
 }

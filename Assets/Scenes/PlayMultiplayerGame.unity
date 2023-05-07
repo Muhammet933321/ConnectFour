@@ -1784,7 +1784,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4702163063653952491, guid: 97790f6a49223594fbbd4197d98f4546, type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4702163063653952491, guid: 97790f6a49223594fbbd4197d98f4546, type: 3}
       propertyPath: m_LocalScale.y
@@ -1865,7 +1865,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4702163063653952491, guid: 47115d796f304854da2304ab0f4720d4, type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4702163063653952491, guid: 47115d796f304854da2304ab0f4720d4, type: 3}
       propertyPath: m_LocalScale.y
@@ -2023,7 +2023,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2073584798}
         m_TargetAssemblyTypeName: UiManager, Assembly-CSharp
-        m_MethodName: OnAiModeSelected
+        m_MethodName: SellectedPlayerVSAi
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -9829,8 +9829,8 @@ Transform:
   - {fileID: 1823632103}
   - {fileID: 918683549}
   - {fileID: 396217631}
-  - {fileID: 275832831}
   - {fileID: 277098390}
+  - {fileID: 275832831}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -10739,6 +10739,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1653993082}
+  - component: {fileID: 1653993083}
   m_Layer: 0
   m_Name: AiGameManager
   m_TagString: Untagged
@@ -10761,6 +10762,34 @@ Transform:
   m_Father: {fileID: 331700101}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1653993083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1653993081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e5048c34e4f71f448c6f8be6866ab60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Player1: {fileID: 4702163063653952503, guid: 47115d796f304854da2304ab0f4720d4, type: 3}
+  Player2: {fileID: 4702163063653952503, guid: 97790f6a49223594fbbd4197d98f4546, type: 3}
+  Player1Ghost: {fileID: 277098387}
+  Player2Ghost: {fileID: 275832828}
+  BoardInputs: {fileID: 1554505000}
+  BoardInput0: {fileID: 871599966}
+  BoardInput1: {fileID: 1155204090}
+  BoardInput2: {fileID: 1174589588}
+  BoardInput3: {fileID: 1300514807}
+  BoardInput4: {fileID: 1946184692}
+  BoardInput5: {fileID: 1440411694}
+  BoardInput6: {fileID: 857146192}
+  UiManagerOBJ: {fileID: 611351644}
+  SingleTurnText: {fileID: 94963448}
+  SpawnLocation: []
+  CanPlay: 0
 --- !u!1 &1660048406
 GameObject:
   m_ObjectHideFlags: 0
