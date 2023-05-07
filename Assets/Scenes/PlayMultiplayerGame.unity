@@ -10786,9 +10786,16 @@ MonoBehaviour:
   BoardInput4: {fileID: 1946184692}
   BoardInput5: {fileID: 1440411694}
   BoardInput6: {fileID: 857146192}
-  UiManagerOBJ: {fileID: 611351644}
+  UiManagerOBJ: {fileID: 2073584797}
   SingleTurnText: {fileID: 94963448}
-  SpawnLocation: []
+  SpawnLocation:
+  - {fileID: 729013290}
+  - {fileID: 2087478078}
+  - {fileID: 214877269}
+  - {fileID: 1290608784}
+  - {fileID: 147583073}
+  - {fileID: 1660048406}
+  - {fileID: 1830137542}
   CanPlay: 0
 --- !u!1 &1660048406
 GameObject:

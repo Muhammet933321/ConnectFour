@@ -59,28 +59,66 @@ public class AiGameManager : MonoBehaviour
 
     public void RandomAiPlay()
     {
-        
-        TakeTurn(Random.Range(0, LenghttOfBoard - 1));
+
+        TakeTurnAi(Random.Range(0, LenghttOfBoard - 1));
     }
     public void HoverCloumn(int column)
     {
         if (StateBoard[column, HeightOfBoard - 1] == 0 && (FallingPiece == null || FallingPiece.GetComponent<Rigidbody>().velocity == Vector3.zero))
         {
+            //Debug.LogError("Mouse On Column");
             if(CanPlay)
             {
-
-            if (Player1Turn)
+                //Debug.LogError("CanPlay ");
+                if (Player1Turn)
             {
                 Player1Ghost.SetActive(true);
                 Player1Ghost.transform.position = SpawnLocation[column].transform.position;
             }
-            else
-            {
-                Player2Ghost.SetActive(true);
-                Player2Ghost.transform.position = SpawnLocation[column].transform.position;
-            }
+            
             }
         }
+    }
+    private void TakeTurnAi(int column)
+    {
+        if (StateBoard[column, HeightOfBoard - 1] == 0 && (FallingPiece == null || FallingPiece.GetComponent<Rigidbody>().velocity == Vector3.zero))
+        {
+            if (CanPlay)
+            {
+
+                if (UpdateBoardState(column))
+                {
+                    //Debug.LogWarning("Ai Moved A Piecies");
+                    Player1Ghost.SetActive(false);
+                    Player2Ghost.SetActive(false);
+                    if (Player1Turn == false)
+                    {
+                        FallingPiece = Instantiate(Player2, SpawnLocation[column].transform.position, new Quaternion(0, 90, 90, 0));
+                        FallingPiece.GetComponent<Rigidbody>().velocity = new Vector3(0, 0.1f, 0);
+                        Player1Turn = true;
+                        SingleTurnText.text = "Your Turn";
+                        if (DidWin(1))
+                        {
+                            UiManagerOBJ.GetComponent<UiManager>().WinForSingle(1);
+                            CanPlay = false;
+                            //    Debug.LogWarning("Player 1 win");
+                        }
+                    }
+                    else
+
+                    if (IsDraw())
+                    {
+                        //     Debug.LogWarning("Draw!");
+                    }
+                }
+            }
+            else
+            {
+                //   Debug.LogWarning("Cant Play Now");
+            }
+
+        }
+
     }
     public void TakeTurn(int column)
     {
@@ -99,30 +137,17 @@ public class AiGameManager : MonoBehaviour
                     FallingPiece = Instantiate(Player1, SpawnLocation[column].transform.position, new Quaternion(0, 90, 90, 0));
                     FallingPiece.GetComponent<Rigidbody>().velocity = new Vector3(0, 0.1f, 0);
                     Player1Turn = false;
-                    SingleTurnText.text = "Player 2 Turn";
-                        Invoke("RandomAiPlay", 2);
+                    SingleTurnText.text = "Ai's Turn";
+                        Invoke("RandomAiPlay", 1);
                         if (DidWin(1))
                         {
                         UiManagerOBJ.GetComponent<UiManager>().WinForSingle(1);
                         CanPlay = false;
                         //    Debug.LogWarning("Player 1 win");
-                        }
-                    
-                        
+                        }     
                 }
                 else
-                {
-                    FallingPiece = Instantiate(Player2, SpawnLocation[column].transform.position, new Quaternion(0, 90, 90, 0));
-                    FallingPiece.GetComponent<Rigidbody>().velocity = new Vector3(0, 0.1f, 0);
-                    Player1Turn = true;
-                    SingleTurnText.text = "Player 1 Turn";
-                        if (DidWin(2))
-                        {
-                        UiManagerOBJ.GetComponent<UiManager>().WinForSingle(2);
-                        CanPlay = false;
-                        //    Debug.LogWarning("Player 2 win");
-                        }
-                }
+                
                 if (IsDraw())
                 {
                //     Debug.LogWarning("Draw!");

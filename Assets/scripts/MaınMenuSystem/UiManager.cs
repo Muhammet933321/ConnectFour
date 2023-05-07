@@ -11,6 +11,7 @@ public class UiManager : MonoBehaviour
 
     private MultiGameManagerUpdate MultiGameManagerUpdateSC;
     private GameManager TwoPlayerGameManagerSC;
+    private AiGameManager AiGameManagerSC;
 
 
     [Header("Managers")]
@@ -74,6 +75,7 @@ public class UiManager : MonoBehaviour
         Application.targetFrameRate=  30;
         MultiGameManagerUpdateSC = MultiGameManagerUpdate.GetComponent<MultiGameManagerUpdate>();
         TwoPlayerGameManagerSC = TwoPlayerGameManager.GetComponent<GameManager>();
+        AiGameManagerSC = AiGameMnager.GetComponent<AiGameManager>();
         MainMenuButton();
     }
     public void SellectedPlayerVSAi()
@@ -81,6 +83,7 @@ public class UiManager : MonoBehaviour
         AiGameMnager.SetActive(true);
         DisableAllScreen();
         SingleGameScene.SetActive(true);
+        AiGameManagerSC.CanPlay = true;
     }
     private void Start()
     {
