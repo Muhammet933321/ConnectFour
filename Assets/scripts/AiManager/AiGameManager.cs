@@ -551,12 +551,12 @@ public class AiGameManager : MonoBehaviour
     private void RandomAiPlay()
     {
         int RandomMove;
-        // Debug.LogWarning("RandomPlay");
+        Debug.LogWarning("RandomPlay");
         for(int  i= 0; i< 100; i ++)
         {
             if( i == 99)
             {
-                Debug.LogError("For Couldn't Find a Move");
+                //Debug.LogError("For Couldn't Find a Move");
                 for(int y = 0; y < LenghttOfBoard; y++)
                 {
                     if (IsColumnFull(StateBoard, y))
@@ -567,7 +567,7 @@ public class AiGameManager : MonoBehaviour
                         TakeTurnAi(y);
 
                 }
-                Debug.LogError("It is Most DRAW");
+                //Debug.LogError("It is Most DRAW");
             }
             RandomMove = Random.Range(0, LenghttOfBoard -1);
             if(IsColumnFull(StateBoard , RandomMove))
@@ -596,6 +596,8 @@ public class AiGameManager : MonoBehaviour
     private int FindBestMove(int[,] board)
     {
         int[,] NewBoard = new int[LenghttOfBoard , HeightOfBoard] ;
+        int[,] NextBoard = new int[LenghttOfBoard, HeightOfBoard];
+        Debug.LogError("Finding Best Move");
         ///
         /// Find Ai Win Now
         ///
@@ -659,40 +661,124 @@ public class AiGameManager : MonoBehaviour
                 }
             }
         }
-        int RandomMove;
-        //Debug.LogWarning("RandomPlay");
-        for (int i = 0; i < 100; i++)
-        {
-            if (i == 99)
-            {
-                //Debug.LogError("For Couldn't Find a Move");
-                for (int y = 0; y < LenghttOfBoard; y++)
-                {
-                    if (IsColumnFull(StateBoard, y))
-                    {
 
+        ///
+        ///If I Play It Can Hi Win
+        ///
+        /*
+        Debug.LogWarning("-----------------------------------");
+
+        for (int i = 0; i < LenghttOfBoard; i++)
+        {
+
+            for (int k = 0; k < LenghttOfBoard; k++)
+            {
+                for (int j = 0; j < HeightOfBoard; j++)
+                {
+                    NewBoard[k, j] = board[k, j];
+                }
+            }
+            Debug.LogError($"1.deep = {i}");
+            UpdateBoard(NewBoard, i, AI);
+            
+            for (int j = 0; j < LenghttOfBoard; j ++)
+            {
+                for (int l = 0; l < LenghttOfBoard; l++)
+                {
+                    for (int v = 0; v < HeightOfBoard; v++)
+                    {
+                        NextBoard[l, v] = NewBoard[l, v];
                     }
-                    else
-                        TakeTurnAi(y);
+                }
+                Debug.LogError($"2.deep = {j}");
+                UpdateBoard(NextBoard, j, PLAYER);
+                 
+                
+
+                if (DidWinAi(NextBoard, PLAYER))
+                {
+                   Debug.LogError($"If I Player Column {i} . He Play Column {j} And He Win");
+
+                   return i;
 
                 }
-                //Debug.LogError("It is Most DRAW");
+                
             }
-            RandomMove = Random.Range(0, LenghttOfBoard - 1);
-            if (IsColumnFull(StateBoard, RandomMove))
-            {
-                continue;
-            }
-            else
-            {
-                TakeTurnAi(RandomMove);
-                break;
-            }
+               
+            
         }
+        Debug.LogError("Canf Find A Greet Move");
         return -1;
 
+        */
+        
+        for (int i = 0; i < LenghttOfBoard; i++)
+        {
 
+            for (int k = 0; k < LenghttOfBoard; k++)
+            {
+                for (int j = 0; j < HeightOfBoard; j++)
+                {
+                    NewBoard[k, j] = board[k, j];
+                }
+            }
+
+
+
+            if (IsColumnFull(NewBoard, i))
+            {
+                //Debug.LogWarning($"Column {i} Is Full");
+                continue;
+            }
+
+            else
+            {
+                UpdateBoard(NewBoard, i, AI);
+                //Debug.Log($"if I Move Column {i}");
+
+                for (int j = 0; j < LenghttOfBoard; j++)
+                {
+                    for (int l = 0; l < LenghttOfBoard; l++)
+                    {
+                        for (int v = 0; v < HeightOfBoard; v++)
+                        {
+                            NextBoard[l, v] = NewBoard[l, v];
+                        }
+                    }
+                    if (IsColumnFull(NextBoard, j))
+                    {
+                        //Debug.LogWarning($"Column {j} Is Full");
+                        continue;
+                    }
+                    else
+                    {
+                        UpdateBoard(NextBoard, j, PLAYER);
+
+                        Debug.Log($"NextBoard = {NextBoard[i, 0]}");
+
+                        if (DidWinAi(NextBoard, PLAYER))
+                        {
+                            Debug.LogError($"If I Player Column {i} . He Play Column {j} And He Win");
+
+                            return i;
+
+                        }
+                        else if (DidWinAi(NextBoard, AI))
+                        {
+                            Debug.Log($"If I Player Column {i} . He Play Column {j} And He Win");
+                            return i;
+                        }
+                    }
+                }
+            }
+        }
+        Debug.LogError("Canf Find A Greet Move");
+        return -1;
+        
+        
     }
+
+
     
     private void UpdateBoard(int[,] board ,int column , int Playernum)
     {
@@ -700,10 +786,10 @@ public class AiGameManager : MonoBehaviour
 
         for (int Raw = 0; Raw < HeightOfBoard; Raw++)
         {
-            if (StateBoard[column, Raw] == 0)
+            if (board[column, Raw] == 0)
             {
                 board[column, Raw] = Playernum;
-                //Debug.Log("Column ,Raw = " + column + " , " + Raw);
+                Debug.Log("Column ,Raw = " + column + " , " + Raw);
                 break;
             }
         }
