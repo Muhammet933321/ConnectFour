@@ -83,7 +83,9 @@ public class UiManager : MonoBehaviour
         AiGameMnager.SetActive(true);
         DisableAllScreen();
         SingleGameScene.SetActive(true);
+        AiGameManagerSC.Player1Turn = true;
         AiGameManagerSC.CanPlay = true;
+        AiGameManagerSC.SingleTurnText.text = "Your Turn";
     }
     private void Start()
     {
@@ -133,6 +135,7 @@ public class UiManager : MonoBehaviour
     public void OnAiModeSelected()
     {
         DisableAllScreen();
+        TwoPlayerGameManagerSC.CanPlay = true;
         SelectAiLevelSceene.SetActive(true);
     }
 
@@ -191,9 +194,19 @@ public class UiManager : MonoBehaviour
 
     public void WinForSingle(int Player)
     {
-        DisableAllScreen();
-        SingleWinText.text = "Player " + Player.ToString() +" Win";
-        SingleWinScreen.SetActive(true);
+        if(Player == 1 || Player == 2)
+        {
+            DisableAllScreen();
+            SingleWinText.text = "Player " + Player.ToString() + " Win";
+            SingleWinScreen.SetActive(true);
+        }
+        if (Player == 3)
+        {
+            DisableAllScreen();
+            SingleWinText.text = "Ai Win";
+            SingleWinScreen.SetActive(true);
+        }
+
     }
     public void OnLose()
     {
@@ -239,6 +252,7 @@ public class UiManager : MonoBehaviour
         MultiGameManagerUpdateSC.Player1Ghost.SetActive(false);
         MultiGameManagerUpdateSC.Player2Ghost.SetActive(false);
         GameMode.SetActive(true);
+        MultiGameManagerUpdate.SetActive(false);
         //Debug.LogError("MainMenuFromOnlineGame");
     }
     public void MainMenuButton()
@@ -254,19 +268,38 @@ public class UiManager : MonoBehaviour
         MultiGameManagerUpdateSC.Player1Ghost.SetActive(false);
         MultiGameManagerUpdateSC.Player2Ghost.SetActive(false);
         GameMode.SetActive(true);
+        MultiGameManagerUpdate.SetActive(false);
     }
 
     public void MainMenuForSingle()
     {
-        MultiGameManagerUpdateSC.Player1Ghost.SetActive(false);
-        MultiGameManagerUpdateSC.Player2Ghost.SetActive(false);
-        TwoPlayerGameManagerSC.CanPlay =false;
-        DisableAllScreen();
-        GameMode.SetActive(true);
-        TwoPlayerGameManager.SetActive(false);
-        // Debug.LogError("MainMenu For Single ");
-        TwoPlayerGameManagerSC.ClearSingleBoard();
-        TwoPlayerGameManagerSC.ClearSinglePecies();
+        if(TwoPlayerGameManager.activeSelf)
+        {
+            TwoPlayerGameManagerSC.Player1Ghost.SetActive(false);
+            TwoPlayerGameManagerSC.Player2Ghost.SetActive(false);
+            TwoPlayerGameManagerSC.CanPlay = false;
+            DisableAllScreen();
+            GameMode.SetActive(true);
+            TwoPlayerGameManager.SetActive(false);
+            // Debug.LogError("MainMenu For Single ");
+            TwoPlayerGameManagerSC.ClearSingleBoard();
+            TwoPlayerGameManagerSC.ClearSinglePecies();
+            TwoPlayerGameManager.SetActive(false);
+        }
+        else
+        {
+            AiGameManagerSC.Player1Ghost.SetActive(false);
+            AiGameManagerSC.Player2Ghost.SetActive(false);
+            AiGameManagerSC.CanPlay = false;
+            DisableAllScreen();
+            GameMode.SetActive(true);
+            TwoPlayerGameManager.SetActive(false);
+            // Debug.LogError("MainMenu For Single ");
+            AiGameManagerSC.ClearSingleBoard();
+            AiGameManagerSC.ClearSinglePecies();
+            AiGameMnager.SetActive(false);
+        }
+        
     }
 
     public void GameScreenActive(string Text)
@@ -289,15 +322,32 @@ public class UiManager : MonoBehaviour
 
     public void PlayAgainSingle()
     {
-        DisableAllScreen();
-        SingleGameScene.SetActive(true) ;
+        if(TwoPlayerGameManager.activeSelf)
+        {
+            DisableAllScreen();
+            SingleGameScene.SetActive(true);
 
 
-        TwoPlayerGameManagerSC.CanPlay = true;
-        TwoPlayerGameManagerSC.SingleTurnText.text = "Player 1 Turn";
+            TwoPlayerGameManagerSC.CanPlay = true;
+            TwoPlayerGameManagerSC.SingleTurnText.text = "Player 1 Turn";
 
-        TwoPlayerGameManagerSC.ClearSingleBoard();
-        TwoPlayerGameManagerSC.ClearSinglePecies();
+            TwoPlayerGameManagerSC.ClearSingleBoard();
+            TwoPlayerGameManagerSC.ClearSinglePecies();
+        }
+        else if(AiGameMnager.activeSelf)
+        {
+            DisableAllScreen();
+            SingleGameScene.SetActive(true);
+
+
+            AiGameManagerSC.CanPlay = true;
+            AiGameManagerSC.Player1Turn = true;
+            AiGameManagerSC.SingleTurnText.text = "Player 1 Turn";
+
+            AiGameManagerSC.ClearSingleBoard();
+            AiGameManagerSC.ClearSinglePecies();
+        }
+        
 
 
     }
