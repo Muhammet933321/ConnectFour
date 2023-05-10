@@ -582,14 +582,59 @@ public class AiGameManager : MonoBehaviour
         }
         
     }
+    private void RandomAiPlayBut(int NaverMove)
+    {
+        int RandomMove;
+        Debug.LogWarning("RandomPlayBut");
+        for (int i = 0; i < 100; i++)
+        {
+            if (i == 99)
+            {
+                //Debug.LogError("For Couldn't Find a Move");
+                for (int y = 0; y < LenghttOfBoard; y++)
+                {
+                    if (IsColumnFull(StateBoard, y) || NaverMove == y)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        TakeTurnAi(y);
+                        break ;
+
+                    }
+                        
+                    
+
+                }
+                
+            }
+            RandomMove = Random.Range(0, LenghttOfBoard - 1);
+            if (IsColumnFull(StateBoard, RandomMove) || NaverMove == RandomMove)
+            {
+                continue;
+            }
+            else
+            {
+                TakeTurnAi(RandomMove);
+                break;
+            }
+        }
+
+    }
 
     private void SimpleAiPlay()
     {
-        if (FindBestMove(StateBoard) == -1)
+        int BestMove =  FindBestMove(StateBoard);
+        if (BestMove == -1)
         {
             RandomAiPlay();
         }
-        else
+        else if(BestMove >= 7  && BestMove < 14)
+        {
+            RandomAiPlayBut(BestMove - 7);
+        }
+        else 
         TakeTurnAi(FindBestMove(StateBoard));
 
     }
@@ -597,6 +642,7 @@ public class AiGameManager : MonoBehaviour
     {
         int[,] NewBoard = new int[LenghttOfBoard , HeightOfBoard] ;
         int[,] NextBoard = new int[LenghttOfBoard, HeightOfBoard];
+        
         Debug.LogError("Finding Best Move");
         ///
         /// Find Ai Win Now
@@ -754,27 +800,22 @@ public class AiGameManager : MonoBehaviour
                     {
                         UpdateBoard(NextBoard, j, PLAYER);
 
-                        Debug.Log($"NextBoard = {NextBoard[i, 0]}");
+                        //Debug.Log($"NextBoard = {NextBoard[i, 0]}");
 
                         if (DidWinAi(NextBoard, PLAYER))
                         {
                             Debug.LogError($"If I Player Column {i} . He Play Column {j} And He Win");
 
-                            return i;
+                            return i+7;
 
                         }
-                        else if (DidWinAi(NextBoard, AI))
-                        {
-                            Debug.Log($"If I Player Column {i} . He Play Column {j} And He Win");
-                            return i;
-                        }
+                        
                     }
                 }
             }
         }
         Debug.LogError("Canf Find A Greet Move");
         return -1;
-        
         
     }
 
@@ -789,7 +830,7 @@ public class AiGameManager : MonoBehaviour
             if (board[column, Raw] == 0)
             {
                 board[column, Raw] = Playernum;
-                Debug.Log("Column ,Raw = " + column + " , " + Raw);
+                //Debug.Log("Column ,Raw = " + column + " , " + Raw);
                 break;
             }
         }
