@@ -194,11 +194,22 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
                  }*/
                 if (IsDraw())
                 {
-                 //   Debug.LogWarning("Draw!");
+                    OnDrawOnlineGame();
+                    photonView.RPC("OnDrawOnlineGame" , PhotonNetwork.player.GetNext());
+
+
+                   // Debug.LogWarning("Draw!");
                 }
             }
 
         }
+    }
+    [PunRPC]
+    public void OnDrawOnlineGame()
+    {
+        UiManagerSC.OnlineDraw();
+        CanPlay = false;
+        EndGame();
     }
 
     [PunRPC]
@@ -322,7 +333,7 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
                 StateBoard[y,x] = 0;
             }
         }
-       Debug.LogError("Online Board Was Cleared");
+       //Debug.LogError("Online Board Was Cleared");
     }
 
     [PunRPC]

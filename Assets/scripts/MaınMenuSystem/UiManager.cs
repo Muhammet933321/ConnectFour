@@ -28,6 +28,7 @@ public class UiManager : MonoBehaviour
     [SerializeField] private GameObject WinerScreen;
     [SerializeField] private GameObject SingleWinScreen;
     [SerializeField] private GameObject LoserScreen;
+    [SerializeField] private GameObject OnlineDrawScreen;
     [SerializeField] private GameObject GameScreen;
     [SerializeField] private GameObject EnemyDisConnectedSceene;
     [SerializeField] private GameObject SingleModeSceene;
@@ -40,6 +41,7 @@ public class UiManager : MonoBehaviour
     [Header("Texts")]
     [SerializeField] private TextMeshProUGUI PlayAgainTextWin;
     [SerializeField] private TextMeshProUGUI PlayAgainTextLose;
+    [SerializeField] private TextMeshProUGUI PlayAgainTextDraw;
     [SerializeField] private TextMeshProUGUI SingleWinText;
     
     public TextMeshProUGUI InfoText;
@@ -67,8 +69,10 @@ public class UiManager : MonoBehaviour
         GamePousedSingle.SetActive(false);
         GamePousedOnline.SetActive(false);
         OnlineGameScene.SetActive(false);
+        OnlineDrawScreen.SetActive(false);
         PlayAgainTextLose.text = "" ;
         PlayAgainTextWin.text =  "" ;
+        PlayAgainTextDraw.text = "" ;
     }
     private void Awake()
     {
@@ -192,7 +196,7 @@ public class UiManager : MonoBehaviour
         MultiGameManagerUpdateSC.EndGame();
         networkManager.GetComponent<PhotonView>().RPC("OnLoseRPC" , PhotonNetwork.player.GetNext());
         MultiGameManagerUpdate.GetComponent<PhotonView>().RPC("EndGame" , PhotonNetwork.player.GetNext());
-        MultiGameManagerUpdateSC.EndGame();
+        
         
     }
 
@@ -208,6 +212,12 @@ public class UiManager : MonoBehaviour
         {
             DisableAllScreen();
             SingleWinText.text = "Ai Win";
+            SingleWinScreen.SetActive(true);
+        }
+        if (Player == 4)
+        {
+            DisableAllScreen();
+            SingleWinText.text = "Draw";
             SingleWinScreen.SetActive(true);
         }
 
@@ -323,6 +333,7 @@ public class UiManager : MonoBehaviour
     {
         PlayAgainTextLose.text = "Enemy Wanna  Play Again";
         PlayAgainTextWin.text = "Enemy Wanna  Play Again";
+        PlayAgainTextDraw.text = "Enemy Wanna  Play Again";
     }
     public void EnemyDisConnectedUi()
     {
@@ -361,5 +372,11 @@ public class UiManager : MonoBehaviour
         
 
 
+    }
+    public void OnlineDraw()
+    {
+        //Debug.Log("DwarScenee Loading");
+        DisableAllScreen();
+        OnlineDrawScreen.SetActive(true);
     }
 }

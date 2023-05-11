@@ -121,6 +121,8 @@ public class AiGameManager : MonoBehaviour
 
                     if (IsDraw())
                     {
+                        UiManagerOBJ.GetComponent<UiManager>().WinForSingle(4);
+                        CanPlay = false;
                         //Debug.LogWarning("Draw!");
                     }
                 }
@@ -165,7 +167,9 @@ public class AiGameManager : MonoBehaviour
 
                     if (IsDraw())
                     {
-                       // Debug.LogWarning("Draw!");
+                        UiManagerOBJ.GetComponent<UiManager>().WinForSingle(4);
+                        CanPlay = false;
+                        // Debug.LogWarning("Draw!");
                     }
                 }
             }

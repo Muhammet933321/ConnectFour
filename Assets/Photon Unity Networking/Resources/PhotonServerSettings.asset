@@ -56,4 +56,5 @@ MonoBehaviour:
   - EnemyWannaPlayAgain
   - DisableAllScreen
   - LoadGameScreen
+  - OnDrawOnlineGame
   DisableAutoOpenWizard: 1

@@ -138,7 +138,9 @@ public class GameManager : MonoBehaviour
                 }
                 if (IsDraw())
                 {
-               //     Debug.LogWarning("Draw!");
+                        UiManagerOBJ.GetComponent<UiManager>().WinForSingle(4);
+                        CanPlay = false;
+                        //Debug.LogWarning("Draw!");
                 }
             }
             }
