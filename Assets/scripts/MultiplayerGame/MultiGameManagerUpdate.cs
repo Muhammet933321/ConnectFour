@@ -322,7 +322,7 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
                 StateBoard[y,x] = 0;
             }
         }
-       //Debug.LogError("Board Was Cleared");
+       Debug.LogError("Online Board Was Cleared");
     }
 
     [PunRPC]
@@ -379,5 +379,9 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
         UiManagerSC.DisableAllScreen();
     }
 
-
+    public override void OnPhotonPlayerConnected(PhotonPlayer newPlayer)
+    {
+        ClearBoard();
+        photonView.RPC("ClearBoard" , newPlayer);
+    }
 }

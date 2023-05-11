@@ -102,7 +102,7 @@ public class UiManager : MonoBehaviour
         SingleGameScene.SetActive(true);
         TwoPlayerGameManager.SetActive(true);
         TwoPlayerGameManagerSC.CanPlay = true;
-
+        TwoPlayerGameManagerSC.OnWtoPlayerModeSellected();
 
     }
     public void PouseGameSingle()
@@ -137,6 +137,8 @@ public class UiManager : MonoBehaviour
         DisableAllScreen();
         TwoPlayerGameManagerSC.CanPlay = true;
         SelectAiLevelSceene.SetActive(true);
+        AiGameManagerSC.PlayAiGameOnSellected();
+        
     }
 
     public void OnOnlineModeSelected()
@@ -184,8 +186,10 @@ public class UiManager : MonoBehaviour
 
     public void OnWin()
     {
+        
         DisableAllScreen();
         WinerScreen.SetActive(true);
+        MultiGameManagerUpdateSC.EndGame();
         networkManager.GetComponent<PhotonView>().RPC("OnLoseRPC" , PhotonNetwork.player.GetNext());
         MultiGameManagerUpdate.GetComponent<PhotonView>().RPC("EndGame" , PhotonNetwork.player.GetNext());
         MultiGameManagerUpdateSC.EndGame();
@@ -264,11 +268,17 @@ public class UiManager : MonoBehaviour
 
         networkManager.DisConnectFun();
 
+
         DisableAllScreen();
         MultiGameManagerUpdateSC.Player1Ghost.SetActive(false);
         MultiGameManagerUpdateSC.Player2Ghost.SetActive(false);
         GameMode.SetActive(true);
-        MultiGameManagerUpdate.SetActive(false);
+        if(MultiGameManagerUpdate.activeSelf)
+        {
+            MultiGameManagerUpdateSC.ClearBoard();
+            MultiGameManagerUpdate.SetActive(false);
+        }
+
     }
 
     public void MainMenuForSingle()
@@ -284,9 +294,9 @@ public class UiManager : MonoBehaviour
             // Debug.LogError("MainMenu For Single ");
             TwoPlayerGameManagerSC.ClearSingleBoard();
             TwoPlayerGameManagerSC.ClearSinglePecies();
-            TwoPlayerGameManager.SetActive(false);
+            AiGameMnager.SetActive(false);
         }
-        else
+        else if(AiGameMnager.activeSelf)
         {
             AiGameManagerSC.Player1Ghost.SetActive(false);
             AiGameManagerSC.Player2Ghost.SetActive(false);
@@ -299,6 +309,7 @@ public class UiManager : MonoBehaviour
             AiGameManagerSC.ClearSinglePecies();
             AiGameMnager.SetActive(false);
         }
+        
         
     }
 

@@ -33,6 +33,26 @@ public class GameManager : MonoBehaviour
 
 
     int[,] StateBoard;
+    private void Awake()
+    {
+        
+    }
+    public void OnWtoPlayerModeSellected()
+    {
+        Player1Turn = true;
+        SingleTurnText.text = "Player 1 Turn";
+        StateBoard = new int[LenghttOfBoard, HeightOfBoard];
+        Player1Ghost.SetActive(false);
+        Player2Ghost.SetActive(false);
+        BoardInputs.SetActive(true);
+        BoardInput0.GetComponent<MultiInputFileds>().GameMode = 1;
+        BoardInput1.GetComponent<MultiInputFileds>().GameMode = 1;
+        BoardInput2.GetComponent<MultiInputFileds>().GameMode = 1;
+        BoardInput3.GetComponent<MultiInputFileds>().GameMode = 1;
+        BoardInput4.GetComponent<MultiInputFileds>().GameMode = 1;
+        BoardInput5.GetComponent<MultiInputFileds>().GameMode = 1;
+        BoardInput6.GetComponent<MultiInputFileds>().GameMode = 1;
+    }
     private void Start()
     {
         Player1Turn = true;

@@ -54,6 +54,21 @@ public class AiGameManager : MonoBehaviour
 
 
     }
+    public void PlayAiGameOnSellected()
+    {
+        Player1Turn = true;
+        SingleTurnText.text = "Player 1 Turn";
+        Player1Ghost.SetActive(false);
+        Player2Ghost.SetActive(false);
+        BoardInputs.SetActive(true);
+        BoardInput0.GetComponent<MultiInputFileds>().GameMode = 2;
+        BoardInput1.GetComponent<MultiInputFileds>().GameMode = 2;
+        BoardInput2.GetComponent<MultiInputFileds>().GameMode = 2;
+        BoardInput3.GetComponent<MultiInputFileds>().GameMode = 2;
+        BoardInput4.GetComponent<MultiInputFileds>().GameMode = 2;
+        BoardInput5.GetComponent<MultiInputFileds>().GameMode = 2;
+        BoardInput6.GetComponent<MultiInputFileds>().GameMode = 2;
+    }
     public void SelectColumn(int column)
     {
         //Debug.Log("Selected Column + " + column);
@@ -564,7 +579,12 @@ public class AiGameManager : MonoBehaviour
                         
                     }
                     else
+                    {
+                        Debug.Log("Called Take Ai");
                         TakeTurnAi(y);
+                        break;
+                    }
+                        
 
                 }
                 //Debug.LogError("It is Most DRAW");
@@ -576,6 +596,7 @@ public class AiGameManager : MonoBehaviour
             }
             else
             {
+                Debug.Log("Called Take Turn");
                 TakeTurnAi(RandomMove);
                 break ;
             }
@@ -590,7 +611,7 @@ public class AiGameManager : MonoBehaviour
         {
             if (i == 99)
             {
-                //Debug.LogError("For Couldn't Find a Move");
+                Debug.LogError("For Couldn't Find a Move");
                 for (int y = 0; y < LenghttOfBoard; y++)
                 {
                     if (IsColumnFull(StateBoard, y) || NaverMove == y)
@@ -599,6 +620,7 @@ public class AiGameManager : MonoBehaviour
                     }
                     else
                     {
+                        Debug.Log("Called Take Ai");
                         TakeTurnAi(y);
                         break ;
 
@@ -616,6 +638,7 @@ public class AiGameManager : MonoBehaviour
             }
             else
             {
+                Debug.Log("Called Take Ai");
                 TakeTurnAi(RandomMove);
                 break;
             }
