@@ -13,6 +13,8 @@ public class UiManager : MonoBehaviour
     private GameManager TwoPlayerGameManagerSC;
     private AiGameManager AiGameManagerSC;
 
+    [SerializeField] private TMP_InputField NickNameText;
+    
 
     [Header("Managers")]
     [SerializeField] private NetworkManager networkManager;
@@ -21,6 +23,7 @@ public class UiManager : MonoBehaviour
     [SerializeField] private GameObject AiGameMnager;
 
     [Header("Buttons")]
+    [SerializeField] private GameObject CreateNickNameSeeneOBJ;
     [SerializeField] private GameObject GameMode;
     [SerializeField] private GameObject SettingsScenee;
     [SerializeField] private GameObject GameType;
@@ -44,7 +47,9 @@ public class UiManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI PlayAgainTextLose;
     [SerializeField] private TextMeshProUGUI PlayAgainTextDraw;
     [SerializeField] private TextMeshProUGUI SingleWinText;
-    
+    [SerializeField] private TextMeshProUGUI MenuNickName;
+    [SerializeField] private TextMeshProUGUI NickNameErrorText;
+
     public TextMeshProUGUI InfoText;
 
     [Header("DropDown")]
@@ -76,18 +81,95 @@ public class UiManager : MonoBehaviour
         OnlineGameScene.SetActive(false);
         OnlineDrawScreen.SetActive(false);
         SettingsScenee.SetActive(false);
+        CreateNickNameSeeneOBJ.SetActive(false);
         PlayAgainTextLose.text = "" ;
         PlayAgainTextWin.text =  "" ;
         PlayAgainTextDraw.text = "" ;
     }
     private void Awake()
     {
-        Application.targetFrameRate=  30;
+        //PlayerPrefs.DeleteAll();
+        MenuNickName.text = "";
+        NickNameErrorText.text = "";
         MultiGameManagerUpdateSC = MultiGameManagerUpdate.GetComponent<MultiGameManagerUpdate>();
         TwoPlayerGameManagerSC = TwoPlayerGameManager.GetComponent<GameManager>();
         AiGameManagerSC = AiGameMnager.GetComponent<AiGameManager>();
-        MainMenuButton();
+        if (PlayerPrefs.HasKey("QualityLevel"))
+        {
+            FpsLimitDD.SetValueWithoutNotify(PlayerPrefs.GetInt("QualityLevel")-1);
+            GraphicLevelChange(PlayerPrefs.GetInt("QualityLevel"));
+            Debug.Log("Quality Level = " + PlayerPrefs.GetInt("QualityLevel"));
+        }
+        else
+        {
+            Debug.Log("It Is First Game");
+            PlayerPrefs.SetInt("QualityLevel", 2);
+        }
+        if(PlayerPrefs.HasKey("NickName"))
+        {
+            MenuNickName.text = PlayerPrefs.GetString("NickName");
+            MainMenuButton();
+        }
+        else
+        {
+            CreateNickNameSceene();
+        }
+        
+        
     }
+    public void CreateNickNameSceene()
+    {
+        DisableAllScreen();
+        CreateNickNameSeeneOBJ.SetActive(true);
+
+    }
+    public void NickNameOkeyButton()
+    {
+
+        if(NickNameText.text != null && NickNameText.text != ""  && NickNameText.text != "Enter Nick Name..." && NickNameText.text.Length < 15 && NickNameText.text != " ")
+        {
+            char[] NickNameChar  = NickNameText.text.ToCharArray();
+            char[] EmptyChar = "                 ".ToCharArray();
+            bool CanNickName = false;
+            for (int i = 0; i < NickNameText.text.Length; i ++)
+            {
+                if (NickNameChar[i] == EmptyChar[i])
+                {
+                    //Debug.LogError(" Using Space");
+                    NickNameErrorText.text = "Naver Use Space";
+                    CanNickName = false;
+                    break;
+                }
+                else
+                {
+                    //Debug.LogError("Naver Use Space");
+                    CanNickName = true;
+                    continue;
+                }
+            }
+            if(CanNickName)
+            {
+                PlayerPrefs.SetString("NickName", NickNameText.text);
+                //Debug.Log("Created Nick Name = " + PlayerPrefs.GetString("NickName"));
+                MenuNickName.text = PlayerPrefs.GetString("NickName");
+                NickNameErrorText.text = "";
+                MainMenuButton();
+            }
+                
+            
+            
+            
+        }
+        else if(NickNameText.text.Length >= 15)
+        {
+            NickNameErrorText.text = "Enter less than 15 characters"; 
+            //Debug.LogError("Invalid Character");
+        }
+        else
+            NickNameErrorText.text = "Enter a valid Nick Name";
+
+    }
+
     public void SellectedPlayerVSAi()
     {
         AiGameMnager.SetActive(true);
@@ -97,10 +179,7 @@ public class UiManager : MonoBehaviour
         AiGameManagerSC.CanPlay = true;
         AiGameManagerSC.SingleTurnText.text = "Your Turn";
     }
-    private void Start()
-    {
-        
-    }
+    
     public void OnSinglePlayerModeSelected()
     {
         DisableAllScreen();
@@ -389,20 +468,31 @@ public class UiManager : MonoBehaviour
     {
         DisableAllScreen();
         SettingsScenee.SetActive(true);
+        FpsLimitDD.SetValueWithoutNotify(PlayerPrefs.GetInt("QualityLevel") - 1);
+        FpsLimitDD.RefreshShownValue();
     }
-    public void FpsLimited()
+    public void GraphicLevelChange(int QualityLevel)
     {
-        if (FpsLimitDD.value == 0)
+        QualityLevel = FpsLimitDD.value;
+        if (QualityLevel == 0)
         {
             Application.targetFrameRate = 30;
+            QualitySettings.SetQualityLevel(1);
+            PlayerPrefs.SetInt("QualityLevel", 1);
         }
-        else if (FpsLimitDD.value == 1)
+        else if (QualityLevel == 1)
         {
             Application.targetFrameRate = 45;
+            QualitySettings.SetQualityLevel(2);
+            PlayerPrefs.SetInt("QualityLevel", 2);
+            
         }
-        else if (FpsLimitDD.value == 2)
+        else if (QualityLevel == 2)
         {
             Application.targetFrameRate = 60;
+            QualitySettings.SetQualityLevel(2);
+            PlayerPrefs.SetInt("QualityLevel", 3);
         }
+        Debug.Log("New Quality Level = " + PlayerPrefs.GetInt("QualityLevel"));
     }
 }

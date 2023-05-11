@@ -50,11 +50,13 @@ public class NetworkManager : Photon.PunBehaviour
     }
     public void connectRandom()
     {
+        PhotonNetwork.player.NickName =  PlayerPrefs.GetString("NickName");
         PlayerLevel = ((LevelMode)1);
         PhotonNetwork.ConnectUsingSettings(GameVersion);
     }
     public void connectFriends()
     {
+        PhotonNetwork.player.NickName = PlayerPrefs.GetString("NickName");
         PlayerLevel = ((LevelMode)0);
         PhotonNetwork.ConnectUsingSettings(GameVersion);
     }
@@ -62,7 +64,8 @@ public class NetworkManager : Photon.PunBehaviour
 
     public override void OnConnectedToMaster()
     {
-       // Debug.LogError($"Connected to master. Loading to Select Game Mode");
+        // Debug.LogError($"Connected to master. Loading to Select Game Mode");
+        Debug.Log("Connected To Master His Name Is = " + PhotonNetwork.player.NickName);
         if(((int)PlayerLevel) == 1)
         {
             UiManagerOBJ.GetComponent<UiManager>().RandomGameMenuLoad();
