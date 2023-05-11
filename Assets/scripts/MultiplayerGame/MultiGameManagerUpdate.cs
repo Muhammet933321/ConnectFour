@@ -346,15 +346,22 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
             UiManagerSC.DisableAllScreen();
             photonViewComp.RPC("DisableAllScreen" , PhotonNetwork.player.GetNext());
          //   Debug.LogError("ReStartinG The Room");
-            if(AmIPlayer1)
+            if(AmIPlayer1 && IsMyTurn)
             {
                 photonViewComp.RPC("LoadGameScreen", PhotonNetwork.player.GetNext() , "Enemy's Turn");
                 UiManagerSC.GameScreenActive("Your Turn");
+            }
+            else if(!AmIPlayer1 && IsMyTurn)
+            {
+                UiManagerSC.GameScreenActive("Your Turn");
+                photonViewComp.RPC("LoadGameScreen", PhotonNetwork.player.GetNext(), "Enemy's Turn");
+
             }
             else
             {
                 UiManagerSC.GameScreenActive("Enemy's Turn");
                 photonViewComp.RPC("LoadGameScreen", PhotonNetwork.player.GetNext(), "Your Turn");
+                
             }
             
             EnemyWanaPlayAgain= false;
@@ -390,9 +397,4 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
         UiManagerSC.DisableAllScreen();
     }
 
-    public override void OnPhotonPlayerConnected(PhotonPlayer newPlayer)
-    {
-        ClearBoard();
-        photonView.RPC("ClearBoard" , newPlayer);
-    }
 }

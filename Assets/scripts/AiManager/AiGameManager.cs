@@ -94,8 +94,7 @@ public class AiGameManager : MonoBehaviour
     }
     private void TakeTurnAi(int column)
     {
-        if (StateBoard[column, HeightOfBoard - 1] == 0 && (FallingPiece == null || FallingPiece.GetComponent<Rigidbody>().velocity == Vector3.zero))
-        {
+        
             if (CanPlay)
             {
 
@@ -116,8 +115,7 @@ public class AiGameManager : MonoBehaviour
                             CanPlay = false;
                             //Debug.LogWarning("Ai Win");
                         }
-                    }
-                    else
+                    } 
 
                     if (IsDraw())
                     {
@@ -132,38 +130,34 @@ public class AiGameManager : MonoBehaviour
                 //   Debug.LogWarning("Cant Play Now");
             }
 
-        }
+        
 
     }
     public void TakeTurn(int column)
     {
         if (StateBoard[column, HeightOfBoard - 1] == 0 && (FallingPiece == null || FallingPiece.GetComponent<Rigidbody>().velocity == Vector3.zero))
         {
-            if (CanPlay)
+            if (CanPlay && Player1Turn)
             {
 
                 if (UpdateBoardState(column))
                 {
-                    //Debug.LogWarning("Piecies was moved");
+                    Debug.LogWarning("Piecies was moved");
                     Player1Ghost.SetActive(false);
                     Player2Ghost.SetActive(false);
-                    if (Player1Turn == true)
-                    {
-                        FallingPiece = Instantiate(Player1, SpawnLocation[column].transform.position, new Quaternion(0, 90, 90, 0));
-                        FallingPiece.GetComponent<Rigidbody>().velocity = new Vector3(0, 0.1f, 0);
-                        Player1Turn = false;
-                        SingleTurnText.text = "Ai's Turn";
-                        //Invoke("RandomAiPlay", 1);
-                        Invoke("SimpleAiPlay", 1);
+                    FallingPiece = Instantiate(Player1, SpawnLocation[column].transform.position, new Quaternion(0, 90, 90, 0));
+                    FallingPiece.GetComponent<Rigidbody>().velocity = new Vector3(0, 0.1f, 0);
+                    Player1Turn = false;
+                    SingleTurnText.text = "Ai's Turn";
+                    //Invoke("RandomAiPlay", 1);
+                    Invoke("SimpleAiPlay", 1);
                         
-                        if (DidWinAi(StateBoard , PLAYER))
-                        {
-                            UiManagerOBJ.GetComponent<UiManager>().WinForSingle(1);
-                            CanPlay = false;
-                            //Debug.LogWarning("Player 1 win");
-                        }
+                    if (DidWinAi(StateBoard , PLAYER))
+                    {
+                        UiManagerOBJ.GetComponent<UiManager>().WinForSingle(1);
+                        CanPlay = false;
+                        //Debug.LogWarning("Player 1 win");
                     }
-                    else
 
                     if (IsDraw())
                     {
@@ -195,7 +189,7 @@ public class AiGameManager : MonoBehaviour
                 {
                     StateBoard[column, Raw] = 2;
                 }
-                //Debug.Log("Column ,Raw = " + column + " , " + Raw);
+                Debug.Log("Column ,Raw = " + column + " , " + Raw);
                 return true;
             }
         }
@@ -570,7 +564,7 @@ public class AiGameManager : MonoBehaviour
     private void RandomAiPlay()
     {
         int RandomMove;
-        Debug.LogWarning("RandomPlay");
+        //Debug.LogWarning("RandomPlay");
         for(int  i= 0; i< 100; i ++)
         {
             if( i == 99)
@@ -584,7 +578,7 @@ public class AiGameManager : MonoBehaviour
                     }
                     else
                     {
-                        Debug.Log("Called Take Ai");
+                       // Debug.Log("Called Take Ai");
                         TakeTurnAi(y);
                         break;
                     }
@@ -600,7 +594,7 @@ public class AiGameManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("Called Take Turn");
+                //Debug.Log("Called Take Turn");
                 TakeTurnAi(RandomMove);
                 break ;
             }
@@ -610,12 +604,12 @@ public class AiGameManager : MonoBehaviour
     private void RandomAiPlayBut(int NaverMove)
     {
         int RandomMove;
-        Debug.LogWarning("RandomPlayBut");
+        //Debug.LogWarning("RandomPlayBut");
         for (int i = 0; i < 100; i++)
         {
             if (i == 99)
             {
-                Debug.LogError("For Couldn't Find a Move");
+                //Debug.LogError("For Couldn't Find a Move");
                 for (int y = 0; y < LenghttOfBoard; y++)
                 {
                     if (IsColumnFull(StateBoard, y) || NaverMove == y)
@@ -624,7 +618,7 @@ public class AiGameManager : MonoBehaviour
                     }
                     else
                     {
-                        Debug.Log("Called Take Ai");
+                       //Debug.Log("Called Take Ai");
                         TakeTurnAi(y);
                         break ;
 
@@ -642,7 +636,7 @@ public class AiGameManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("Called Take Ai");
+                //Debug.Log("Called Take Ai");
                 TakeTurnAi(RandomMove);
                 break;
             }
@@ -670,7 +664,7 @@ public class AiGameManager : MonoBehaviour
         int[,] NewBoard = new int[LenghttOfBoard , HeightOfBoard] ;
         int[,] NextBoard = new int[LenghttOfBoard, HeightOfBoard];
         
-        Debug.LogError("Finding Best Move");
+       // Debug.LogError("Finding Best Move");
         ///
         /// Find Ai Win Now
         ///
@@ -831,7 +825,7 @@ public class AiGameManager : MonoBehaviour
 
                         if (DidWinAi(NextBoard, PLAYER))
                         {
-                            Debug.LogError($"If I Player Column {i} . He Play Column {j} And He Win");
+                            //Debug.LogError($"If I Player Column {i} . He Play Column {j} And He Win");
 
                             return i+7;
 
@@ -841,7 +835,7 @@ public class AiGameManager : MonoBehaviour
                 }
             }
         }
-        Debug.LogError("Canf Find A Greet Move");
+        //Debug.LogError("Canf Find A Greet Move");
         return -1;
         
     }

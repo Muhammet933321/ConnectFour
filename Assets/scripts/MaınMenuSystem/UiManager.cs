@@ -22,6 +22,7 @@ public class UiManager : MonoBehaviour
 
     [Header("Buttons")]
     [SerializeField] private GameObject GameMode;
+    [SerializeField] private GameObject SettingsScenee;
     [SerializeField] private GameObject GameType;
     [SerializeField] private GameObject PlayFriends;
     [SerializeField] private GameObject FindRandomGame;
@@ -45,9 +46,13 @@ public class UiManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI SingleWinText;
     
     public TextMeshProUGUI InfoText;
-    
 
-    
+    [Header("DropDown")]
+    [SerializeField] private TMP_Dropdown FpsLimitDD;
+
+
+
+
 
 
 
@@ -70,6 +75,7 @@ public class UiManager : MonoBehaviour
         GamePousedOnline.SetActive(false);
         OnlineGameScene.SetActive(false);
         OnlineDrawScreen.SetActive(false);
+        SettingsScenee.SetActive(false);
         PlayAgainTextLose.text = "" ;
         PlayAgainTextWin.text =  "" ;
         PlayAgainTextDraw.text = "" ;
@@ -378,5 +384,25 @@ public class UiManager : MonoBehaviour
         //Debug.Log("DwarScenee Loading");
         DisableAllScreen();
         OnlineDrawScreen.SetActive(true);
+    }
+    public void OnSettingsMenuSellected()
+    {
+        DisableAllScreen();
+        SettingsScenee.SetActive(true);
+    }
+    public void FpsLimited()
+    {
+        if (FpsLimitDD.value == 0)
+        {
+            Application.targetFrameRate = 30;
+        }
+        else if (FpsLimitDD.value == 1)
+        {
+            Application.targetFrameRate = 45;
+        }
+        else if (FpsLimitDD.value == 2)
+        {
+            Application.targetFrameRate = 60;
+        }
     }
 }
