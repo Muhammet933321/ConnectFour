@@ -495,6 +495,6 @@ public class UiManager : MonoBehaviour
             QualitySettings.SetQualityLevel(2);
             PlayerPrefs.SetInt("QualityLevel", 3);
         }
-        Debug.Log("New Quality Level = " + PlayerPrefs.GetInt("QualityLevel"));
+        //Debug.Log("New Quality Level = " + PlayerPrefs.GetInt("QualityLevel"));
     }
 }

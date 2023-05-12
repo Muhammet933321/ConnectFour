@@ -298,7 +298,7 @@ public class AiGameManager : MonoBehaviour
                 StateBoard[y, x] = 0;
             }
         }
-        //  Debug.LogError("Board Was Cleared");
+         //Debug.LogError("Board Was Cleared");
     }
 
     public void ClearSinglePecies()
@@ -330,193 +330,6 @@ public class AiGameManager : MonoBehaviour
 
     // FROM CHAT GPT
 
-    public int evaluate(int[,] board, int player)
-    {
-        int opponent = (player == 1) ? 2 : 1; // rakip oyuncunun kimliði
-        int score = 0;
-
-        // Satýrlarý kontrol et
-        for (int row = 0; row < board.GetLength(0); row++)
-        {
-            for (int col = 0; col < board.GetLength(1) - 3; col++)
-            {
-                int countPlayer = 0;
-                int countOpponent = 0;
-                for (int i = 0; i < 4; i++)
-                {
-                    if (board[row, col + i] == player)
-                    {
-                        countPlayer++;
-                    }
-                    else if (board[row, col + i] == opponent)
-                    {
-                        countOpponent++;
-                    }
-                }
-                score += evaluateLine(countPlayer, countOpponent);
-            }
-        }
-
-        // Sütunlarý kontrol et
-        for (int col = 0; col < board.GetLength(1); col++)
-        {
-            for (int row = 0; row < board.GetLength(0) - 3; row++)
-            {
-                int countPlayer = 0;
-                int countOpponent = 0;
-                for (int i = 0; i < 4; i++)
-                {
-                    if (board[row + i, col] == player)
-                    {
-                        countPlayer++;
-                    }
-                    else if (board[row + i, col] == opponent)
-                    {
-                        countOpponent++;
-                    }
-                }
-                score += evaluateLine(countPlayer, countOpponent);
-            }
-        }
-
-        // Diyagonal (sol üstten sað alta) kontrol et
-        for (int row = 0; row < board.GetLength(0) - 3; row++)
-        {
-            for (int col = 0; col < board.GetLength(1) - 3; col++)
-            {
-                int countPlayer = 0;
-                int countOpponent = 0;
-                for (int i = 0; i < 4; i++)
-                {
-                    if (board[row + i, col + i] == player)
-                    {
-                        countPlayer++;
-                    }
-                    else if (board[row + i, col + i] == opponent)
-                    {
-                        countOpponent++;
-                    }
-                }
-                score += evaluateLine(countPlayer, countOpponent);
-            }
-        }
-
-        // Diyagonal (sað üstten sol alta) kontrol et
-        for (int row = 0; row < board.GetLength(0) - 3; row++)
-        {
-            for (int col = 3; col < board.GetLength(1); col++)
-            {
-                int countPlayer = 0;
-                int countOpponent = 0;
-                for (int i = 0; i < 4; i++)
-                {
-                    if (board[row + i, col - i] == player)
-                    {
-                        countPlayer++;
-                    }
-                    else if (board[row + i, col - i] == opponent)
-                    {
-                        countOpponent++;
-                    }
-                }
-                score += evaluateLine(countPlayer, countOpponent);
-            }
-        }
-
-        return score;
-    }
-
-    private int evaluateLine(int countPlayer, int countOpponent)
-    {
-        int score = 0;
-        if (countPlayer == 4)
-        {
-            score += 1000;
-        }
-        else if (countPlayer == 3 && countOpponent == 0)
-        {
-            score += 5;
-        }
-        else if (countPlayer == 2 && countOpponent == 0)
-        {
-            score += 2;
-        }
-        else if (countPlayer == 1 && countOpponent == 0)
-        {
-            score += 1;
-        }
-
-        if (countOpponent == 4)
-        {
-            score -= 1000;
-        }
-        else if (countOpponent == 3 && countPlayer == 0)
-        {
-            score -= 5;
-        }
-        else if (countOpponent == 2 && countPlayer == 0)
-        {
-            score -= 2;
-        }
-        else if (countOpponent == 1 && countPlayer == 0)
-        {
-            score -= 1;
-        }
-
-        return score;
-
-    }
-
-    private int Minimax(int[,] board, int depth, bool maximizing_player)
-    {
-        int score = evaluate(board , AI);
-
-        if (depth == 0 || score == 1000 || score == -1000)
-        {
-            return score;
-        }
-
-        if (maximizing_player)
-        {
-            int bestScore = -10000;
-
-            for (int i = 0; i < LenghttOfBoard; i++)
-            {
-                if (IsColumnFull(board, i))
-                {
-                    continue;
-                }
-
-                int[,] newBoard = CopyBoard(board);
-                MakeMove(newBoard, i, PLAYER);
-
-                int currentScore = Minimax(newBoard, depth - 1, false);
-                bestScore = Mathf.Max(bestScore, currentScore);
-            }
-
-            return bestScore;
-        }
-        else
-        {
-            int bestScore = 10000;
-
-            for (int i = 0; i < LenghttOfBoard; i++)
-            {
-                if (IsColumnFull(board, i))
-                {
-                    continue;
-                }
-
-                int[,] newBoard = CopyBoard(board);
-                MakeMove(newBoard, i, AI);
-
-                int currentScore = Minimax(newBoard, depth - 1, true);
-                bestScore = Mathf.Min(bestScore, currentScore);
-            }
-
-            return bestScore;
-        }
-    }
     private bool IsColumnFull(int[,] board , int column)
     {
         if (board[column, 5] == 0)
@@ -656,7 +469,7 @@ public class AiGameManager : MonoBehaviour
             RandomAiPlayBut(BestMove - 7);
         }
         else 
-        TakeTurnAi(FindBestMove(StateBoard));
+        TakeTurnAi(BestMove);
 
     }
     private int FindBestMove(int[,] board)
@@ -664,13 +477,13 @@ public class AiGameManager : MonoBehaviour
         int[,] NewBoard = new int[LenghttOfBoard , HeightOfBoard] ;
         int[,] NextBoard = new int[LenghttOfBoard, HeightOfBoard];
         
-       // Debug.LogError("Finding Best Move");
+        //Debug.LogError("Finding Best Move");
         ///
         /// Find Ai Win Now
         ///
         for (int i = 0; i < LenghttOfBoard; i++)
         {
-
+            NewBoard = CopyBoard(board);
             for(int k = 0; k < LenghttOfBoard; k++)
             {
                 for (int j  = 0; j < HeightOfBoard; j++)
@@ -690,7 +503,7 @@ public class AiGameManager : MonoBehaviour
                 UpdateBoard(NewBoard, i, AI);
                 if (DidWinAi(NewBoard, AI))
                 {
-                    //Debug.LogWarning($"Ai Win On 1 Move This Move is { i }");
+                   //Debug.LogWarning($"Ai Win On 1 Move This Move is { i }");
                     return i;
 
                 }
@@ -702,14 +515,8 @@ public class AiGameManager : MonoBehaviour
         ///
         for (int i = 0; i < LenghttOfBoard; i++)
         {
-
-            for (int k = 0; k < LenghttOfBoard; k++)
-            {
-                for (int j = 0; j < HeightOfBoard; j++)
-                {
-                    NewBoard[k, j] = board[k, j];
-                }
-            }
+            NewBoard = CopyBoard(board);
+            
 
 
             if (IsColumnFull(NewBoard, i))
@@ -732,63 +539,12 @@ public class AiGameManager : MonoBehaviour
         ///
         ///If I Play It Can Hi Win
         ///
-        /*
-        Debug.LogWarning("-----------------------------------");
-
-        for (int i = 0; i < LenghttOfBoard; i++)
-        {
-
-            for (int k = 0; k < LenghttOfBoard; k++)
-            {
-                for (int j = 0; j < HeightOfBoard; j++)
-                {
-                    NewBoard[k, j] = board[k, j];
-                }
-            }
-            Debug.LogError($"1.deep = {i}");
-            UpdateBoard(NewBoard, i, AI);
-            
-            for (int j = 0; j < LenghttOfBoard; j ++)
-            {
-                for (int l = 0; l < LenghttOfBoard; l++)
-                {
-                    for (int v = 0; v < HeightOfBoard; v++)
-                    {
-                        NextBoard[l, v] = NewBoard[l, v];
-                    }
-                }
-                Debug.LogError($"2.deep = {j}");
-                UpdateBoard(NextBoard, j, PLAYER);
-                 
-                
-
-                if (DidWinAi(NextBoard, PLAYER))
-                {
-                   Debug.LogError($"If I Player Column {i} . He Play Column {j} And He Win");
-
-                   return i;
-
-                }
-                
-            }
-               
-            
-        }
-        Debug.LogError("Canf Find A Greet Move");
-        return -1;
-
-        */
+       
         
         for (int i = 0; i < LenghttOfBoard; i++)
         {
-
-            for (int k = 0; k < LenghttOfBoard; k++)
-            {
-                for (int j = 0; j < HeightOfBoard; j++)
-                {
-                    NewBoard[k, j] = board[k, j];
-                }
-            }
+            NewBoard = CopyBoard(board);
+            
 
 
 
@@ -805,13 +561,8 @@ public class AiGameManager : MonoBehaviour
 
                 for (int j = 0; j < LenghttOfBoard; j++)
                 {
-                    for (int l = 0; l < LenghttOfBoard; l++)
-                    {
-                        for (int v = 0; v < HeightOfBoard; v++)
-                        {
-                            NextBoard[l, v] = NewBoard[l, v];
-                        }
-                    }
+                    NextBoard = CopyBoard(NewBoard);
+                    
                     if (IsColumnFull(NextBoard, j))
                     {
                         //Debug.LogWarning($"Column {j} Is Full");
@@ -835,7 +586,7 @@ public class AiGameManager : MonoBehaviour
                 }
             }
         }
-        //Debug.LogError("Canf Find A Greet Move");
+        //Debug.LogError("Cant Find A Greet Move");
         return -1;
         
     }
