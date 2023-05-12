@@ -142,7 +142,7 @@ public class AiGameManager : MonoBehaviour
 
                 if (UpdateBoardState(column))
                 {
-                    Debug.LogWarning("Piecies was moved");
+                    //Debug.LogWarning("Piecies was moved");
                     Player1Ghost.SetActive(false);
                     Player2Ghost.SetActive(false);
                     FallingPiece = Instantiate(Player1, SpawnLocation[column].transform.position, new Quaternion(0, 90, 90, 0));
@@ -189,7 +189,7 @@ public class AiGameManager : MonoBehaviour
                 {
                     StateBoard[column, Raw] = 2;
                 }
-                Debug.Log("Column ,Raw = " + column + " , " + Raw);
+                //Debug.Log("Column ,Raw = " + column + " , " + Raw);
                 return true;
             }
         }

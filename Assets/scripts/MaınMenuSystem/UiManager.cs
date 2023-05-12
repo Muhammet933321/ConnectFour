@@ -48,6 +48,7 @@ public class UiManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI PlayAgainTextDraw;
     [SerializeField] private TextMeshProUGUI SingleWinText;
     [SerializeField] private TextMeshProUGUI MenuNickName;
+    public TextMeshProUGUI EnemyNickName;
     [SerializeField] private TextMeshProUGUI NickNameErrorText;
 
     public TextMeshProUGUI InfoText;
@@ -90,6 +91,7 @@ public class UiManager : MonoBehaviour
     {
         //PlayerPrefs.DeleteAll();
         MenuNickName.text = "";
+        EnemyNickName.text = "";
         NickNameErrorText.text = "";
         MultiGameManagerUpdateSC = MultiGameManagerUpdate.GetComponent<MultiGameManagerUpdate>();
         TwoPlayerGameManagerSC = TwoPlayerGameManager.GetComponent<GameManager>();
@@ -98,11 +100,11 @@ public class UiManager : MonoBehaviour
         {
             FpsLimitDD.SetValueWithoutNotify(PlayerPrefs.GetInt("QualityLevel")-1);
             GraphicLevelChange(PlayerPrefs.GetInt("QualityLevel"));
-            Debug.Log("Quality Level = " + PlayerPrefs.GetInt("QualityLevel"));
+            //Debug.Log("Quality Level = " + PlayerPrefs.GetInt("QualityLevel"));
         }
         else
         {
-            Debug.Log("It Is First Game");
+            //Debug.Log("It Is First Game");
             PlayerPrefs.SetInt("QualityLevel", 2);
         }
         if(PlayerPrefs.HasKey("NickName"))
@@ -341,7 +343,7 @@ public class UiManager : MonoBehaviour
         {
             MultiGameManagerUpdateSC.ClearBoard();
         }
-        
+        EnemyNickName.text = "";
 
         networkManager.LeaveTheRoomFun();
 
@@ -356,9 +358,9 @@ public class UiManager : MonoBehaviour
     }
     public void MainMenuButton()
     {
-        
+
         //MultiGameManagerUpdate.GetComponent<PhotonView>().RPC("ClearBoard", PhotonNetwork.player);
-        
+        EnemyNickName.text = "";
         networkManager.LeaveTheRoomFun();
 
         networkManager.DisConnectFun();

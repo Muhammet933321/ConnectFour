@@ -65,7 +65,7 @@ public class NetworkManager : Photon.PunBehaviour
     public override void OnConnectedToMaster()
     {
         // Debug.LogError($"Connected to master. Loading to Select Game Mode");
-        Debug.Log("Connected To Master His Name Is = " + PhotonNetwork.player.NickName);
+        //Debug.Log("Connected To Master His Name Is = " + PhotonNetwork.player.NickName);
         if(((int)PlayerLevel) == 1)
         {
             UiManagerOBJ.GetComponent<UiManager>().RandomGameMenuLoad();
@@ -121,6 +121,7 @@ public class NetworkManager : Photon.PunBehaviour
              //   $"{(LevelMode)PhotonNetwork.room.CustomProperties[MODE]} " +
            //     $"MaxPlyaer = {PhotonNetwork.room.MaxPlayers}");
         UiManagerSC.GameScreenActive("Waiting For Connect A Player");
+        UiManagerSC.EnemyNickName.text = PhotonNetwork.player.GetNext().NickName;
         
     }
 
@@ -134,6 +135,7 @@ public class NetworkManager : Photon.PunBehaviour
     {
         
       //  Debug.LogError($"Player {newPlayer.ID} Connected The Toom");
+        UiManagerSC.EnemyNickName.text = newPlayer.NickName;
         RoomIsReady(newPlayer);
     }
 
@@ -204,6 +206,7 @@ public class NetworkManager : Photon.PunBehaviour
         {
             //Debug.Log("Player Already Offline");
         }
+        UiManagerSC.EnemyNickName.text = "";
     }
     public bool IsConnectedFun()
     {
@@ -230,6 +233,7 @@ public class NetworkManager : Photon.PunBehaviour
         {
             //Debug.LogError("Player Already Not In Room");
         }
+        UiManagerSC.EnemyNickName.text = "";
     }
 
     public override void OnDisconnectedFromPhoton()
@@ -238,15 +242,18 @@ public class NetworkManager : Photon.PunBehaviour
         {
             GameManager.ClearBoard();
         }
-        
+        UiManagerSC.EnemyNickName.text = "";
+
     }
     public override void OnConnectionFail(DisconnectCause cause)
     {
-       // Debug.LogError("Internet Error");
+        // Debug.LogError("Internet Error");
+        UiManagerSC.EnemyNickName.text = "";
     }
     public override void OnPhotonPlayerDisconnected(PhotonPlayer otherPlayer)
     {
-       // Debug.LogError("Enemy DisConnected To Game");
+        // Debug.LogError("Enemy DisConnected To Game");
+        UiManagerSC.EnemyNickName.text = "";
         GameManager.CanPlay = false;
         GameManager.ClearBoard();
         PhotonNetwork.LeaveRoom();
