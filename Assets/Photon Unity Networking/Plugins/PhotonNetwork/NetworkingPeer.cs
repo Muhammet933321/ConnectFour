@@ -879,7 +879,8 @@ internal class NetworkingPeer : LoadBalancingPeer, IPhotonPeerListener
         {
             if (!PhotonHandler.AppQuits)
             {
-                Debug.LogWarning(string.Format("Can't execute Disconnect() while not connected. Nothing changed. State: {0}", this.State));
+                //Debug.LogWarning(string.Format("Can't execute Disconnect() while not connected. Nothing changed. State: {0}", this.State));
+                GameObject.FindWithTag("UiGameManager").GetComponent<UiManager>().ConnectionFailed();
             }
             return;
         }
@@ -1608,7 +1609,7 @@ internal class NetworkingPeer : LoadBalancingPeer, IPhotonPeerListener
     {
         if (level == DebugLevel.ERROR)
         {
-            Debug.LogError(message);
+            //Debug.LogError(message);
         }
         else if (level == DebugLevel.WARNING)
         {

@@ -50,6 +50,7 @@ public class NetworkManager : Photon.PunBehaviour
     }
     public void connectRandom()
     {
+
         PhotonNetwork.player.NickName =  PlayerPrefs.GetString("NickName");
         PlayerLevel = ((LevelMode)1);
         PhotonNetwork.ConnectUsingSettings(GameVersion);
@@ -80,30 +81,41 @@ public class NetworkManager : Photon.PunBehaviour
     public void JoinRandomRoom()
     {
         
-      //  Debug.LogError("Looking For Random Room With Game Mode " + PlayerLevel);
-
-        Hashtable RANDOM_HASH = new Hashtable { { MODE , PlayerLevel } };
         
-        PhotonNetwork.JoinRandomRoom(RANDOM_HASH, MAX_PLAYER );
-        //PhotonNetwork.JoinRoom( null );
-        // new ExitGames.Client.Photon.Hashtable() { { MODE, PlayerLevel } }
+            //Debug.LogError("Looking For Random Room With Game Mode " + PlayerLevel);
+            Hashtable RANDOM_HASH = new Hashtable { { MODE, PlayerLevel } };
+
+            PhotonNetwork.JoinRandomRoom(RANDOM_HASH, MAX_PLAYER);
+            //PhotonNetwork.JoinRoom( null );
+            // new ExitGames.Client.Photon.Hashtable() { { MODE, PlayerLevel } }
+
+        
+
     }
     public override void OnPhotonRandomJoinFailed(object[] codeAndMsg)
     {
-        //Debug.LogError("Join Random Room Fieled .Creating New One");
-        RoomOptions RANDOM_ROOM_OPTIONS = new RoomOptions();
-        RANDOM_ROOM_OPTIONS.CustomRoomPropertiesForLobby = new string[] { MODE };
-        RANDOM_ROOM_OPTIONS.MaxPlayers= MAX_PLAYER;
-        RANDOM_ROOM_OPTIONS.CustomRoomProperties = new Hashtable { { MODE , PlayerLevel } };
+            //Debug.LogError("Join Random Room Fieled .Creating New One");
+            RoomOptions RANDOM_ROOM_OPTIONS = new RoomOptions();
+            RANDOM_ROOM_OPTIONS.CustomRoomPropertiesForLobby = new string[] { MODE };
+            RANDOM_ROOM_OPTIONS.MaxPlayers = MAX_PLAYER;
+            RANDOM_ROOM_OPTIONS.CustomRoomProperties = new Hashtable { { MODE, PlayerLevel } };
+
+            PhotonNetwork.CreateRoom(null, RANDOM_ROOM_OPTIONS);
+
+            PhotonNetwork.CreateRoom(RoomName.text, null);
+            UiManagerSC.DisableAllScreen();
+            GameManager.AmIPlayer1 = true;
+            GameManager.IsMyTurn = true;
+            GameManager.CanPlay = false;
+
         
-        PhotonNetwork.CreateRoom(null, RANDOM_ROOM_OPTIONS );
 
-        PhotonNetwork.CreateRoom(RoomName.text, null);
-        UiManagerSC.DisableAllScreen();
-        GameManager.AmIPlayer1 = true;
-        GameManager.IsMyTurn = true;
-        GameManager.CanPlay = false;
-
+    }
+    public override void OnPhotonCreateRoomFailed(object[] codeAndMsg)
+    {
+        Debug.Log("CreateRoomFailed");
+        UiManagerSC.ConnectionFailed();
+        
     }
     
 
@@ -118,12 +130,30 @@ public class NetworkManager : Photon.PunBehaviour
     public override void OnJoinedRoom()
     {
            // Debug.LogError($"Player {PhotonNetwork.player.ID} Joined the room With  " +
-             //   $"{(LevelMode)PhotonNetwork.room.CustomProperties[MODE]} " +
+           //   $"{(LevelMode)PhotonNetwork.room.CustomProperties[MODE]} " +
            //     $"MaxPlyaer = {PhotonNetwork.room.MaxPlayers}");
         UiManagerSC.GameScreenActive("Waiting For Connect A Player");
-        UiManagerSC.EnemyNickName.text = PhotonNetwork.player.GetNext().NickName;
-        
+        if (PhotonNetwork.room.PlayerCount == 2)
+        {
+            //Debug.Log("He Join The Room Then After Player 1 ");
+            UiManagerSC.EnemyNickName.text = PhotonNetwork.player.GetNext().NickName;
+        }
+        else
+        {
+            //Debug.Log("He  Room Alone ");
+            UiManagerSC.EnemyNickName.text = "";
+        }
+
+            
+
+
     }
+    public override void OnFailedToConnectToPhoton(DisconnectCause cause)
+    {
+        //vb nDebug.Log(" On Failed Connect The Photon");
+        UiManagerSC.ConnectionFailed();
+    }
+    
 
     public void SetPlayerLevel(LevelMode levelMode)
     {

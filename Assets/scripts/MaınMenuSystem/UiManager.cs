@@ -35,6 +35,8 @@ public class UiManager : MonoBehaviour
     [SerializeField] private GameObject OnlineDrawScreen;
     [SerializeField] private GameObject GameScreen;
     [SerializeField] private GameObject EnemyDisConnectedSceene;
+    [SerializeField] private GameObject ConnectionFailedSceene;
+    [SerializeField] private GameObject LoadingGameSceene;
     [SerializeField] private GameObject SingleModeSceene;
     [SerializeField] private GameObject SelectAiLevelSceene;
     [SerializeField] private GameObject SingleGameScene;
@@ -83,6 +85,8 @@ public class UiManager : MonoBehaviour
         OnlineDrawScreen.SetActive(false);
         SettingsScenee.SetActive(false);
         CreateNickNameSeeneOBJ.SetActive(false);
+        ConnectionFailedSceene.SetActive(false);
+        LoadingGameSceene.SetActive(false);
         PlayAgainTextLose.text = "" ;
         PlayAgainTextWin.text =  "" ;
         PlayAgainTextDraw.text = "" ;
@@ -242,7 +246,8 @@ public class UiManager : MonoBehaviour
 
     public void OnRandomGameSelected()
     {
-        
+        DisableAllScreen();
+        LoadingGameSceene.SetActive(true);
         networkManager.SetPlayerLevel((LevelMode)1);
         networkManager.connectRandom();
     }
@@ -270,11 +275,13 @@ public class UiManager : MonoBehaviour
     */
     public void OnConnectFriends()
     {
-        
+        DisableAllScreen();
+        LoadingGameSceene.SetActive(true);
         networkManager.SetPlayerLevel((LevelMode)0);
         networkManager.connectFriends();
     }
 
+    
     public void OnWin()
     {
         
@@ -496,5 +503,12 @@ public class UiManager : MonoBehaviour
             PlayerPrefs.SetInt("QualityLevel", 3);
         }
         //Debug.Log("New Quality Level = " + PlayerPrefs.GetInt("QualityLevel"));
+    }
+
+    public void ConnectionFailed()
+    {
+        DisableAllScreen();
+        ConnectionFailedSceene.SetActive(true);
+
     }
 }
