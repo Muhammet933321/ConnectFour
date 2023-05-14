@@ -171,17 +171,117 @@ public class NetworkManager : Photon.PunBehaviour
 
     public void OnJoinButton()
     {
-        
-        PhotonNetwork.JoinRoom(RoomName.text);
+        if (RoomName.text != null && RoomName.text != "" && RoomName.text.Length <= 7 && RoomName.text != " ")
+        {
+            char[] NickNameChar = RoomName.text.ToCharArray();
+            char[] EmptyChar = "                 ".ToCharArray();
+            bool CanNickName = false;
+            for (int i = 0; i < RoomName.text.Length; i++)
+            {
+                if (NickNameChar[i] == EmptyChar[i])
+                {
+                    //Debug.LogError("Using Space");
+                    UiManagerSC.NickNameErrorText.text = "Naver Use Space";
+                    CanNickName = false;
+                    break;
+                }
+                else
+                {
+                    //Debug.LogError("Naver Useed Space");
+                    CanNickName = true;
+                    continue;
+                }
+            }
+            if (CanNickName)
+            {
+                UiManagerSC.DisableAllScreen();
+                UiManagerSC.LoadingGameSceene.SetActive(true);
+                PhotonNetwork.JoinRoom(RoomName.text);
+            }
 
+
+
+
+        }
+        else if (RoomName.text.Length >= 7)
+        {
+            UiManagerSC.NickNameErrorText.text = "Enter less than 8 characters";
+            //UiManagerSC.EnterStringForOnlineRoom.GetComponent<RectTransform>().InverseTransformPoint(new Vector3(0,0,0));
+            RoomName.text = "";
+
+
+            //Debug.LogError("Invalid Character");
+        }
+        else
+            UiManagerSC.NickNameErrorText.text = "Enter a valid Room Name";
+        
+
+    }
+    public override void OnPhotonJoinRoomFailed(object[] codeAndMsg)
+    {
+        
+        UiManagerSC.MultiGameMenuLoad();
+        UiManagerSC.NickNameErrorText.text = "Check the room name";
     }
     public void OnCreateButton()
     {
-        PhotonNetwork.CreateRoom(RoomName.text,null);
-        UiManagerSC.DisableAllScreen();
-        GameManager.AmIPlayer1 = true;
-        GameManager.IsMyTurn = true;
-        GameManager.CanPlay = false;
+        /*if(RoomName.text == "")
+        {
+            UiManagerSC.DisableAllScreen();
+            UiManagerSC.LoadingGameSceene.SetActive(true);
+            PhotonNetwork.CreateRoom(RoomName.text, null);
+            GameManager.AmIPlayer1 = true;
+            GameManager.IsMyTurn = true;
+            GameManager.CanPlay = false;
+        }*/
+        if (RoomName.text != null && RoomName.text != ""  && RoomName.text.Length <= 7 && RoomName.text != " ")
+        {
+            char[] NickNameChar = RoomName.text.ToCharArray();
+            char[] EmptyChar = "                 ".ToCharArray();
+            bool CanNickName = false;
+            for (int i = 0; i < RoomName.text.Length; i++)
+            {
+                if (NickNameChar[i] == EmptyChar[i])
+                {
+                    //Debug.LogError("Using Space");
+                    UiManagerSC.NickNameErrorText.text = "Naver Use Space";
+                    CanNickName = false;
+                    break;
+                }
+                else
+                {
+                    //Debug.LogError("Naver Useed Space");
+                    CanNickName = true;
+                    continue;
+                }
+            }
+            if (CanNickName)
+            {
+                UiManagerSC.DisableAllScreen();
+                UiManagerSC.LoadingGameSceene.SetActive(true);
+                PhotonNetwork.CreateRoom(RoomName.text, null);
+                GameManager.AmIPlayer1 = true;
+                GameManager.IsMyTurn = true;
+                GameManager.CanPlay = false;
+            }
+
+
+
+
+        }
+        else if (RoomName.text.Length >= 7)
+        {
+            UiManagerSC.NickNameErrorText.text = "Enter less than 8 characters";
+            //UiManagerSC.EnterStringForOnlineRoom.GetComponent<RectTransform>().InverseTransformPoint(new Vector3(0,0,0));
+            RoomName.text = "";
+            
+
+            //Debug.LogError("Invalid Character");
+        }
+        else
+            UiManagerSC.NickNameErrorText.text = "Enter a valid Room Name";
+
+
     }
     public void RoomIsReady(PhotonPlayer newPlayer)
     {

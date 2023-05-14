@@ -36,7 +36,7 @@ public class UiManager : MonoBehaviour
     [SerializeField] private GameObject GameScreen;
     [SerializeField] private GameObject EnemyDisConnectedSceene;
     [SerializeField] private GameObject ConnectionFailedSceene;
-    [SerializeField] private GameObject LoadingGameSceene;
+    public GameObject LoadingGameSceene;
     [SerializeField] private GameObject SingleModeSceene;
     [SerializeField] private GameObject SelectAiLevelSceene;
     [SerializeField] private GameObject SingleGameScene;
@@ -51,7 +51,7 @@ public class UiManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI SingleWinText;
     [SerializeField] private TextMeshProUGUI MenuNickName;
     public TextMeshProUGUI EnemyNickName;
-    [SerializeField] private TextMeshProUGUI NickNameErrorText;
+    public TextMeshProUGUI NickNameErrorText;
 
     public TextMeshProUGUI InfoText;
 
@@ -90,6 +90,7 @@ public class UiManager : MonoBehaviour
         PlayAgainTextLose.text = "" ;
         PlayAgainTextWin.text =  "" ;
         PlayAgainTextDraw.text = "" ;
+        NickNameErrorText.text = "";
     }
     private void Awake()
     {
@@ -168,7 +169,8 @@ public class UiManager : MonoBehaviour
         }
         else if(NickNameText.text.Length >= 15)
         {
-            NickNameErrorText.text = "Enter less than 15 characters"; 
+            NickNameErrorText.text = "Enter less than 15 characters";
+            NickNameText.text = "";
             //Debug.LogError("Invalid Character");
         }
         else
