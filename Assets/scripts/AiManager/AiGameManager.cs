@@ -377,7 +377,7 @@ public class AiGameManager : MonoBehaviour
     private void RandomAiPlay()
     {
         int RandomMove;
-        //Debug.LogWarning("RandomPlay");
+        Debug.LogWarning("RandomPlay");
         for(int  i= 0; i< 100; i ++)
         {
             if( i == 99)
@@ -417,7 +417,9 @@ public class AiGameManager : MonoBehaviour
     private void RandomAiPlayBut(int NaverMove)
     {
         int RandomMove;
-        //Debug.LogWarning("RandomPlayBut");
+        int[,] NewBoard;
+        int[,] NextBoard;
+        Debug.LogWarning("RandomPlayBut");
         for (int i = 0; i < 100; i++)
         {
             if (i == 99)
@@ -425,7 +427,7 @@ public class AiGameManager : MonoBehaviour
                 //Debug.LogError("For Couldn't Find a Move");
                 for (int y = 0; y < LenghttOfBoard; y++)
                 {
-                    if (IsColumnFull(StateBoard, y) || NaverMove == y)
+                    if (IsColumnFull(StateBoard, y))
                     {
                         continue;
                     }
@@ -449,8 +451,40 @@ public class AiGameManager : MonoBehaviour
             }
             else
             {
-                //Debug.Log("Called Take Ai");
-                TakeTurnAi(RandomMove);
+                Debug.Log("Sertching If I Play");
+                NewBoard = CopyBoard(StateBoard);
+                UpdateBoard(NewBoard, RandomMove, AI);
+                for (int y = 0; y < LenghttOfBoard; y++)
+                {
+                    NextBoard = CopyBoard(NewBoard);
+
+
+
+                    if (IsColumnFull(NextBoard, y))
+                    {
+                        //Debug.LogWarning($"Column {i} Is Full");
+                        continue;
+                    }
+                    else
+                    {
+                        UpdateBoard(NextBoard, y, PLAYER);
+                        if (DidWinAi(NextBoard, PLAYER))
+                        {
+                            Debug.Log($"If I Play Column {RandomMove} Enemy Win On 1 Move This Move is {y}");
+                            continue;
+
+                        }
+                        else if(RandomMove != NaverMove)
+                        {
+                            Debug.Log($"If I Play Column {RandomMove} Enemy Cant Win");
+                            TakeTurnAi(RandomMove);
+                            break;
+                        }
+                    }
+                }
+
+
+                //TakeTurnAi(RandomMove);
                 break;
             }
         }
@@ -466,7 +500,7 @@ public class AiGameManager : MonoBehaviour
         }
         else if(BestMove >= 7  && BestMove < 14)
         {
-            RandomAiPlayBut(BestMove - 7);
+            //RandomAiPlayBut(BestMove - 7);
         }
         else 
         TakeTurnAi(BestMove);
@@ -476,6 +510,7 @@ public class AiGameManager : MonoBehaviour
     {
         int[,] NewBoard = new int[LenghttOfBoard , HeightOfBoard] ;
         int[,] NextBoard = new int[LenghttOfBoard, HeightOfBoard];
+        int[] NaverMoves = new int[7];
         
         //Debug.LogError("Finding Best Move");
         ///
@@ -484,13 +519,7 @@ public class AiGameManager : MonoBehaviour
         for (int i = 0; i < LenghttOfBoard; i++)
         {
             NewBoard = CopyBoard(board);
-            for(int k = 0; k < LenghttOfBoard; k++)
-            {
-                for (int j  = 0; j < HeightOfBoard; j++)
-                {
-                    NewBoard[k,j] = board[k,j];
-                }
-            }
+             
             
 
             if (IsColumnFull(NewBoard, i))
@@ -503,7 +532,7 @@ public class AiGameManager : MonoBehaviour
                 UpdateBoard(NewBoard, i, AI);
                 if (DidWinAi(NewBoard, AI))
                 {
-                   //Debug.LogWarning($"Ai Win On 1 Move This Move is { i }");
+                    Debug.Log($"Ai Win On 1 Move This Move is { i }");
                     return i;
 
                 }
@@ -529,7 +558,7 @@ public class AiGameManager : MonoBehaviour
                 UpdateBoard(NewBoard, i, PLAYER);
                 if (DidWinAi(NewBoard, PLAYER))
                 {
-                    //Debug.LogWarning($"Enemy Win On 1 Move This Move is {i}");
+                    Debug.Log($"Enemy Win On 1 Move This Move is {i}");
                     return i;
 
                 }
@@ -576,9 +605,9 @@ public class AiGameManager : MonoBehaviour
 
                         if (DidWinAi(NextBoard, PLAYER))
                         {
-                            //Debug.LogError($"If I Player Column {i} . He Play Column {j} And He Win");
-
-                            return i+7;
+                            Debug.Log($"If I Player Column {i} . He Play Column {j} And He Win");
+                            NaverMoves[i] = 1;
+                            
 
                         }
                         
@@ -587,12 +616,71 @@ public class AiGameManager : MonoBehaviour
             }
         }
         //Debug.LogError("Cant Find A Greet Move");
-        return -1;
+        for(int i = 0 ; i < LenghttOfBoard ; i++)
+        {
+            if (NaverMoves[i] == 1)
+            {
+                RandomAiPlayButnew(NaverMoves);
+                return 9;
+            }
+        }
+        
+        return -1 ;
         
     }
 
+    private void RandomAiPlayButnew(int[] NaverMove)
+    {
+        int RandomMove;
+        Debug.LogWarning("RandomPlayBut");
+        for (int i = 0; i < 100; i++)
+        {
+            if (i == 99)
+            {
+                Debug.LogError("Couldn't Find a Move");
+                for (int y = 0; y < LenghttOfBoard; y++)
+                {
+                    if (IsColumnFull(StateBoard, y))
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        
+                        if (NaverMove[y] == 1)
+                        {
+                            Debug.Log("I will lose but Must Play here");
+                            TakeTurnAi(y);
+                            break;
+                        }
+                        else
+                        {
+                            TakeTurnAi(y);
+                            break;
+                        }
 
-    
+                    }
+
+
+
+                }
+
+            }
+            RandomMove = Random.Range(0, LenghttOfBoard - 1);
+            if (IsColumnFull(StateBoard, RandomMove) || NaverMove[RandomMove] == 1)
+            {
+                continue;
+            }
+            else
+            {
+                Debug.Log($"If i Play {RandomMove} He Cant Win");
+                TakeTurnAi(RandomMove);
+                break;
+            }
+        }
+
+    }
+
     private void UpdateBoard(int[,] board ,int column , int Playernum)
     {
 
