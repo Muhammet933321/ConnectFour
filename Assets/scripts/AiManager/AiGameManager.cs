@@ -377,7 +377,7 @@ public class AiGameManager : MonoBehaviour
     private void RandomAiPlay()
     {
         int RandomMove;
-        Debug.LogWarning("RandomPlay");
+       // Debug.LogWarning("RandomPlay");
         for(int  i= 0; i< 100; i ++)
         {
             if( i == 99)
@@ -413,82 +413,6 @@ public class AiGameManager : MonoBehaviour
             }
         }
         
-    }
-    private void RandomAiPlayBut(int NaverMove)
-    {
-        int RandomMove;
-        int[,] NewBoard;
-        int[,] NextBoard;
-        Debug.LogWarning("RandomPlayBut");
-        for (int i = 0; i < 100; i++)
-        {
-            if (i == 99)
-            {
-                //Debug.LogError("For Couldn't Find a Move");
-                for (int y = 0; y < LenghttOfBoard; y++)
-                {
-                    if (IsColumnFull(StateBoard, y))
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                       //Debug.Log("Called Take Ai");
-                        TakeTurnAi(y);
-                        break ;
-
-                    }
-                        
-                    
-
-                }
-                
-            }
-            RandomMove = Random.Range(0, LenghttOfBoard - 1);
-            if (IsColumnFull(StateBoard, RandomMove) || NaverMove == RandomMove)
-            {
-                continue;
-            }
-            else
-            {
-                Debug.Log("Sertching If I Play");
-                NewBoard = CopyBoard(StateBoard);
-                UpdateBoard(NewBoard, RandomMove, AI);
-                for (int y = 0; y < LenghttOfBoard; y++)
-                {
-                    NextBoard = CopyBoard(NewBoard);
-
-
-
-                    if (IsColumnFull(NextBoard, y))
-                    {
-                        //Debug.LogWarning($"Column {i} Is Full");
-                        continue;
-                    }
-                    else
-                    {
-                        UpdateBoard(NextBoard, y, PLAYER);
-                        if (DidWinAi(NextBoard, PLAYER))
-                        {
-                            Debug.Log($"If I Play Column {RandomMove} Enemy Win On 1 Move This Move is {y}");
-                            continue;
-
-                        }
-                        else if(RandomMove != NaverMove)
-                        {
-                            Debug.Log($"If I Play Column {RandomMove} Enemy Cant Win");
-                            TakeTurnAi(RandomMove);
-                            break;
-                        }
-                    }
-                }
-
-
-                //TakeTurnAi(RandomMove);
-                break;
-            }
-        }
-
     }
 
     private void SimpleAiPlay()
@@ -532,7 +456,7 @@ public class AiGameManager : MonoBehaviour
                 UpdateBoard(NewBoard, i, AI);
                 if (DidWinAi(NewBoard, AI))
                 {
-                    Debug.Log($"Ai Win On 1 Move This Move is { i }");
+                    //Debug.Log($"Ai Win On 1 Move This Move is { i }");
                     return i;
 
                 }
@@ -558,12 +482,42 @@ public class AiGameManager : MonoBehaviour
                 UpdateBoard(NewBoard, i, PLAYER);
                 if (DidWinAi(NewBoard, PLAYER))
                 {
-                    Debug.Log($"Enemy Win On 1 Move This Move is {i}");
+                    //Debug.Log($"Enemy Win On 1 Move This Move is {i}");
                     return i;
 
                 }
             }
         }
+
+        ///
+        /// Is He Can Win 3 Play
+        ///
+
+
+        NewBoard = CopyBoard(StateBoard);
+
+        for (int y = 0; y < LenghttOfBoard - 3; y++)
+        {
+            for (int z = 0; z < HeightOfBoard -1; z++)
+            {
+                if (NewBoard[y, z] == 0 && NewBoard[y + 1, z] == PLAYER && NewBoard[y + 2, z] == PLAYER && NewBoard[y + 3, z] == 0)
+                {
+                    if(z == 0 )
+                    {
+                        //Debug.Log("He Have 2 Horizontal Piecies On floor Do it ");
+                        return y;
+                    }
+                    else if((NewBoard[y, z -1] == PLAYER || NewBoard[y, z - 1] == AI) && ( NewBoard[y + 3, z-1] == PLAYER || NewBoard[y + 3, z - 1] == AI))
+                    {
+                        //Debug.Log("He Have 2 Horizontal Piecies On Up Do it ");
+                        return y;
+                    }
+                    
+
+                }
+            }
+        }
+
 
         ///
         ///If I Play It Can Hi Win
@@ -605,7 +559,7 @@ public class AiGameManager : MonoBehaviour
 
                         if (DidWinAi(NextBoard, PLAYER))
                         {
-                            Debug.Log($"If I Player Column {i} . He Play Column {j} And He Win");
+                            //Debug.Log($"If I Player Column {i} . He Play Column {j} And He Win");
                             NaverMoves[i] = 1;
                             
 
@@ -632,12 +586,12 @@ public class AiGameManager : MonoBehaviour
     private void RandomAiPlayButnew(int[] NaverMove)
     {
         int RandomMove;
-        Debug.LogWarning("RandomPlayBut");
+       //Debug.LogWarning("RandomPlayBut");
         for (int i = 0; i < 100; i++)
         {
             if (i == 99)
             {
-                Debug.LogError("Couldn't Find a Move");
+                //Debug.LogError("Couldn't Find a Move");
                 for (int y = 0; y < LenghttOfBoard; y++)
                 {
                     if (IsColumnFull(StateBoard, y))
@@ -649,7 +603,7 @@ public class AiGameManager : MonoBehaviour
                         
                         if (NaverMove[y] == 1)
                         {
-                            Debug.Log("I will lose but Must Play here");
+                            //Debug.Log("I will lose but Must Play here");
                             TakeTurnAi(y);
                             break;
                         }
@@ -673,7 +627,7 @@ public class AiGameManager : MonoBehaviour
             }
             else
             {
-                Debug.Log($"If i Play {RandomMove} He Cant Win");
+                //Debug.Log($"If i Play {RandomMove} He Cant Win");
                 TakeTurnAi(RandomMove);
                 break;
             }
