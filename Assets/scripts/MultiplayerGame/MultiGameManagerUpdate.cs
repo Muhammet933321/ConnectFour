@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using Photon.Realtime;
+using UnityEngine.UIElements;
 
 public class MultiGameManagerUpdate : Photon.PunBehaviour
 {
@@ -16,7 +17,9 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
     public GameObject[] SpawnLocation;
     private GameObject FallingPiece;
     private PhotonView photonViewOBJ;
-    
+    [SerializeField] private GameObject WinPointer;
+
+
     public bool CanPlay;
     public bool AmIPlayer1;
     public bool IsMyTurn;
@@ -28,6 +31,15 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
     int HeightOfBoard = 6;
     int LenghttOfBoard = 7;
     int[,] StateBoard;
+    private int AI = 2;
+    private int PLAYER = 1;
+
+
+
+
+
+
+
 
     /* bool IsMyTurn()
      {
@@ -58,11 +70,11 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
         photonViewOBJ = GetComponent<PhotonView>();
         UiManagerSC = UiManagerOBJ.GetComponent<UiManager>();
         photonViewComp = GetComponent<PhotonView>();
-        
+
         Player1Ghost.SetActive(false);
         Player2Ghost.SetActive(false);
         CanPlay = false;
-        EnemyWanaPlayAgain= false;
+        EnemyWanaPlayAgain = false;
 
 
         /*
@@ -82,14 +94,14 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
     }
     public void LocalInfo()
     {
-     //   Debug.Log("Local Erisildi");
+        //   Debug.Log("Local Erisildi");
     }
 
     [PunRPC]
     void Info()
     {
 
-      //  Debug.Log("Global Erisildi");
+        //  Debug.Log("Global Erisildi");
     }
 
     /*
@@ -140,34 +152,35 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
             if (IsMyTurn && CanPlay)
             {
                 if (UpdateBoardState(column))
-            {
-                Player1Ghost.SetActive(false);
-                Player2Ghost.SetActive(false);
-                
+                {
+                    Player1Ghost.SetActive(false);
+                    Player2Ghost.SetActive(false);
+
                     if (AmIPlayer1)
                     {
-                       // Debug.LogError("Moved a Pieces");
+                        // Debug.LogError("Moved a Pieces");
                         PhotonNetwork.Instantiate(Player1.name, SpawnLocation[column].transform.position, new Quaternion(0, 90, 90, 0), 0);
-                        photonViewOBJ.RPC("EnemyTurn" , PhotonNetwork.player.GetNext(),null);
+                        photonViewOBJ.RPC("EnemyTurn", PhotonNetwork.player.GetNext(), null);
                         UiManagerSC.InfoText.text = "Enemy's Turn";
 
 
                     }
                     else
                     {
-                       // Debug.LogError("Moved a Pieces");
+                        // Debug.LogError("Moved a Pieces");
                         PhotonNetwork.Instantiate(Player2.name, SpawnLocation[column].transform.position, new Quaternion(0, 90, 90, 0), 0);
                         photonViewOBJ.RPC("EnemyTurn", PhotonNetwork.player.GetNext(), null);
                         UiManagerSC.InfoText.text = "Enemy's Turn";
                     }
 
                     IsMyTurn = false;
-                    if(AmIPlayer1)
+                    if (AmIPlayer1)
                     {
                         if (DidWin(1))
                         {
                             UiManagerSC.OnWin();
-                          //  Debug.LogError("Player 1 win");
+
+                            //  Debug.LogError("Player 1 win");
                         }
                     }
                     else
@@ -175,10 +188,11 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
                         if (DidWin(2))
                         {
                             UiManagerSC.OnWin();
-                           // Debug.LogError("Player 1 win");
+
+                            // Debug.LogError("Player 1 win");
                         }
                     }
-                    
+
 
 
                 }
@@ -195,10 +209,10 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
                 if (IsDraw())
                 {
                     OnDrawOnlineGame();
-                    photonView.RPC("OnDrawOnlineGame" , PhotonNetwork.player.GetNext());
+                    photonView.RPC("OnDrawOnlineGame", PhotonNetwork.player.GetNext());
 
 
-                   // Debug.LogWarning("Draw!");
+                    // Debug.LogWarning("Draw!");
                 }
             }
 
@@ -230,12 +244,12 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
             {
                 if (AmIPlayer1)
                 {
-             //       Debug.LogError("Updated Board State");
+                    //       Debug.LogError("Updated Board State");
                     StateBoard[column, Raw] = 2;
                 }
                 else
                 {
-               //     Debug.LogError("Enemy Moved a piece");
+                    //     Debug.LogError("Enemy Moved a piece");
                     StateBoard[column, Raw] = 1;
                 }
                 //Debug.Log("Column ,Raw = " + column + " , " + Raw);
@@ -255,7 +269,7 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
                 if (AmIPlayer1)
                 {
 
-                    photonViewOBJ.RPC("EnemyUpdateBoardState", PhotonNetwork.player.GetNext(),column);
+                    photonViewOBJ.RPC("EnemyUpdateBoardState", PhotonNetwork.player.GetNext(), column);
                     StateBoard[column, Raw] = 1;
                 }
                 else
@@ -328,30 +342,30 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
     {
         for (int x = 0; x < HeightOfBoard; x++)
         {
-            for(int y = 0; y < LenghttOfBoard; y ++)
+            for (int y = 0; y < LenghttOfBoard; y++)
             {
-                StateBoard[y,x] = 0;
+                StateBoard[y, x] = 0;
             }
         }
-       //Debug.LogError("Online Board Was Cleared");
+        //Debug.LogError("Online Board Was Cleared");
     }
 
     [PunRPC]
     public void ReStartRoom()
     {
-        if(EnemyWanaPlayAgain && IWanaPlayAgain && PhotonNetwork.player.IsMasterClient)
+        if (EnemyWanaPlayAgain && IWanaPlayAgain && PhotonNetwork.player.IsMasterClient)
         {
             PhotonNetwork.DestroyAll();
             CanPlay = true;
             UiManagerSC.DisableAllScreen();
-            photonViewComp.RPC("DisableAllScreen" , PhotonNetwork.player.GetNext());
-         //   Debug.LogError("ReStartinG The Room");
-            if(AmIPlayer1 && IsMyTurn)
+            photonViewComp.RPC("DisableAllScreen", PhotonNetwork.player.GetNext());
+            //   Debug.LogError("ReStartinG The Room");
+            if (AmIPlayer1 && IsMyTurn)
             {
-                photonViewComp.RPC("LoadGameScreen", PhotonNetwork.player.GetNext() , "Enemy's Turn");
+                photonViewComp.RPC("LoadGameScreen", PhotonNetwork.player.GetNext(), "Enemy's Turn");
                 UiManagerSC.GameScreenActive("Your Turn");
             }
-            else if(!AmIPlayer1 && IsMyTurn)
+            else if (!AmIPlayer1 && IsMyTurn)
             {
                 UiManagerSC.GameScreenActive("Your Turn");
                 photonViewComp.RPC("LoadGameScreen", PhotonNetwork.player.GetNext(), "Enemy's Turn");
@@ -361,15 +375,17 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
             {
                 UiManagerSC.GameScreenActive("Enemy's Turn");
                 photonViewComp.RPC("LoadGameScreen", PhotonNetwork.player.GetNext(), "Your Turn");
-                
+
             }
-            
-            EnemyWanaPlayAgain= false;
-            IWanaPlayAgain= false;
-            
+
+            EnemyWanaPlayAgain = false;
+            IWanaPlayAgain = false;
+
         }
-        
+
     }
+    
+
     [PunRPC]
     public void LoadGameScreen(string Text)
     {
@@ -397,4 +413,10 @@ public class MultiGameManagerUpdate : Photon.PunBehaviour
         UiManagerSC.DisableAllScreen();
     }
 
+    private void TargetWinnerFun()
+    {
+        
+    }
+
+    
 }

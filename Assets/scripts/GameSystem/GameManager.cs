@@ -20,6 +20,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject BoardInput5;
     [SerializeField] private GameObject BoardInput6;
     [SerializeField] private GameObject UiManagerOBJ;
+    [SerializeField] private GameObject WinPointerVertical;
+    [SerializeField] private GameObject WinPointerHorizontal;
+    [SerializeField] private GameObject WinPointerXY;
     GameObject FallingPiece;
     public TextMeshProUGUI SingleTurnText;
 
@@ -30,9 +33,72 @@ public class GameManager : MonoBehaviour
 
     int HeightOfBoard = 6;
     int LenghttOfBoard = 7;
-
+    private int AI = 2;
+    private int PLAYER = 1;
 
     int[,] StateBoard;
+
+
+    
+
+
+
+    
+    
+
+    int[] takeWinPointerPatition(int PlayerNum)
+    {
+        int[] position = { -1, -1 };
+
+        // Horizontal
+        for (int x = 0; x < LenghttOfBoard - 3; x++)
+        {
+            for (int y = 0; y < HeightOfBoard; y++)
+            {
+                if (StateBoard[x, y] == PlayerNum && StateBoard[x + 1, y] == PlayerNum && StateBoard[x + 2, y] == PlayerNum && StateBoard[x + 3, y] == PlayerNum)
+                {
+                    position[0] = x;
+                    position[1] = y;
+                    return position;
+                }
+            }
+        }
+        //Vertical
+        for (int x = 0; x < LenghttOfBoard; x++)
+        {
+            for (int y = 0; y < HeightOfBoard - 3; y++)
+            {
+                if (StateBoard[x, y] == PlayerNum && StateBoard[x, y + 1] == PlayerNum && StateBoard[x, y + 2] == PlayerNum && StateBoard[x, y + 3] == PlayerNum)
+                {
+                    position[0] = x;
+                    position[1] = y;
+                    return position;
+                }
+            }
+        }
+        //y = x line 
+        for (int x = 0; x < LenghttOfBoard - 3; x++)
+        {
+            for (int y = 0; y < HeightOfBoard - 3; y++)
+            {
+                if (StateBoard[x, y + 3] == PlayerNum && StateBoard[x + 1, y + 2] == PlayerNum && StateBoard[x + 2, y + 1] == PlayerNum && StateBoard[x + 3, y] == PlayerNum)
+                {
+                    position[0] = x;
+                    position[1] = y;
+                    return position;
+                }
+                if (StateBoard[x, y] == PlayerNum && StateBoard[x + 1, y + 1] == PlayerNum && StateBoard[x + 2, y + 2] == PlayerNum && StateBoard[x + 3, y + 3] == PlayerNum)
+                {
+                    position[0] = x;
+                    position[1] = y;
+                    return position;
+                }
+            }
+        }
+        return position;
+    }
+
+
     private void Awake()
     {
         
@@ -118,6 +184,7 @@ public class GameManager : MonoBehaviour
                         {
                         UiManagerOBJ.GetComponent<UiManager>().WinForSingle(1);
                         CanPlay = false;
+
                         //    Debug.LogWarning("Player 1 win");
                         }
                     
@@ -133,7 +200,8 @@ public class GameManager : MonoBehaviour
                         {
                         UiManagerOBJ.GetComponent<UiManager>().WinForSingle(2);
                         CanPlay = false;
-                        //    Debug.LogWarning("Player 2 win");
+
+                            //    Debug.LogWarning("Player 2 win");
                         }
                 }
                 if (IsDraw())

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Clock : MonoBehaviour {
 //-----------------------------------------------------------------------------------------------------------------------------------------
@@ -15,9 +16,13 @@ public class Clock : MonoBehaviour {
     //-- set start time 00:00
     public int minutes = 0;
     public int hour = 0;
+
     
     //-- time speed factor
     public float clockSpeed = 1.0f;     // 1.0f = realtime, < 1.0f = slower, > 1.0f = faster
+
+    
+
 
     //-- internal vars
     int seconds;
@@ -30,10 +35,14 @@ public class Clock : MonoBehaviour {
 //-----------------------------------------------------------------------------------------------------------------------------------------
 void Start() 
 {
+    hour = int.Parse(System.DateTime.UtcNow.ToLocalTime().ToString("HH"));
+    minutes = int.Parse(System.DateTime.UtcNow.ToLocalTime().ToString("mm"));
+
     pointerSeconds = transform.Find("rotation_axis_pointer_seconds").gameObject;
     pointerMinutes = transform.Find("rotation_axis_pointer_minutes").gameObject;
     pointerHours   = transform.Find("rotation_axis_pointer_hour").gameObject;
 
+        
     msecs = 0.0f;
     seconds = 0;
 }

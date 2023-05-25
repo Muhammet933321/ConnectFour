@@ -103,7 +103,7 @@ public class NetworkManager : Photon.PunBehaviour
             PhotonNetwork.CreateRoom(null, RANDOM_ROOM_OPTIONS);
 
             PhotonNetwork.CreateRoom(RoomName.text, null);
-            UiManagerSC.DisableAllScreen();
+            
             GameManager.AmIPlayer1 = true;
             GameManager.IsMyTurn = true;
             GameManager.CanPlay = false;
@@ -129,10 +129,12 @@ public class NetworkManager : Photon.PunBehaviour
     }
     public override void OnJoinedRoom()
     {
-           // Debug.LogError($"Player {PhotonNetwork.player.ID} Joined the room With  " +
-           //   $"{(LevelMode)PhotonNetwork.room.CustomProperties[MODE]} " +
-           //     $"MaxPlyaer = {PhotonNetwork.room.MaxPlayers}");
+        // Debug.LogError($"Player {PhotonNetwork.player.ID} Joined the room With  " +
+        //   $"{(LevelMode)PhotonNetwork.room.CustomProperties[MODE]} " +
+        //     $"MaxPlyaer = {PhotonNetwork.room.MaxPlayers}");
+        UiManagerSC.DisableAllScreen();
         UiManagerSC.GameScreenActive("Waiting For Connect A Player");
+        
         if (PhotonNetwork.room.PlayerCount == 2)
         {
             //Debug.Log("He Join The Room Then After Player 1 ");
@@ -166,9 +168,17 @@ public class NetworkManager : Photon.PunBehaviour
         
       //  Debug.LogError($"Player {newPlayer.ID} Connected The Toom");
         UiManagerSC.EnemyNickName.text = newPlayer.NickName;
+        GameManagerOBJ.GetComponent<PhotonView>().RPC("LoadGameScreen", newPlayer, "Enemy's Turn");
+
+        GameManagerOBJ.SetActive(true);
         RoomIsReady(newPlayer);
     }
+    [PunRPC]
 
+    public void CanPlayAnymore()
+    {
+
+    }
     public void OnJoinButton()
     {
         if (RoomName.text != null && RoomName.text != "" && RoomName.text.Length <= 7 && RoomName.text != " ")
@@ -288,6 +298,8 @@ public class NetworkManager : Photon.PunBehaviour
         GameManagerOBJ.SetActive(true);
         BoardInput.SetActive(true);
         GameManager.CanPlay = true;
+        GameManager.AmIPlayer1 = true;
+        GameManager.IsMyTurn = true;
         photonViewOBJ.RPC("RPC_GameStart", newPlayer , null);
       //  Debug.LogError("Game Is Starting");
         UiManagerSC.GameScreenActive("Your Turn");
@@ -390,5 +402,26 @@ public class NetworkManager : Photon.PunBehaviour
         UiManagerSC.EnemyDisConnectedUi();
     }
 
+
+    public void FindNewRandomGame()
+    {
+        Debug.Log("Finding New Random Game");
+        if (GameManagerOBJ.GetActive())
+        {
+            GameManager.ClearBoard();
+        }
+        UiManagerSC.EnemyNickName.text = "";
+
+        LeaveTheRoomFun();
+
+        DisConnectFun();
+
+        
+        GameManager.Player1Ghost.SetActive(false);
+        GameManager.Player2Ghost.SetActive(false);
+        UiManagerSC.DisableAllScreen();
+        UiManagerSC.LoadingGameSceene.SetActive(true);
+
+    }
 
 }

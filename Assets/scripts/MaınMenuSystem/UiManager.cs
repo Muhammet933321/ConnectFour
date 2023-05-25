@@ -8,13 +8,14 @@ using UnityEngine.UI;
 
 public class UiManager : MonoBehaviour
 {
-
+    
     private MultiGameManagerUpdate MultiGameManagerUpdateSC;
     private GameManager TwoPlayerGameManagerSC;
     private AiGameManager AiGameManagerSC;
 
     [SerializeField] private TMP_InputField NickNameText;
-    
+    [SerializeField] private GameObject WinPointer;
+
 
     [Header("Managers")]
     [SerializeField] private NetworkManager networkManager;
@@ -101,6 +102,7 @@ public class UiManager : MonoBehaviour
         MultiGameManagerUpdateSC = MultiGameManagerUpdate.GetComponent<MultiGameManagerUpdate>();
         TwoPlayerGameManagerSC = TwoPlayerGameManager.GetComponent<GameManager>();
         AiGameManagerSC = AiGameMnager.GetComponent<AiGameManager>();
+        WinPointer.SetActive(false);
         if (PlayerPrefs.HasKey("QualityLevel"))
         {
             FpsLimitDD.SetValueWithoutNotify(PlayerPrefs.GetInt("QualityLevel")-1);
@@ -129,6 +131,11 @@ public class UiManager : MonoBehaviour
         DisableAllScreen();
         CreateNickNameSeeneOBJ.SetActive(true);
 
+    }
+    public void QuitButto()
+    {
+        Application.Quit();
+        Debug.Log("Quit Button cliced");
     }
     public void NickNameOkeyButton()
     {
@@ -266,7 +273,8 @@ public class UiManager : MonoBehaviour
     public void OnFindRandomGameSelected()
     {
         DisableAllScreen();
-
+        MultiGameManagerUpdate.SetActive(true);
+        LoadingGameSceene.SetActive(true);
     }
     /*
     public void OnConnectRandom()
