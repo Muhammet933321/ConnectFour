@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -5,6 +6,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
+using Random = UnityEngine.Random;
 
 public class AiGameManager : MonoBehaviour
 {
@@ -13,6 +15,10 @@ public class AiGameManager : MonoBehaviour
     public GameObject Player1Ghost;
     public GameObject Player2Ghost;
     public GameObject BoardInputs;
+    float G = 9.81f;
+    [SerializeField] private AudioSource bumpPiecies;
+    [SerializeField] private GameObject partycalEffect;
+
     [SerializeField] private GameObject BoardInput0;
     [SerializeField] private GameObject BoardInput1;
     [SerializeField] private GameObject BoardInput2;
@@ -168,13 +174,20 @@ public class AiGameManager : MonoBehaviour
                         FallingPiece.GetComponent<Rigidbody>().velocity = new Vector3(0, 0.1f, 0);
                         Player1Turn = true;
                         SingleTurnText.text = "Your Turn";
-                        if (DidWinAi(StateBoard, AI))
-                        {
-                            UiManagerOBJ.GetComponent<UiManager>().WinForSingle(3);
+                        Invoke("BumpPiecie", float.Parse(HowTimeDrop(column).ToString()));
+                            if (DidWinAi(StateBoard, AI))
+                             {
+                                 UiManagerOBJ.GetComponent<UiManager>().WinForSingle(3);
                             
-                            CanPlay = false;
-                            //Debug.LogWarning("Ai Win");
-                        }
+                                 CanPlay = false;
+                                 int[] WinPosition;
+                                 WinPosition = WinHowPositionAndHowType(AI);
+                                 if (WinPosition[0] != 5)
+                                 {
+                                    PointWinner(WinPosition);
+                                 }
+                                //Debug.LogWarning("Ai Win");
+                            }
                     } 
 
                     if (IsDraw())
@@ -193,6 +206,24 @@ public class AiGameManager : MonoBehaviour
         
 
     }
+    void BumpPiecie()
+    {
+        bumpPiecies.Play();
+    }
+    double HowTimeDrop(int column)
+    {
+        float H = 0;
+        for (int x = 0; x < HeightOfBoard; x++)
+        {
+            if (StateBoard[column, x] == 0)
+            {
+                H = SpawnLocation[column].transform.position.y - (0.365f * x + 0.62f);
+            }
+        }
+
+        return Math.Sqrt(2 * H / G);
+    }
+
     public void TakeTurn(int column)
     {
         if (StateBoard[column, HeightOfBoard - 1] == 0 && (FallingPiece == null || FallingPiece.GetComponent<Rigidbody>().velocity == Vector3.zero))
@@ -211,12 +242,18 @@ public class AiGameManager : MonoBehaviour
                     SingleTurnText.text = "Ai's Turn";
                     //Invoke("RandomAiPlay", 1);
                     Invoke("SimpleAiPlay", 1);
-                        
+                    Invoke("BumpPiecie", float.Parse(HowTimeDrop(column).ToString()));
+
                     if (DidWinAi(StateBoard , PLAYER))
                     {
                         UiManagerOBJ.GetComponent<UiManager>().WinForSingle(1);
                         CanPlay = false;
-                        
+                        int[] WinPosition;
+                        WinPosition = WinHowPositionAndHowType(PLAYER);
+                        if (WinPosition[0] != 5)
+                        {
+                            PointWinner(WinPosition);
+                        }
                         //Debug.LogWarning("Player 1 win");
                     }
 
@@ -234,6 +271,136 @@ public class AiGameManager : MonoBehaviour
             }
 
         }
+    }
+    Vector3 PartycalPosition;
+    void SpawnPartycalEffect()
+    {
+        Instantiate(partycalEffect, PartycalPosition, new Quaternion(0, 0, 0, 0));
+
+    }
+    void PointWinner(int[] PositionAndType)
+    {
+        float Column1sX = 1.393533f;
+        float Line1sY = 0.620878f;
+        float everyYUp = 0.365f;
+        float everyXRight = -0.45f;
+        float DefultZ = 0.051f;
+
+        if (PositionAndType[0] == 0)
+        {
+            PartycalPosition = new Vector3((Column1sX + ((PositionAndType[1] + 0) * everyXRight)), (Line1sY + (everyYUp * (PositionAndType[2] + 0))), DefultZ);
+            SpawnPartycalEffect();
+            PartycalPosition = new Vector3((Column1sX + ((PositionAndType[1] + 1) * everyXRight)), (Line1sY + (everyYUp * (PositionAndType[2] + 0))), DefultZ);
+            SpawnPartycalEffect();
+            PartycalPosition = new Vector3((Column1sX + ((PositionAndType[1] + 2) * everyXRight)), (Line1sY + (everyYUp * (PositionAndType[2] + 0))), DefultZ);
+            SpawnPartycalEffect();
+            PartycalPosition = new Vector3((Column1sX + ((PositionAndType[1] + 3) * everyXRight)), (Line1sY + (everyYUp * (PositionAndType[2] + 0))), DefultZ);
+            SpawnPartycalEffect();
+            Debug.Log("WinPointer1 = x =" + (Column1sX + ((PositionAndType[1] + 0) * everyXRight)) + "Y = " + (Line1sY + (everyYUp * (PositionAndType[2] + 0))));
+            Debug.Log("WinPointer1 = x =" + (Column1sX + ((PositionAndType[1] + 1) * everyXRight)) + "Y = " + (Line1sY + (everyYUp * (PositionAndType[2] + 0))));
+            Debug.Log("WinPointer1 = x =" + (Column1sX + ((PositionAndType[1] + 2) * everyXRight)) + "Y = " + (Line1sY + (everyYUp * (PositionAndType[2] + 0))));
+            Debug.Log("WinPointer1 = x =" + (Column1sX + ((PositionAndType[1] + 3) * everyXRight)) + "Y = " + (Line1sY + (everyYUp * (PositionAndType[2] + 0))));
+        }
+        if (PositionAndType[0] == 1)
+        {
+            PartycalPosition = new Vector3((Column1sX + ((PositionAndType[1] + 0) * everyXRight)), (Line1sY + (everyYUp * (PositionAndType[2] + 0))), DefultZ);
+            SpawnPartycalEffect();
+            PartycalPosition = new Vector3((Column1sX + ((PositionAndType[1] + 0) * everyXRight)), (Line1sY + (everyYUp * (PositionAndType[2] + 1))), DefultZ);
+            SpawnPartycalEffect();
+            PartycalPosition = new Vector3((Column1sX + ((PositionAndType[1] + 0) * everyXRight)), (Line1sY + (everyYUp * (PositionAndType[2] + 2))), DefultZ);
+            SpawnPartycalEffect();
+            PartycalPosition = new Vector3((Column1sX + ((PositionAndType[1] + 0) * everyXRight)), (Line1sY + (everyYUp * (PositionAndType[2] + 3))), DefultZ);
+            SpawnPartycalEffect();
+            Debug.Log("WinPointer1 = x =" + (Column1sX + ((PositionAndType[1] + 0) * everyXRight)) + "Y = " + (Line1sY + (everyYUp * (PositionAndType[2] + 0))));
+            Debug.Log("WinPointer1 = x =" + (Column1sX + ((PositionAndType[1] + 0) * everyXRight)) + "Y = " + (Line1sY + (everyYUp * (PositionAndType[2] + 1))));
+            Debug.Log("WinPointer1 = x =" + (Column1sX + ((PositionAndType[1] + 0) * everyXRight)) + "Y = " + (Line1sY + (everyYUp * (PositionAndType[2] + 2))));
+            Debug.Log("WinPointer1 = x =" + (Column1sX + ((PositionAndType[1] + 0) * everyXRight)) + "Y = " + (Line1sY + (everyYUp * (PositionAndType[2] + 3))));
+        }
+        if (PositionAndType[0] == 2)
+        {
+            PartycalPosition = new Vector3((Column1sX + ((PositionAndType[1] + 0) * everyXRight)), (Line1sY + (everyYUp * (PositionAndType[2] + 3))), DefultZ);
+            SpawnPartycalEffect();
+            PartycalPosition = new Vector3((Column1sX + ((PositionAndType[1] + 1) * everyXRight)), (Line1sY + (everyYUp * (PositionAndType[2] + 2))), DefultZ);
+            SpawnPartycalEffect();
+            PartycalPosition = new Vector3((Column1sX + ((PositionAndType[1] + 2) * everyXRight)), (Line1sY + (everyYUp * (PositionAndType[2] + 1))), DefultZ);
+            SpawnPartycalEffect();
+            PartycalPosition = new Vector3((Column1sX + ((PositionAndType[1] + 3) * everyXRight)), (Line1sY + (everyYUp * (PositionAndType[2] + 0))), DefultZ);
+            SpawnPartycalEffect();
+            Debug.Log("WinPointer1 = x =" + (Column1sX + ((PositionAndType[1] + 0) * everyXRight)) + "Y = " + (Line1sY + (everyYUp * (PositionAndType[2] + 3))));
+            Debug.Log("WinPointer1 = x =" + (Column1sX + ((PositionAndType[1] + 1) * everyXRight)) + "Y = " + (Line1sY + (everyYUp * (PositionAndType[2] + 2))));
+            Debug.Log("WinPointer1 = x =" + (Column1sX + ((PositionAndType[1] + 2) * everyXRight)) + "Y = " + (Line1sY + (everyYUp * (PositionAndType[2] + 1))));
+            Debug.Log("WinPointer1 = x =" + (Column1sX + ((PositionAndType[1] + 3) * everyXRight)) + "Y = " + (Line1sY + (everyYUp * (PositionAndType[2] + 0))));
+        }
+        if (PositionAndType[0] == 3)
+        {
+            PartycalPosition = new Vector3((Column1sX + ((PositionAndType[1] + 0) * everyXRight)), (Line1sY + (everyYUp * (PositionAndType[2] + 0))), DefultZ);
+            SpawnPartycalEffect();
+            PartycalPosition = new Vector3((Column1sX + ((PositionAndType[1] + 1) * everyXRight)), (Line1sY + (everyYUp * (PositionAndType[2] + 1))), DefultZ);
+            SpawnPartycalEffect();
+            PartycalPosition = new Vector3((Column1sX + ((PositionAndType[1] + 2) * everyXRight)), (Line1sY + (everyYUp * (PositionAndType[2] + 2))), DefultZ);
+            SpawnPartycalEffect();
+            PartycalPosition = new Vector3((Column1sX + ((PositionAndType[1] + 3) * everyXRight)), (Line1sY + (everyYUp * (PositionAndType[2] + 3))), DefultZ);
+            SpawnPartycalEffect();
+            Debug.Log("WinPointer1 = x =" + (Column1sX + ((PositionAndType[1] + 0) * everyXRight)) + "Y = " + (Line1sY + (everyYUp * (PositionAndType[2] + 0))));
+            Debug.Log("WinPointer1 = x =" + (Column1sX + ((PositionAndType[1] + 1) * everyXRight)) + "Y = " + (Line1sY + (everyYUp * (PositionAndType[2] + 1))));
+            Debug.Log("WinPointer1 = x =" + (Column1sX + ((PositionAndType[1] + 2) * everyXRight)) + "Y = " + (Line1sY + (everyYUp * (PositionAndType[2] + 2))));
+            Debug.Log("WinPointer1 = x =" + (Column1sX + ((PositionAndType[1] + 3) * everyXRight)) + "Y = " + (Line1sY + (everyYUp * (PositionAndType[2] + 3))));
+        }
+    }
+    int[] WinHowPositionAndHowType(int PlayerNum)
+    {
+        // Horizontal
+        int[] Returner = { 0, 0, 0 };
+        for (int x = 0; x < LenghttOfBoard - 3; x++)
+        {
+            for (int y = 0; y < HeightOfBoard; y++)
+            {
+                if (StateBoard[x, y] == PlayerNum && StateBoard[x + 1, y] == PlayerNum && StateBoard[x + 2, y] == PlayerNum && StateBoard[x + 3, y] == PlayerNum)
+                {
+                    Returner[0] = 0;
+                    Returner[1] = x;
+                    Returner[2] = y;
+                    return Returner;
+                }
+            }
+        }
+        //Vertical
+        for (int x = 0; x < LenghttOfBoard; x++)
+        {
+            for (int y = 0; y < HeightOfBoard - 3; y++)
+            {
+                if (StateBoard[x, y] == PlayerNum && StateBoard[x, y + 1] == PlayerNum && StateBoard[x, y + 2] == PlayerNum && StateBoard[x, y + 3] == PlayerNum)
+                {
+                    Returner[0] = 1;
+                    Returner[1] = x;
+                    Returner[2] = y;
+                    return Returner;
+                }
+            }
+        }
+        //y = x line 
+        for (int x = 0; x < LenghttOfBoard - 3; x++)
+        {
+            for (int y = 0; y < HeightOfBoard - 3; y++)
+            {
+                if (StateBoard[x, y + 3] == PlayerNum && StateBoard[x + 1, y + 2] == PlayerNum && StateBoard[x + 2, y + 1] == PlayerNum && StateBoard[x + 3, y] == PlayerNum)
+                {
+                    Returner[0] = 2;
+                    Returner[1] = x;
+                    Returner[2] = y;
+                    return Returner;
+                }
+                if (StateBoard[x, y] == PlayerNum && StateBoard[x + 1, y + 1] == PlayerNum && StateBoard[x + 2, y + 2] == PlayerNum && StateBoard[x + 3, y + 3] == PlayerNum)
+                {
+                    Returner[0] = 3;
+                    Returner[1] = x;
+                    Returner[2] = y;
+                    return Returner;
+                }
+            }
+        }
+        Returner[0] = 5;
+        return Returner;
     }
     bool UpdateBoardState(int column)
     {
@@ -461,8 +628,9 @@ public class AiGameManager : MonoBehaviour
                 }
                 //Debug.LogError("It is Most DRAW");
             }
-            RandomMove = Random.Range(0, LenghttOfBoard -1);
-            if(IsColumnFull(StateBoard , RandomMove))
+            //RandomMove = Random.Range(0, LenghttOfBoard -1);
+            RandomMove = Random.Range(0, LenghttOfBoard - 1);
+            if (IsColumnFull(StateBoard , RandomMove))
             {
                 continue;
             }

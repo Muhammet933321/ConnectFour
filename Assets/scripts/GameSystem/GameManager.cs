@@ -1,3 +1,5 @@
+using JetBrains.Annotations;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -7,11 +9,16 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+
+    float G = 9.81f;
     public GameObject Player1;
     public GameObject Player2;
     public GameObject Player1Ghost;
     public GameObject Player2Ghost;
     public GameObject BoardInputs;
+    [SerializeField] private AudioSource bumpPiecies;
+    [SerializeField] private GameObject partycalEffect;
+
     [SerializeField] private GameObject BoardInput0;
     [SerializeField] private GameObject BoardInput1;
     [SerializeField] private GameObject BoardInput2;
@@ -27,6 +34,8 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI SingleTurnText;
 
 
+
+
     public GameObject[] SpawnLocation;
     bool Player1Turn;
     public bool CanPlay;
@@ -39,12 +48,12 @@ public class GameManager : MonoBehaviour
     int[,] StateBoard;
 
 
-    
 
 
 
-    
-    
+
+
+
 
     int[] takeWinPointerPatition(int PlayerNum)
     {
@@ -101,7 +110,7 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        
+
     }
     public void OnWtoPlayerModeSellected()
     {
@@ -138,6 +147,8 @@ public class GameManager : MonoBehaviour
 
 
     }
+
+
     public void SelectColumn(int column)
     {
         //Debug.Log("Selected Column + " + column);
@@ -146,19 +157,19 @@ public class GameManager : MonoBehaviour
     {
         if (StateBoard[column, HeightOfBoard - 1] == 0 && (FallingPiece == null || FallingPiece.GetComponent<Rigidbody>().velocity == Vector3.zero))
         {
-            if(CanPlay)
+            if (CanPlay)
             {
 
-            if (Player1Turn)
-            {
-                Player1Ghost.SetActive(true);
-                Player1Ghost.transform.position = SpawnLocation[column].transform.position;
-            }
-            else
-            {
-                Player2Ghost.SetActive(true);
-                Player2Ghost.transform.position = SpawnLocation[column].transform.position;
-            }
+                if (Player1Turn)
+                {
+                    Player1Ghost.SetActive(true);
+                    Player1Ghost.transform.position = SpawnLocation[column].transform.position;
+                }
+                else
+                {
+                    Player2Ghost.SetActive(true);
+                    Player2Ghost.transform.position = SpawnLocation[column].transform.position;
+                }
             }
         }
     }
@@ -166,51 +177,66 @@ public class GameManager : MonoBehaviour
     {
         if (StateBoard[column, HeightOfBoard - 1] == 0 && (FallingPiece == null || FallingPiece.GetComponent<Rigidbody>().velocity == Vector3.zero))
         {
-            if ( CanPlay)
+            if (CanPlay)
             {
 
-            if (UpdateBoardState(column))
-            {
+                if (UpdateBoardState(column))
+                {
                     //Debug.LogWarning("Piecies was moved");
-                Player1Ghost.SetActive(false);
-                Player2Ghost.SetActive(false);
-                if (Player1Turn == true)
-                {
-                    FallingPiece = Instantiate(Player1, SpawnLocation[column].transform.position, new Quaternion(0, 90, 90, 0));
-                    FallingPiece.GetComponent<Rigidbody>().velocity = new Vector3(0, 0.1f, 0);
-                    Player1Turn = false;
-                    SingleTurnText.text = "Player 2 Turn";
-                        if (DidWin(1))
-                        {
-                        UiManagerOBJ.GetComponent<UiManager>().WinForSingle(1);
-                        CanPlay = false;
+                    Player1Ghost.SetActive(false);
+                    Player2Ghost.SetActive(false);
+                    if (Player1Turn == true)
+                    {
+                        FallingPiece = Instantiate(Player1, SpawnLocation[column].transform.position, new Quaternion(0, 90, 90, 0));
+                        FallingPiece.GetComponent<Rigidbody>().velocity = new Vector3(0, 0.1f, 0);
+                        Player1Turn = false;
+                        SingleTurnText.text = "Player 2 Turn";
+                        Invoke("BumpPiecie", float.Parse(HowTimeDrop(column).ToString()));
 
-                        //    Debug.LogWarning("Player 1 win");
+                        if (DidWin(PLAYER))
+                        {
+                            
+                            UiManagerOBJ.GetComponent<UiManager>().WinForSingle(1);
+                            CanPlay = false;
+                            int[] WinPosition;
+                            WinPosition = WinHowPositionAndHowType(PLAYER);
+                            if (WinPosition[0] != 5)
+                            {
+                                PointWinner(WinPosition);
+                            }
+                            //    Debug.LogWarning("Player 1 win");
                         }
-                    
-                        
-                }
-                else
-                {
-                    FallingPiece = Instantiate(Player2, SpawnLocation[column].transform.position, new Quaternion(0, 90, 90, 0));
-                    FallingPiece.GetComponent<Rigidbody>().velocity = new Vector3(0, 0.1f, 0);
-                    Player1Turn = true;
-                    SingleTurnText.text = "Player 1 Turn";
-                        if (DidWin(2))
-                        {
-                        UiManagerOBJ.GetComponent<UiManager>().WinForSingle(2);
-                        CanPlay = false;
 
+
+                    }
+                    else
+                    {
+                        FallingPiece = Instantiate(Player2, SpawnLocation[column].transform.position, new Quaternion(0, 90, 90, 0));
+                        FallingPiece.GetComponent<Rigidbody>().velocity = new Vector3(0, 0.1f, 0);
+                        Player1Turn = true;
+                        SingleTurnText.text = "Player 1 Turn";
+                        Invoke("BumpPiecie", float.Parse(HowTimeDrop(column).ToString()));
+                        if (DidWin(AI))
+                        {
+                            
+                            UiManagerOBJ.GetComponent<UiManager>().WinForSingle(2);
+                            CanPlay = false;
+                            int[] WinPosition;
+                            WinPosition = WinHowPositionAndHowType(AI);
+                            if (WinPosition[0] != 5)
+                            {
+                                PointWinner(WinPosition);
+                            }
                             //    Debug.LogWarning("Player 2 win");
                         }
-                }
-                if (IsDraw())
-                {
+                    }
+                    if (IsDraw())
+                    {
                         UiManagerOBJ.GetComponent<UiManager>().WinForSingle(4);
                         CanPlay = false;
                         //Debug.LogWarning("Draw!");
+                    }
                 }
-            }
             }
             else
             {
@@ -219,29 +245,137 @@ public class GameManager : MonoBehaviour
 
         }
     }
-    bool UpdateBoardState(int column)
+
+    Vector3 PartycalPosition;
+    void SpawnPartycalEffect()
     {
+        Instantiate(partycalEffect, PartycalPosition, new Quaternion(0, 0, 0, 0));
+
+    }    
+    void PointWinner(int[] PositionAndType)
+    {
+        float Column1sX = 1.393533f;
+        float Line1sY = 0.620878f;
+        float everyYUp = 0.365f;
+        float everyXRight = -0.45f;
+        float DefultZ = 0.051f;
         
-        for (int Raw = 0; Raw < HeightOfBoard; Raw++)
+        if (PositionAndType[0] == 0)
         {
-            if (StateBoard[column, Raw] == 0)
+            PartycalPosition = new Vector3((Column1sX + ((PositionAndType[1] + 0) * everyXRight)), (Line1sY + (everyYUp * (PositionAndType[2] + 0))), DefultZ);
+            SpawnPartycalEffect();
+            PartycalPosition = new Vector3((Column1sX + ((PositionAndType[1] + 1) * everyXRight)), (Line1sY + (everyYUp * (PositionAndType[2] + 0))), DefultZ);
+            SpawnPartycalEffect();
+            PartycalPosition = new Vector3((Column1sX + ((PositionAndType[1] + 2) * everyXRight)), (Line1sY + (everyYUp * (PositionAndType[2] + 0))), DefultZ);
+            SpawnPartycalEffect();
+            PartycalPosition = new Vector3((Column1sX + ((PositionAndType[1] + 3) * everyXRight)), (Line1sY + (everyYUp * (PositionAndType[2] + 0))), DefultZ);
+            SpawnPartycalEffect();
+            Debug.Log("WinPointer1 = x =" + (Column1sX + ((PositionAndType[1] + 0) * everyXRight)) + "Y = " + (Line1sY + (everyYUp * (PositionAndType[2]+ 0))) );
+            Debug.Log("WinPointer1 = x =" + (Column1sX + ((PositionAndType[1] + 1) * everyXRight)) + "Y = " + (Line1sY + (everyYUp * (PositionAndType[2]+ 0))) );
+            Debug.Log("WinPointer1 = x =" + (Column1sX + ((PositionAndType[1] + 2) * everyXRight)) + "Y = " + (Line1sY + (everyYUp * (PositionAndType[2]+ 0))) );
+            Debug.Log("WinPointer1 = x =" + (Column1sX + ((PositionAndType[1] + 3) * everyXRight)) + "Y = " + (Line1sY + (everyYUp * (PositionAndType[2]+ 0))) );
+        }
+        if (PositionAndType[0] == 1)
+        {
+            PartycalPosition = new Vector3((Column1sX + ((PositionAndType[1] + 0) * everyXRight)), (Line1sY + (everyYUp * (PositionAndType[2] + 0))), DefultZ);
+            SpawnPartycalEffect();
+            PartycalPosition = new Vector3((Column1sX + ((PositionAndType[1] + 0) * everyXRight)), (Line1sY + (everyYUp * (PositionAndType[2] + 1))), DefultZ);
+            SpawnPartycalEffect();
+            PartycalPosition = new Vector3((Column1sX + ((PositionAndType[1] + 0) * everyXRight)), (Line1sY + (everyYUp * (PositionAndType[2] + 2))), DefultZ);
+            SpawnPartycalEffect();
+            PartycalPosition = new Vector3((Column1sX + ((PositionAndType[1] + 0) * everyXRight)), (Line1sY + (everyYUp * (PositionAndType[2] + 3))), DefultZ);
+            SpawnPartycalEffect();
+            Debug.Log("WinPointer1 = x =" + (Column1sX + ((PositionAndType[1] + 0) * everyXRight)) + "Y = " + (Line1sY + (everyYUp * (PositionAndType[2] + 0))));
+            Debug.Log("WinPointer1 = x =" + (Column1sX + ((PositionAndType[1] + 0) * everyXRight)) + "Y = " + (Line1sY + (everyYUp * (PositionAndType[2] + 1))));
+            Debug.Log("WinPointer1 = x =" + (Column1sX + ((PositionAndType[1] + 0) * everyXRight)) + "Y = " + (Line1sY + (everyYUp * (PositionAndType[2] + 2))));
+            Debug.Log("WinPointer1 = x =" + (Column1sX + ((PositionAndType[1] + 0) * everyXRight)) + "Y = " + (Line1sY + (everyYUp * (PositionAndType[2] + 3))));
+        }
+        if (PositionAndType[0] == 2)
+        {
+            PartycalPosition = new Vector3((Column1sX + ((PositionAndType[1] + 0) * everyXRight)), (Line1sY + (everyYUp * (PositionAndType[2] + 3))), DefultZ);
+            SpawnPartycalEffect();
+            PartycalPosition = new Vector3((Column1sX + ((PositionAndType[1] + 1) * everyXRight)), (Line1sY + (everyYUp * (PositionAndType[2] + 2))), DefultZ);
+            SpawnPartycalEffect();
+            PartycalPosition = new Vector3((Column1sX + ((PositionAndType[1] + 2) * everyXRight)), (Line1sY + (everyYUp * (PositionAndType[2] + 1))), DefultZ);
+            SpawnPartycalEffect();
+            PartycalPosition = new Vector3((Column1sX + ((PositionAndType[1] + 3) * everyXRight)), (Line1sY + (everyYUp * (PositionAndType[2] + 0))), DefultZ);
+            SpawnPartycalEffect();
+            Debug.Log("WinPointer1 = x =" + (Column1sX + ((PositionAndType[1] + 0) * everyXRight)) + "Y = " + (Line1sY + (everyYUp * (PositionAndType[2] + 3))));
+            Debug.Log("WinPointer1 = x =" + (Column1sX + ((PositionAndType[1] + 1) * everyXRight)) + "Y = " + (Line1sY + (everyYUp * (PositionAndType[2] + 2))));
+            Debug.Log("WinPointer1 = x =" + (Column1sX + ((PositionAndType[1] + 2) * everyXRight)) + "Y = " + (Line1sY + (everyYUp * (PositionAndType[2] + 1))));
+            Debug.Log("WinPointer1 = x =" + (Column1sX + ((PositionAndType[1] + 3) * everyXRight)) + "Y = " + (Line1sY + (everyYUp * (PositionAndType[2] + 0))));
+        }
+        if (PositionAndType[0] == 3)
+        {
+            PartycalPosition = new Vector3((Column1sX + ((PositionAndType[1] + 0) * everyXRight)), (Line1sY + (everyYUp * (PositionAndType[2] + 0))), DefultZ);
+            SpawnPartycalEffect();
+            PartycalPosition = new Vector3((Column1sX + ((PositionAndType[1] + 1) * everyXRight)), (Line1sY + (everyYUp * (PositionAndType[2] + 1))), DefultZ);
+            SpawnPartycalEffect();
+            PartycalPosition = new Vector3((Column1sX + ((PositionAndType[1] + 2) * everyXRight)), (Line1sY + (everyYUp * (PositionAndType[2] + 2))), DefultZ);
+            SpawnPartycalEffect();
+            PartycalPosition = new Vector3((Column1sX + ((PositionAndType[1] + 3) * everyXRight)), (Line1sY + (everyYUp * (PositionAndType[2] + 3))), DefultZ);
+            SpawnPartycalEffect();
+            Debug.Log("WinPointer1 = x =" + (Column1sX + ((PositionAndType[1] + 0) * everyXRight)) + "Y = " + (Line1sY + (everyYUp * (PositionAndType[2] + 0))));
+            Debug.Log("WinPointer1 = x =" + (Column1sX + ((PositionAndType[1] + 1) * everyXRight)) + "Y = " + (Line1sY + (everyYUp * (PositionAndType[2] + 1))));
+            Debug.Log("WinPointer1 = x =" + (Column1sX + ((PositionAndType[1] + 2) * everyXRight)) + "Y = " + (Line1sY + (everyYUp * (PositionAndType[2] + 2))));
+            Debug.Log("WinPointer1 = x =" + (Column1sX + ((PositionAndType[1] + 3) * everyXRight)) + "Y = " + (Line1sY + (everyYUp * (PositionAndType[2] + 3))));
+        }
+    }
+    int[] WinHowPositionAndHowType(int PlayerNum)
+    {
+        // Horizontal
+        int[] Returner = { 0, 0, 0 };
+        for (int x = 0; x < LenghttOfBoard - 3; x++)
+        {
+            for (int y = 0; y < HeightOfBoard; y++)
             {
-                if (Player1Turn)
+                if (StateBoard[x, y] == PlayerNum && StateBoard[x + 1, y] == PlayerNum && StateBoard[x + 2, y] == PlayerNum && StateBoard[x + 3, y] == PlayerNum)
                 {
-                    StateBoard[column, Raw] = 1;
+                    Returner[0] = 0;
+                    Returner[1] = x;
+                    Returner[2] = y;
+                    return Returner;
                 }
-                else
-                {
-                    StateBoard[column, Raw] = 2;
-                }
-                //Debug.Log("Column ,Raw = " + column + " , " + Raw);
-                return true;
             }
         }
-        return false;
+        //Vertical
+        for (int x = 0; x < LenghttOfBoard; x++)
+        {
+            for (int y = 0; y < HeightOfBoard - 3; y++)
+            {
+                if (StateBoard[x, y] == PlayerNum && StateBoard[x, y + 1] == PlayerNum && StateBoard[x, y + 2] == PlayerNum && StateBoard[x, y + 3] == PlayerNum)
+                {
+                    Returner[0] = 1;
+                    Returner[1] = x;
+                    Returner[2] = y;
+                    return Returner;
+                }
+            }
+        }
+        //y = x line 
+        for (int x = 0; x < LenghttOfBoard - 3; x++)
+        {
+            for (int y = 0; y < HeightOfBoard - 3; y++)
+            {
+                if (StateBoard[x, y + 3] == PlayerNum && StateBoard[x + 1, y + 2] == PlayerNum && StateBoard[x + 2, y + 1] == PlayerNum && StateBoard[x + 3, y] == PlayerNum)
+                {
+                    Returner[0] = 2;
+                    Returner[1] = x;
+                    Returner[2] = y;
+                    return Returner;
+                }
+                if (StateBoard[x, y] == PlayerNum && StateBoard[x + 1, y + 1] == PlayerNum && StateBoard[x + 2, y + 2] == PlayerNum && StateBoard[x + 3, y + 3] == PlayerNum)
+                {
+                    Returner[0] = 3;
+                    Returner[1] = x;
+                    Returner[2] = y;
+                    return Returner;
+                }
+            }
+        }
+        Returner[0] = 5;
+        return Returner;
     }
-
-
     bool DidWin(int PlayerNum)
     {
         // Horizontal
@@ -283,6 +417,36 @@ public class GameManager : MonoBehaviour
         }
         return false;
     }
+
+
+    void BumpPiecie()
+    {
+        bumpPiecies.Play();
+    }
+    bool UpdateBoardState(int column)
+    {
+
+        for (int Raw = 0; Raw < HeightOfBoard; Raw++)
+        {
+            if (StateBoard[column, Raw] == 0)
+            {
+                if (Player1Turn)
+                {
+                    StateBoard[column, Raw] = 1;
+                }
+                else
+                {
+                    StateBoard[column, Raw] = 2;
+                }
+                //Debug.Log("Column ,Raw = " + column + " , " + Raw);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    
+     
     bool IsDraw()
     {
         for (int x = 0; x < LenghttOfBoard; x++)
@@ -306,6 +470,21 @@ public class GameManager : MonoBehaviour
         }
       //  Debug.LogError("Board Was Cleared");
     }
+
+    double HowTimeDrop(int column)
+    {
+        float H = 0;
+        for (int x = 0; x < HeightOfBoard; x++)
+        {
+            if (StateBoard[column, x] == 0)
+            {
+                H = SpawnLocation[column].transform.position.y - (0.365f *x + 0.62f);
+            }
+        }
+        
+        return  Math.Sqrt(2 * H / G)  ;
+    }
+    
 
     public void ClearSinglePecies()
     {
